@@ -24,7 +24,7 @@
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
       --radius2: 24px;
-      --max: 1120px;
+      --max: 1320px;
     }
 
     *{box-sizing:border-box}
@@ -57,6 +57,35 @@
 
     a{color:inherit}
     .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
+
+    /* ===== Desktop-only: mais conforto e melhor uso do espaço (sem mexer no celular) ===== */
+    @media (min-width: 1100px){
+      .wrap{padding: 0 26px;}
+
+      .brand strong{font-size: 15px;}
+      .brand span{font-size: 13px;}
+
+      .navlinks a{
+        font-size: 14px;
+        padding: 9px 12px;
+      }
+
+      .btn{padding: 15px 20px;}
+      .btn-sm{padding: 11px 13px; font-size: 14px;}
+
+      .grid2{gap: 22px;}
+      section{padding: 40px 0;}
+      .pad{padding: 26px;}
+
+      .lead{font-size: 16px;}
+      .micro{font-size: 13.5px;}
+    }
+
+    @media (min-width: 1400px){
+      .wrap{padding: 0 30px;}
+      .lead{font-size: 16.5px;}
+    }
+
     .pill{
       display:inline-flex;
       align-items:center;
@@ -198,7 +227,6 @@
       font-size: 12.5px;
       line-height: 1.55;
     }
-
     .chips{
       display:flex;
       flex-wrap:wrap;
@@ -260,6 +288,11 @@
       line-height: 1.45;
       max-width: 52ch;
     }
+
+    /* ===== Foto de perfil (melhor enquadramento sem mexer no arquivo) =====
+       Se ainda não ficar perfeito, o único "ajuste" é mudar 38% para 30% (sobe) ou 50% (desce). */
+    .avatar{ --avatar-y: 38%; }
+    .avatar img{ object-position: 50% var(--avatar-y); }
 
     /* How it works */
     .grid3{
@@ -381,6 +414,7 @@
       background: rgba(255,255,255,.06);
       cursor:pointer;
       color: var(--text);
+      transition: transform .15s ease, border-color .2s ease, background .2s ease;
     }
     .carBtn:hover{border-color: rgba(255,255,255,.24); transform: translateY(-1px)}
     .carHint{
@@ -491,6 +525,59 @@
       padding: 24px 0 40px;
       color: var(--muted2);
       font-size: 12.5px;
+    }
+
+    /* ===== Desktop: aproveita melhor espaço (mantém mobile igual) ===== */
+    @media (min-width: 1100px){
+      /* mais presença no desktop */
+      section{padding: 46px 0;}
+      .hero{padding-top: 34px;}
+
+      .navin{padding: 14px 0;}
+      .navlinks{gap: 8px;}
+
+      .h2{font-size: 26px;}
+      .sub{font-size: 14.5px; max-width: 64ch;}
+
+      .chip{font-size: 13px; padding: 9px 12px;}
+
+      .li{padding: 14px 14px;}
+      .li b{font-size: 14.5px;}
+      .li span{font-size: 14px;}
+
+      .grid3{gap: 18px;}
+      .mini{padding: 18px; min-height: 180px;}
+      .mini h3{font-size: 18px;}
+      .mini p{font-size: 15px;}
+
+      .carouselWrap{gap: 20px;}
+      .carouselStage{padding: 14px;}
+      .carControls{padding: 13px 16px;}
+      .carHint{font-size: 13.5px;}
+
+      .trailGrid{gap: 18px;}
+      .trail{padding: 18px; min-height: 290px;}
+      .trail h3{font-size: 18px;}
+      .trail ul{font-size: 15px;}
+
+      summary{padding: 16px 16px;}
+      .ans{padding: 0 16px 16px; font-size: 15px;}
+
+      .cta{padding: 22px;}
+      .cta h3{font-size: 20px;}
+      .cta p{font-size: 15px;}
+
+      footer{font-size: 13.5px;}
+
+      /* avatar um pouco maior no desktop */
+      .avatar{width: 48px; height: 48px;}
+    }
+    @media (min-width: 1400px){
+      /* telas muito grandes: sutil boost */
+      .h2{font-size: 28px;}
+      .mini h3{font-size: 19px;}
+      .trail h3{font-size: 19px;}
+      .trail ul{font-size: 15.5px;}
     }
 
     /* Responsive */
@@ -802,7 +889,6 @@
           </div>
         </div>
 
-        <!-- As 3 que você definiu -->
         <details>
           <summary>
             Como recebo valores e opções de plano?
@@ -836,7 +922,6 @@
           </div>
         </details>
 
-        <!-- 2 perguntas extras para valor/desejo -->
         <details>
           <summary>
             O que muda quando eu tenho uma rotina fora da aula (e não só “uma aula por semana”)?
@@ -886,16 +971,21 @@
 
   <script>
     // ============================
+    // 0) Cache-buster (opcional)
+    // ============================
+    // Se você substituir imagens mantendo o mesmo nome e o navegador insistir em mostrar a antiga,
+    // basta trocar "1" para "2" (e commitar).
+    const ASSET_VERSION = "1";
+    const asset = (p) => p + "?v=" + ASSET_VERSION;
+
+    // ============================
     // 1) WHATSAPP (mensagem pronta)
     // ============================
-    // Coloque seu número com DDI+DDD+numero, sem espaços (ex.: 5511999999999)
     const WHATSAPP_PHONE = "5592985273076";
-
-    const WHATSAPP_MESSAGE = "Olá! Tenho interesse em me tornar aluno%0AGostaria de informações sobre o curso";
+    const WHATSAPP_TEXT = "Olá! Tenho interesse em me tornar aluno\nGostaria de informações sobre o curso";
+    const WHATSAPP_MESSAGE = encodeURIComponent(WHATSAPP_TEXT);
 
     function buildWhatsAppLink() {
-      // Se você não preencher o número, ainda abre WhatsApp com a mensagem,
-      // mas NÃO garante abrir direto com você.
       if (!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) {
         return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
       }
@@ -903,15 +993,17 @@
     }
 
     const waLink = buildWhatsAppLink();
-    const waBtns = ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].map(id => document.getElementById(id));
-    waBtns.forEach(btn => { if (btn) btn.href = waLink; });
+    ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"]
+      .map(id => document.getElementById(id))
+      .forEach(btn => { if (btn) btn.href = waLink; });
 
     // ============================
     // 2) PROFILE IMAGE (robusto)
     // ============================
-    // Seus arquivos estão com .webp.webp. Se você renomear depois pra .webp,
-    // este fallback evita quebrar o site.
     const profileImg = document.getElementById("profileImg");
+    const rawProfilePath = profileImg.getAttribute("src");
+    profileImg.src = asset(rawProfilePath);
+
     profileImg.addEventListener("error", () => {
       if (profileImg.src.includes(".webp.webp")) {
         profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
@@ -922,18 +1014,18 @@
     // 3) CAROUSEL (auto suave)
     // ============================
     const carouselImages = [
-      "assets/carousel-01.webp.webp",
-      "assets/carousel-02.webp.webp",
-      "assets/carousel-03.webp.webp",
-      "assets/carousel-04.webp.webp",
-      "assets/carousel-05.webp.webp",
-      "assets/carousel-06.webp.webp",
-      "assets/carousel-07.webp.webp",
-      "assets/carousel-08.webp.webp",
-      "assets/carousel-09.webp.webp",
-      "assets/carousel-10.webp.webp",
-      "assets/carousel-11.webp.webp",
-      "assets/carousel-12.webp.webp"
+      asset("assets/carousel-01.webp.webp"),
+      asset("assets/carousel-02.webp.webp"),
+      asset("assets/carousel-03.webp.webp"),
+      asset("assets/carousel-04.webp.webp"),
+      asset("assets/carousel-05.webp.webp"),
+      asset("assets/carousel-06.webp.webp"),
+      asset("assets/carousel-07.webp.webp"),
+      asset("assets/carousel-08.webp.webp"),
+      asset("assets/carousel-09.webp.webp"),
+      asset("assets/carousel-10.webp.webp"),
+      asset("assets/carousel-11.webp.webp"),
+      asset("assets/carousel-12.webp.webp")
     ];
 
     const imgEl = document.getElementById("carouselImg");
@@ -962,59 +1054,40 @@
 
     function setActiveDot() {
       const btns = dotsEl.querySelectorAll(".dotBtn");
-      btns.forEach((b, i) => {
-        b.classList.toggle("active", i === idx);
-      });
+      btns.forEach((b, i) => b.classList.toggle("active", i === idx));
     }
 
     function render() {
       imgEl.classList.remove("show");
-      // pequeno delay para a transição ficar suave
       setTimeout(() => {
         imgEl.src = carouselImages[idx];
         imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
-        imgEl.onload = () => {
-          imgEl.classList.add("show");
-        };
+
+        imgEl.onload = () => imgEl.classList.add("show");
+
         imgEl.onerror = () => {
-          // fallback se você renomear os arquivos para .webp
           if (imgEl.src.includes(".webp.webp")) {
             imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
           }
         };
+
         setActiveDot();
       }, 80);
     }
 
-    function next() {
-      idx = (idx + 1) % carouselImages.length;
-      render();
-    }
-    function prev() {
-      idx = (idx - 1 + carouselImages.length) % carouselImages.length;
-      render();
-    }
+    function next() { idx = (idx + 1) % carouselImages.length; render(); }
+    function prev() { idx = (idx - 1 + carouselImages.length) % carouselImages.length; render(); }
 
     function start() {
       if (timer) return;
-      timer = setInterval(() => {
-        if (!hovering) next();
-      }, 3200); // velocidade do carrossel
+      timer = setInterval(() => { if (!hovering) next(); }, 3200);
     }
-    function stop() {
-      if (!timer) return;
-      clearInterval(timer);
-      timer = null;
-    }
-    function restart() {
-      stop();
-      start();
-    }
+    function stop() { if (!timer) return; clearInterval(timer); timer = null; }
+    function restart() { stop(); start(); }
 
     prevBtn.addEventListener("click", () => { prev(); restart(); });
     nextBtn.addEventListener("click", () => { next(); restart(); });
 
-    // Pausa ao passar mouse (desktop)
     const carouselBox = imgEl.closest(".carousel");
     carouselBox.addEventListener("mouseenter", () => { hovering = true; });
     carouselBox.addEventListener("mouseleave", () => { hovering = false; });
@@ -1023,7 +1096,6 @@
     render();
     start();
 
-    // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
