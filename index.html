@@ -2,20 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Aulas de inglês online (iniciante, intermediário e avançado). Direção clara, rotina guiada fora da aula e evolução consistente." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Aulas de inglês online (iniciante, intermediário e avançado) com direção clara, prática guiada e rotina fora da aula para evolução consistente." />
+  <meta name="theme-color" content="#070B18" />
   <title>Professor Marcos Vinicius — Inglês Online (General English)</title>
 
   <style>
     :root{
       --bg0:#060B18;
-      --bg1:#08112A;
+      --bg1:#07112A;
       --card: rgba(255,255,255,.06);
       --card2: rgba(255,255,255,.09);
       --line: rgba(255,255,255,.10);
       --text:#EAF0FF;
-      --muted: rgba(234,240,255,.75);
-      --muted2: rgba(234,240,255,.60);
+      --muted: rgba(234,240,255,.74);
+      --muted2: rgba(234,240,255,.58);
       --accent:#2E7BFF;
       --accent2:#6BA6FF;
       --good:#39D98A;
@@ -30,7 +31,7 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color: var(--text);
+      color:var(--text);
       background:
         radial-gradient(1200px 600px at 15% 12%, rgba(46,123,255,.26), transparent 60%),
         radial-gradient(900px 500px at 85% 18%, rgba(107,166,255,.18), transparent 55%),
@@ -42,21 +43,102 @@
     /* subtle grid */
     body:before{
       content:"";
-      position:fixed; inset:0;
+      position:fixed;
+      inset:0;
       background-image:
         linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
       background-size: 64px 64px;
       opacity:.18;
       pointer-events:none;
-      mask-image: radial-gradient(800px 520px at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,.25), transparent 75%);
+      -webkit-mask-image: radial-gradient(800px 520px at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0));
+              mask-image: radial-gradient(800px 520px at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0));
     }
 
     a{color:inherit}
-    .wrap{max-width:var(--max); margin:0 auto; padding:0 18px;}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
+    .pill{
+      display:inline-flex;
+      align-items:center;
       gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size: 13px;
+    }
+    .dot{width:10px; height:10px; border-radius:50%; background: rgba(46,123,255,.9); box-shadow:0 0 0 4px rgba(46,123,255,.18)}
+
+    /* NAV */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      background: rgba(6,11,24,.55);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .navin{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 0;
+      gap: 14px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 260px;
+    }
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      line-height: 1.15;
+    }
+    .brand strong{display:block; font-size: 14px; letter-spacing:.2px}
+    .brand span{display:block; font-size: 12px; color: var(--muted2)}
+    .avatar{
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .navlinks{
+      display:flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .navlinks a{
+      text-decoration:none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+    .navlinks a:hover{
+      border-color: rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
       padding: 14px 18px;
       border-radius: 14px;
       border: 1px solid var(--line);
@@ -65,572 +147,647 @@
       letter-spacing:.2px;
       transition: transform .15s ease, background .2s ease, border-color .2s ease;
       user-select:none;
-      cursor:pointer;
       white-space:nowrap;
     }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.18)}
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22)}
     .btn-primary{
-      background: linear-gradient(135deg, rgba(46,123,255,.95), rgba(107,166,255,.78));
-      border-color: rgba(46,123,255,.45);
-      box-shadow: 0 16px 40px rgba(46,123,255,.18);
+      background: linear-gradient(135deg, rgba(46,123,255,.95), rgba(107,166,255,.85));
+      border-color: rgba(46,123,255,.55);
+      box-shadow: 0 18px 52px rgba(46,123,255,.24);
     }
-    .btn-primary:hover{box-shadow: 0 18px 52px rgba(46,123,255,.24)}
     .btn-ghost{
       background: rgba(255,255,255,.04);
+      color: var(--text);
     }
-    .pill{
-      display:inline-flex; gap:10px; align-items:center;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 13px;
-    }
+    .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
+    .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
 
-    header{
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(14px);
-      background: rgba(6,11,24,.55);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 12px 0;
-    }
-    .brand{
-      display:flex; gap:12px; align-items:center;
-      text-decoration:none;
-    }
-    .logo{
-      width: 38px; height:38px; border-radius: 12px;
-      background: linear-gradient(135deg, rgba(46,123,255,.95), rgba(107,166,255,.55));
-      box-shadow: 0 12px 30px rgba(46,123,255,.20);
-      border: 1px solid rgba(255,255,255,.14);
-    }
-    .brand strong{display:block; font-size:14px; line-height:1.1}
-    .brand span{display:block; font-size:12px; color:var(--muted2); margin-top:2px}
-    .navlinks{
-      display:flex; gap:14px; align-items:center;
-    }
-    .navlinks a{
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration:none;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid transparent;
-    }
-    .navlinks a:hover{border-color: rgba(255,255,255,.10); background: rgba(255,255,255,.03)}
-    .navcta{display:flex; gap:10px; align-items:center}
-
-    /* Hero */
-    .hero{padding: 54px 0 22px}
-    .hero-grid{
+    /* SECTIONS */
+    section{padding: 34px 0}
+    .hero{padding-top: 26px}
+    .grid2{
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
+      grid-template-columns: 1.08fr .92fr;
       gap: 18px;
-      align-items: stretch;
+      align-items:stretch;
     }
     .card{
       background: var(--card);
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.10);
       border-radius: var(--radius2);
       box-shadow: var(--shadow);
-    }
-    .hero-main{
-      padding: 28px;
-      position:relative;
       overflow:hidden;
     }
-    .hero-main:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(520px 280px at 10% 10%, rgba(46,123,255,.22), transparent 60%),
-        radial-gradient(420px 240px at 90% 30%, rgba(107,166,255,.16), transparent 60%);
-      opacity:.95;
-      pointer-events:none;
-    }
-    .hero-main > *{position:relative}
+    .pad{padding: 22px}
     h1{
       margin: 14px 0 10px;
-      font-size: 38px;
-      line-height: 1.08;
-      letter-spacing: -0.6px;
+      font-size: clamp(28px, 3.2vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -.6px;
     }
-    .sub{
+    .lead{
+      margin: 0;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.55;
-      margin: 0 0 18px;
-      max-width: 56ch;
+      max-width: 60ch;
     }
-    .kpis{
-      display:flex; flex-wrap:wrap; gap:10px;
-      margin-top: 16px;
-    }
-    .kpis .pill b{color: var(--text)}
-    .cta-row{
-      display:flex; flex-wrap:wrap; gap:10px;
-      margin-top: 16px;
+    .micro{
+      margin-top: 10px;
+      color: var(--muted2);
+      font-size: 12.5px;
+      line-height: 1.55;
     }
 
-    .hero-side{
-      padding: 22px;
-      display:flex; flex-direction:column; gap:12px;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top: 14px;
     }
-    .hero-side h3{
-      margin: 0;
-      font-size: 15px;
+    .chip{
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
       color: var(--muted);
-      letter-spacing:.2px;
-      font-weight: 700;
     }
+
     .list{
-      display:grid; gap:10px;
-      margin-top: 4px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style:none;
     }
     .li{
-      display:flex; gap:10px; align-items:flex-start;
+      display:flex;
+      gap: 12px;
       padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
     }
-    .dot{
-      width: 10px; height:10px; margin-top:4px;
-      border-radius: 999px;
-      background: rgba(46,123,255,.85);
-      box-shadow: 0 0 0 4px rgba(46,123,255,.12);
+    .li b{display:block; font-size: 13px; margin-bottom: 3px}
+    .li span{display:block; font-size: 12.5px; color: var(--muted2); line-height: 1.45}
+    .bullet{
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-top: 4px;
+      background: rgba(46,123,255,.9);
+      box-shadow: 0 0 0 4px rgba(46,123,255,.18);
       flex: 0 0 auto;
     }
-    .li strong{display:block; font-size: 13px}
-    .li span{display:block; font-size: 13px; color: var(--muted2); margin-top:2px; line-height:1.35}
 
-    /* Sections */
-    section{padding: 28px 0}
-    .section-title{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
+    .titleRow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 12px;
     }
-    .section-title h2{
+    .h2{
       margin:0;
       font-size: 22px;
-      letter-spacing: -0.25px;
+      letter-spacing:-.2px;
     }
-    .section-title p{
+    .sub{
       margin:0;
-      color: var(--muted);
       font-size: 13px;
-      line-height: 1.4;
+      color: var(--muted2);
+      line-height: 1.45;
+      max-width: 52ch;
     }
 
+    /* How it works */
     .grid3{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
-    .grid2{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-    .box{
-      padding: 18px;
+    .mini{
+      padding: 16px;
       border-radius: var(--radius);
-      background: var(--card);
-      border: 1px solid var(--line);
-    }
-    .box h4{margin:0 0 8px; font-size: 15px}
-    .box p{margin:0; color: var(--muted); font-size: 13px; line-height:1.55}
-    .tag{
-      display:inline-flex;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(46,123,255,.12);
-      border: 1px solid rgba(46,123,255,.22);
-      color: rgba(234,240,255,.88);
-      font-size: 12px;
-      font-weight: 650;
-      margin-bottom: 10px;
-    }
-
-    .trail{
-      padding: 18px;
-      border-radius: var(--radius2);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.11);
-      position:relative;
-      overflow:hidden;
-    }
-    .trail:before{
-      content:"";
-      position:absolute; inset:-1px;
-      background: radial-gradient(420px 220px at 15% 12%, rgba(46,123,255,.18), transparent 60%);
-      opacity:.95;
-      pointer-events:none;
-    }
-    .trail > *{position:relative}
-    .trail h4{margin:0 0 8px}
-    .trail ul{margin:10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; line-height:1.6}
-    .trail ul li{margin: 6px 0}
-
-    .faq details{
       border: 1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
-      background: rgba(255,255,255,.03);
-      padding: 12px 14px;
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 14px 35px rgba(0,0,0,.25);
+      min-height: 160px;
     }
-    .faq details + details{margin-top: 10px}
-    .faq summary{
-      cursor:pointer;
-      list-style:none;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-size: 12px;
       font-weight: 700;
-      font-size: 13px;
+      letter-spacing:.6px;
+      color: rgba(234,240,255,.88);
+      text-transform: uppercase;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
     }
-    .faq summary::-webkit-details-marker{display:none}
-    .faq p{
-      margin:10px 0 0;
+    .mini h3{
+      margin: 12px 0 6px;
+      font-size: 16px;
+      letter-spacing:-.2px;
+    }
+    .mini p{
+      margin:0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    /* Carousel */
+    .carouselWrap{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .carousel{
+      position:relative;
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+    }
+    .carouselStage{
+      position:relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 12px;
+    }
+    .carouselStage img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* NÃO corta print */
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      display:block;
+      opacity: 0;
+      transform: scale(1.01);
+      transition: opacity .5s ease, transform .7s ease;
+    }
+    .carouselStage img.show{
+      opacity: 1;
+      transform: scale(1.0);
+    }
+    .carControls{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .dots{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .dotBtn{
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      cursor:pointer;
+      padding:0;
+    }
+    .dotBtn.active{
+      width: 22px;
+      background: rgba(46,123,255,.9);
+      border-color: rgba(46,123,255,.65);
+      box-shadow: 0 0 0 4px rgba(46,123,255,.18);
+    }
+    .carBtn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      color: var(--text);
+    }
+    .carBtn:hover{border-color: rgba(255,255,255,.24); transform: translateY(-1px)}
+    .carHint{
+      color: var(--muted2);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    /* Trails */
+    .trailGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items:stretch;
+    }
+    .trail{
+      padding: 16px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 14px 35px rgba(0,0,0,.25);
+      min-height: 260px;
+    }
+    .trail .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing:.6px;
+      text-transform: uppercase;
+      color: rgba(234,240,255,.90);
+    }
+    .trail h3{
+      margin: 12px 0 8px;
+      font-size: 16px;
+      letter-spacing:-.2px;
+    }
+    .trail ul{
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13.5px;
       line-height: 1.6;
     }
 
-    footer{
-      padding: 28px 0 38px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      color: var(--muted2);
-      font-size: 12px;
+    /* FAQ */
+    details{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+      overflow:hidden;
     }
-    .foot{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    details + details{margin-top: 10px}
+    summary{
+      cursor:pointer;
+      padding: 14px 14px;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      font-weight: 700;
+      color: rgba(234,240,255,.92);
+    }
+    summary::-webkit-details-marker{display:none}
+    .ans{
+      padding: 0 14px 14px;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .ans b{color: rgba(234,240,255,.92)}
+    .chev{
+      width: 26px; height: 26px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      flex: 0 0 auto;
+      transition: transform .2s ease;
+    }
+    details[open] .chev{transform: rotate(180deg)}
+
+    /* CTA bottom */
+    .cta{
+      padding: 18px;
+      border-radius: var(--radius2);
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(800px 260px at 15% 30%, rgba(46,123,255,.20), transparent 60%),
+        rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+    }
+    .cta h3{margin:0; font-size: 18px}
+    .cta p{margin:6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 62ch}
+
+    footer{
+      padding: 24px 0 40px;
+      color: var(--muted2);
+      font-size: 12.5px;
     }
 
-    /* responsive */
+    /* Responsive */
     @media (max-width: 980px){
-      .hero-grid{grid-template-columns: 1fr}
-      h1{font-size: 34px}
-      .grid3{grid-template-columns: 1fr}
       .grid2{grid-template-columns: 1fr}
-      .navlinks{display:none}
+      .grid3{grid-template-columns: 1fr}
+      .trailGrid{grid-template-columns: 1fr}
+      .carouselWrap{grid-template-columns: 1fr}
+      .brand{min-width: 0}
+      .navlinks{justify-content:flex-start}
     }
     @media (max-width: 520px){
-      h1{font-size: 30px}
-      .hero-main{padding: 20px}
-      .hero-side{padding: 18px}
+      .btn{width: 100%}
+      .btn-row{width:100%}
+      .navin{align-items:flex-start}
+      .navlinks a{padding: 8px 9px}
+      .avatar{width: 42px; height: 42px; border-radius: 14px}
     }
   </style>
 </head>
 
 <body>
-  <!-- CONFIG (você não precisa mexer nisso agora) -->
-  <script>
-    // WhatsApp (Brasil): 55 + DDD + número
-    const WHATSAPP_NUMBER_E164 = "5592985273076";
-
-    // Mensagem pré-pronta (você pode trocar depois pedindo que eu gere um novo index.html completo)
-    const WHATSAPP_MESSAGE = encodeURIComponent(
-      "Olá, Marcos! Vi sua landing page e quero ser aluno(a).\n" +
-      "Meu nível (aprox.): ____\n" +
-      "Meu objetivo: ____\n" +
-      "Disponibilidade na semana: ____\n"
-    );
-
-    // Seu Google Form (CTA secundário)
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor";
-
-    function goWhatsApp(){
-      window.open(`https://wa.me/${WHATSAPP_NUMBER_E164}?text=${WHATSAPP_MESSAGE}`, "_blank");
-    }
-    function goForm(){
-      window.open(FORM_URL, "_blank");
-    }
-    function scrollToId(id){
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
-    }
-  </script>
-
-  <header>
+  <header class="nav">
     <div class="wrap">
-      <div class="nav">
-        <a class="brand" href="#" onclick="scrollToId('top'); return false;">
-          <div class="logo" aria-hidden="true"></div>
-          <div>
+      <div class="navin">
+        <div class="brand">
+          <div class="brandText">
             <strong>Professor Marcos Vinicius</strong>
             <span>Inglês Online • General English</span>
           </div>
-        </a>
 
-        <nav class="navlinks" aria-label="Seções">
-          <a href="#" onclick="scrollToId('como'); return false;">Como funciona</a>
-          <a href="#" onclick="scrollToId('trilhas'); return false;">Trilhas</a>
-          <a href="#" onclick="scrollToId('rotina'); return false;">Rotina fora da aula</a>
-          <a href="#" onclick="scrollToId('faq'); return false;">Dúvidas</a>
-        </nav>
-
-        <div class="navcta">
-          <a class="btn btn-ghost" href="#" onclick="goForm(); return false;">Avaliação rápida (2 min)</a>
-          <a class="btn btn-primary" href="#" onclick="goWhatsApp(); return false;">Quero ser aluna(o)</a>
+          <!-- Foto no topo, à direita do título (como você pediu) -->
+          <div class="avatar" title="Professor Marcos Vinicius">
+            <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+          </div>
         </div>
+
+        <nav class="navlinks" aria-label="Navegação">
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#atividades">Atividades</a>
+          <a href="#trilhas">Trilhas</a>
+          <a href="#faq">Dúvidas</a>
+
+          <a class="btn btn-sm btn-ghost" id="formBtnTop" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
+            Formulário (4 min)
+          </a>
+
+          <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
+            Quero ser aluna(o)
+          </a>
+        </nav>
       </div>
     </div>
   </header>
 
-  <main id="top">
+  <main>
     <!-- HERO -->
-    <div class="hero">
+    <section class="hero">
       <div class="wrap">
-        <div class="hero-grid">
-          <div class="card hero-main">
-            <span class="pill">🟦 Direção clara • rotina guiada • evolução consistente</span>
+        <div class="grid2">
+          <div class="card">
+            <div class="pad">
+              <span class="pill"><span class="dot"></span> Direção clara • prática guiada • evolução consistente</span>
 
-            <h1>Inglês real, com estrutura e segurança — do iniciante ao avançado.</h1>
-            <p class="sub">
-              Aulas online com foco em <b>falar com mais clareza</b>, montar frases com mais confiança e
-              evoluir sem ficar preso(a) em “decorar regras”.
-              Você recebe caminho, feedback e uma rotina fora da aula que realmente sustenta progresso.
-            </p>
+              <h1>Inglês real, com estrutura e segurança — do iniciante ao avançado.</h1>
 
-            <div class="cta-row">
-              <a class="btn btn-primary" href="#" onclick="goWhatsApp(); return false;">Quero ser aluna(o)</a>
-              <a class="btn btn-ghost" href="#" onclick="goForm(); return false;">Avaliação rápida (2 min)</a>
-              <a class="btn btn-ghost" href="#" onclick="scrollToId('como'); return false;">Entender como funciona</a>
-            </div>
+              <p class="lead">
+                Aulas online para ganhar controle: formar frases com clareza, entender melhor no listening e falar com mais naturalidade
+                — sem depender de “decorar regra” ou ficar travando em situações reais.
+              </p>
 
-            <div class="kpis" aria-label="Destaques">
-              <span class="pill"><b>General English</b> (vida real)</span>
-              <span class="pill"><b>Turmas</b> (4–6) + <b>Individuais</b></span>
-              <span class="pill"><b>Contrato</b> semestral</span>
-              <span class="pill"><b>Suporte</b> por WhatsApp</span>
+              <div class="btn-row" style="margin-top:16px">
+                <a class="btn btn-primary" id="waBtnHero" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+                <a class="btn btn-ghost" id="formBtnHero" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+              </div>
+
+              <p class="micro">
+                Ao clicar em <b>“Formulário (4 min)”</b>, você me diz seu objetivo e disponibilidade. Eu leio e te retorno no WhatsApp com direcionamento e opções.
+                Ao clicar em <b>“Quero ser aluna(o)”</b>, você abre o WhatsApp com uma mensagem pronta.
+              </p>
+
+              <div class="chips">
+                <span class="chip">General English (vida real)</span>
+                <span class="chip">Turmas (4–6) + Individuais</span>
+                <span class="chip">Rotina fora da aula</span>
+                <span class="chip">Contrato semestral</span>
+                <span class="chip">Suporte por WhatsApp</span>
+              </div>
             </div>
           </div>
 
-          <aside class="card hero-side">
-            <h3>Se você se reconhece aqui, faz sentido conversar:</h3>
-            <div class="list">
-              <div class="li">
-                <div class="dot"></div>
+          <div class="card">
+            <div class="pad">
+              <div class="titleRow">
                 <div>
-                  <strong>Você trava para começar a frase</strong>
-                  <span>não por falta de vontade, mas porque a estrutura “não vem”.</span>
+                  <h2 class="h2">Se você se reconhece aqui, faz sentido conversar:</h2>
+                  <p class="sub">Sem promessas mágicas — com diagnóstico, estratégia e treino inteligente.</p>
                 </div>
               </div>
-              <div class="li">
-                <div class="dot"></div>
-                <div>
-                  <strong>Sua mente dá um branco com coisas simples</strong>
-                  <span>e você perde a confiança na hora.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="dot"></div>
-                <div>
-                  <strong>Você tenta traduzir e se perde</strong>
-                  <span>e quer parar de depender de tradutor.</span>
-                </div>
-              </div>
-              <div class="li">
-                <div class="dot"></div>
-                <div>
-                  <strong>Você quer um método organizado</strong>
-                  <span>com orientação real — sem enrolação e sem “coachês”.</span>
-                </div>
+
+              <ul class="list">
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Você trava pra começar a frase</b>
+                    <span>não por falta de vontade, mas porque a estrutura “não vem”.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Sua mente dá branco com coisas simples</b>
+                    <span>e você perde a confiança na hora.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Você tenta traduzir e se perde</b>
+                    <span>e quer parar de depender do tradutor.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Você quer método organizado</b>
+                    <span>com orientação real — sem enrolação e sem “modelo pronto”.</span>
+                  </div>
+                </li>
+              </ul>
+
+              <div style="margin-top:14px" class="carHint">
+                <b>Objetivo do meu trabalho:</b> te dar um caminho claro + treino consistente para você ganhar autonomia em fala, escuta, estrutura e confiança.
               </div>
             </div>
-          </aside>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROMESSA + 3 TRILHAS (decisão que você me deu) -->
-    <section>
-      <div class="wrap">
-        <div class="section-title">
-          <h2>Uma promessa geral + 3 trilhas (iniciante, intermediário, avançado)</h2>
-          <p>Você não precisa “ser bom” para começar — precisa de direção e consistência.</p>
-        </div>
-
-        <div class="grid3">
-          <div class="trail">
-            <span class="tag">PROMESSA GERAL</span>
-            <h4>Clareza para falar + estrutura para evoluir</h4>
-            <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6">
-              O objetivo não é “estudar inglês”. É ganhar controle: entender a lógica, produzir frases com mais naturalidade
-              e construir uma rotina fora da aula que sustente evolução real.
-            </p>
-          </div>
-
-          <div class="trail">
-            <span class="tag">TRILHA 1 • INICIANTE</span>
-            <h4>Sair do zero com base sólida</h4>
-            <ul>
-              <li>começar a formar frases simples sem travar</li>
-              <li>construir vocabulário funcional (dia a dia)</li>
-              <li>rotina leve e guiada para ganhar tração</li>
-            </ul>
-          </div>
-
-          <div class="trail">
-            <span class="tag">TRILHA 2 • INTERMEDIÁRIO/AVANÇADO</span>
-            <h4>Falar com mais precisão e presença</h4>
-            <ul>
-              <li>organizar ideias, opinar e se posicionar com clareza</li>
-              <li>reduzir “português mental” e ganhar naturalidade</li>
-              <li>treino de fluência + refinamento gradual</li>
-            </ul>
           </div>
         </div>
       </div>
     </section>
 
     <!-- COMO FUNCIONA -->
-    <section id="como">
+    <section id="como-funciona">
       <div class="wrap">
-        <div class="section-title">
-          <h2>Como funciona (sem mistério)</h2>
-          <p>Estrutura simples por fora, bem pensada por dentro.</p>
+        <div class="titleRow">
+          <div>
+            <h2 class="h2">Como funciona (sem mistério)</h2>
+            <p class="sub">Estrutura simples por fora — bem pensada por dentro.</p>
+          </div>
         </div>
 
         <div class="grid3">
-          <div class="box">
-            <span class="tag">1) DIREÇÃO</span>
-            <h4>Diagnóstico + caminho</h4>
-            <p>
-              A gente define seu nível real, seu objetivo e o que está travando (estrutura, confiança, consistência, etc).
-              Depois disso, você tem clareza de “o que fazer” — sem ficar perdido(a).
-            </p>
+          <div class="mini">
+            <span class="kicker">1) Direção</span>
+            <h3>Diagnóstico + caminho</h3>
+            <p>Eu identifico seu nível real e o que está travando (estrutura, confiança, consistência, listening, etc.). Depois disso, você fica claro(a) do que fazer — sem ficar perdido(a).</p>
           </div>
-          <div class="box">
-            <span class="tag">2) AULA AO VIVO</span>
-            <h4>Scaffolding (guia de raciocínio)</h4>
-            <p>
-              Eu vou te conduzindo para você <b>entender e produzir</b> — não só repetir.
-              É comum o aluno destravar porque finalmente entende “como o inglês se organiza”.
-            </p>
+
+          <div class="mini">
+            <span class="kicker">2) Aula ao vivo</span>
+            <h3>Guia de raciocínio (scaffolding)</h3>
+            <p>Eu te conduzo para entender e produzir — não só repetir. O foco é sair da dependência de “decorar” e construir controle de verdade.</p>
           </div>
-          <div class="box">
-            <span class="tag">3) ROTINA</span>
-            <h4>Treino fora da aula (de verdade)</h4>
-            <p>
-              Você pratica com tarefas curtas e direcionadas: áudio, ditado, gravação de voz, questões abertas e revisões.
-              A rotina é o que transforma aula em evolução.
-            </p>
+
+          <div class="mini">
+            <span class="kicker">3) Rotina</span>
+            <h3>Treino fora da aula (de verdade)</h3>
+            <p>Você recebe tarefas curtas e direcionadas (áudio, ditado, revisões, produção guiada). A rotina é o que transforma aula em evolução consistente.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ROTINA FORA DA AULA -->
-    <section id="rotina">
+    <!-- ATIVIDADES + CARROSSEL -->
+    <section id="atividades">
       <div class="wrap">
-        <div class="section-title">
-          <h2>Rotina de estudo fora da aula</h2>
-          <p>Gramática é ferramenta — o foco é uso real (fala, escuta, construção de frase e confiança).</p>
+        <div class="titleRow">
+          <div>
+            <h2 class="h2">Como são as atividades na prática</h2>
+            <p class="sub">Abaixo estão exemplos reais (prints) de atividades e formatos que ajudam a consolidar fala, escuta e estrutura.</p>
+          </div>
         </div>
 
-        <div class="grid2">
-          <div class="box">
-            <span class="tag">O QUE VOCÊ FAZ</span>
-            <h4>Treinos curtos e inteligentes</h4>
-            <p>
-              Atividades com <b>áudio</b>, <b>ditado</b>, <b>gravação de voz</b>, <b>questões abertas</b> e revisões.
-              Você treina habilidades que a aula sozinha não sustenta.
-            </p>
+        <div class="carouselWrap">
+          <div class="carousel" aria-label="Carrossel de imagens de atividades">
+            <div class="carouselStage">
+              <img id="carouselImg" alt="Exemplo de atividade" loading="lazy" />
+            </div>
+
+            <div class="carControls">
+              <div class="btn-row" style="gap:8px">
+                <button class="carBtn" id="prevBtn" aria-label="Imagem anterior">‹</button>
+                <button class="carBtn" id="nextBtn" aria-label="Próxima imagem">›</button>
+              </div>
+
+              <div class="dots" id="dots" aria-label="Indicadores do carrossel"></div>
+
+              <div class="carHint">
+                Carrossel automático suave • pausa ao passar o mouse
+              </div>
+            </div>
           </div>
-          <div class="box">
-            <span class="tag">POR QUE FUNCIONA</span>
-            <h4>Você deixa de “chutar” e ganha controle</h4>
-            <p>
-              O treino é organizado para reduzir erro repetido, fortalecer estrutura e aumentar segurança.
-              Eu adapto o caminho quando você encontra dificuldades — sem te deixar sozinho(a).
-            </p>
+
+          <div class="card">
+            <div class="pad">
+              <h2 class="h2" style="margin-bottom:8px">O que esses exemplos mostram?</h2>
+              <p class="sub" style="max-width: none">
+                Você não fica “jogado(a)”. O treino é pensado para reduzir fricção e aumentar controle:
+              </p>
+
+              <ul class="list" style="margin-top:12px">
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Escuta com objetivo</b>
+                    <span>atividades que treinam reconhecimento de palavras e ideias, não só “ouvir por ouvir”.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Produção guiada</b>
+                    <span>você fala e escreve com estrutura, sem depender de “frase pronta”.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Correção que vira clareza</b>
+                    <span>feedback para você entender o erro e construir o raciocínio certo.</span>
+                  </div>
+                </li>
+                <li class="li">
+                  <span class="bullet"></span>
+                  <div>
+                    <b>Rotina leve e sustentável</b>
+                    <span>tarefas curtas, consistentes e alinhadas ao seu momento — para evoluir sem se esgotar.</span>
+                  </div>
+                </li>
+              </ul>
+
+              <div style="margin-top:14px" class="btn-row">
+                <a class="btn btn-primary" id="waBtnMid" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+                <a class="btn btn-ghost" href="#faq">Ver dúvidas comuns</a>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- FORMATOS + REGRAS ESSENCIAIS -->
-    <section>
+    <!-- TRILHAS -->
+    <section id="trilhas">
       <div class="wrap">
-        <div class="section-title">
-          <h2>Formatos de aula e regras essenciais</h2>
-          <p>Clareza desde o início para evitar fricção.</p>
-        </div>
-
-        <div class="grid3">
-          <div class="box">
-            <span class="tag">FORMATOS</span>
-            <h4>Individuais, duplas, trios e turmas</h4>
-            <p>
-              Turmas entre <b>4 a 6 alunos</b> (ideal: 6).  
-              Aulas online e planos com frequência/duração ajustadas ao seu objetivo.
-            </p>
-          </div>
-          <div class="box">
-            <span class="tag">DURAÇÃO</span>
-            <h4>Flexível por plano</h4>
-            <p>
-              Durações comuns: <b>30, 45 e 60 min</b>.  
-              Também é possível <b>90</b> e <b>120 min</b> (conforme plano e disponibilidade).
-            </p>
-          </div>
-          <div class="box">
-            <span class="tag">CONTRATO</span>
-            <h4>Semestral</h4>
-            <p>
-              O trabalho é feito em <b>ciclo de 6 meses</b> para garantir consistência, progressão e resultado.
-              (Detalhes são alinhados no WhatsApp.)
-            </p>
+        <div class="titleRow">
+          <div>
+            <h2 class="h2">Trilhas (iniciante, intermediário, avançado)</h2>
+            <p class="sub">Você entra onde faz sentido — e eu ajusto o caminho para seu nível real e seus bloqueios.</p>
           </div>
         </div>
 
-        <div style="height:14px"></div>
-
-        <div class="grid2">
-          <div class="box">
-            <span class="tag">REPOSIÇÕES</span>
-            <h4>Sim, com regra clara</h4>
-            <p>
-              Reposição é possível, mas precisa ser solicitada pelo aluno com pelo menos <b>2 horas de antecedência</b>.
-              Máximo de <b>2 reposições vigentes</b> por vez.
-            </p>
-          </div>
-          <div class="box">
-            <span class="tag">TURMAS</span>
-            <h4>Datas e lista de espera</h4>
-            <p>
-              Turmas podem abrir em datas específicas e também por <b>lista de espera</b>.
-              A “Avaliação rápida” me ajuda a te encaixar no melhor formato.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA FINAL -->
-    <section>
-      <div class="wrap">
-        <div class="card" style="padding:20px; border-radius:24px; background:linear-gradient(180deg, rgba(46,123,255,.14), rgba(255,255,255,.04)); border:1px solid rgba(46,123,255,.18);">
-          <div class="section-title" style="margin-bottom:10px;">
-            <h2 style="margin:0;">Pronto(a) para destravar com direção clara?</h2>
-            <p style="margin:0;">Sem preços aqui. A gente decide o formato depois de entender seu objetivo.</p>
+        <div class="trailGrid">
+          <div class="trail">
+            <span class="tag">Trilha 1 • Iniciante</span>
+            <h3>Sair do zero com base sólida</h3>
+            <ul>
+              <li>Formar frases simples com segurança (sem travar no “começo”).</li>
+              <li>Construir vocabulário funcional para situações reais (dia a dia).</li>
+              <li>Entender estrutura básica (ordem de palavras) e padrões recorrentes.</li>
+              <li><b>Padrões fonéticos do inglês</b> (sons e combinações mais comuns) para reconhecer palavras no listening e pronunciar com mais segurança.</li>
+              <li>Rotina leve e guiada para ganhar tração e consistência sem se sentir perdido(a).</li>
+            </ul>
           </div>
 
-          <div class="cta-row" style="margin-top:12px;">
-            <a class="btn btn-primary" href="#" onclick="goWhatsApp(); return false;">Quero ser aluna(o)</a>
-            <a class="btn btn-ghost" href="#" onclick="goForm(); return false;">Avaliação rápida (2 min)</a>
+          <div class="trail">
+            <span class="tag">Trilha 2 • Intermediário</span>
+            <h3>Ganhar naturalidade e controle</h3>
+            <ul>
+              <li>Organizar ideias e falar por mais tempo sem “quebrar no meio”.</li>
+              <li>Reduzir o “português mental” (tradução) e pensar com mais fluidez.</li>
+              <li>Refinar estruturas-chave para ficar mais claro(a) e menos travado(a).</li>
+              <li>Treinar listening com estratégia (captar sentido + detalhes úteis).</li>
+              <li>Rotina fora da aula focada em consistência e automatização gradual.</li>
+            </ul>
           </div>
 
-          <p style="margin:12px 0 0; color:var(--muted2); font-size:12px; line-height:1.5;">
-            Ao clicar em “Avaliação rápida”, você será direcionado(a) ao Google Forms.  
-            Ao clicar em “Quero ser aluna(o)”, você abre o WhatsApp com uma mensagem pronta para facilitar o contato.
-          </p>
+          <div class="trail">
+            <span class="tag">Trilha 3 • Avançado</span>
+            <h3>Precisão, presença e liberdade</h3>
+            <ul>
+              <li>Opinar, discordar e se posicionar sem soar estranho(a) ou agressivo(a).</li>
+              <li>Falar com mais precisão (vocabulário + estrutura) e menos repetição.</li>
+              <li>Melhorar ritmo e clareza para situações profissionais e sociais exigentes.</li>
+              <li>Construir autonomia: você sabe “como se ajustar” quando faltar palavra.</li>
+              <li>Rotina de refinamento: consistência, nuances e correções de alto impacto.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
@@ -638,60 +795,236 @@
     <!-- FAQ -->
     <section id="faq">
       <div class="wrap">
-        <div class="section-title">
-          <h2>Dúvidas comuns</h2>
-          <p>Respostas diretas, sem enrolação.</p>
+        <div class="titleRow">
+          <div>
+            <h2 class="h2">Dúvidas comuns</h2>
+            <p class="sub">Respostas diretas e objetivas — com direcionamento para o WhatsApp.</p>
+          </div>
         </div>
 
-        <div class="faq">
-          <details>
-            <summary>Eu preciso ter “dom” ou já saber alguma coisa?</summary>
-            <p>Não. Você precisa de direção, prática guiada e consistência. Eu trabalho com alunos do iniciante ao avançado.</p>
-          </details>
+        <!-- As 3 que você definiu -->
+        <details>
+          <summary>
+            Como recebo valores e opções de plano?
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="ans">
+            Os valores variam conforme formato (individual ou turma), duração e frequência.
+            <b>Me chama no WhatsApp</b> e eu te envio as opções disponíveis.
+          </div>
+        </details>
 
-          <details>
-            <summary>Isso é mais conversa ou mais “curso”?</summary>
-            <p>É General English com estrutura: aula ao vivo + rotina fora da aula. Conversa existe, mas com objetivo e progressão.</p>
-          </details>
+        <details>
+          <summary>
+            Qual a dinâmica nas aulas?
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="ans">
+            Há uma modalidade mais teórica (sempre aplicada) e uma modalidade mais conversacional (quando você já tem familiaridade).
+            As aulas são equilibradas e têm como objetivo final <b>autonomia total</b> em todas as habilidades.
+          </div>
+        </details>
 
-          <details>
-            <summary>Eu travo e fico com medo de errar. Isso atrapalha?</summary>
-            <p>Isso é comum. A aula é conduzida para reduzir travas e construir confiança com base em estrutura e repetição inteligente.</p>
-          </details>
+        <details>
+          <summary>
+            Sou iniciante total (ou já tenho alguma experiência). Você adapta as aulas ao meu nível?
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="ans">
+            <b>Sim.</b> Eu identifico seu nível real no início (mesmo que você esteja do zero ou já tenha fluência) e ajusto as aulas para o seu momento:
+            estrutura, fala, escuta e confiança — <b>sem te colocar em um “modelo pronto”.</b>
+          </div>
+        </details>
 
-          <details>
-            <summary>Por que contrato semestral?</summary>
-            <p>Porque evolução real depende de ciclo e consistência. Em 6 meses dá para organizar base, consolidar e subir nível com clareza.</p>
-          </details>
+        <!-- 2 perguntas extras para valor/desejo -->
+        <details>
+          <summary>
+            O que muda quando eu tenho uma rotina fora da aula (e não só “uma aula por semana”)?
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="ans">
+            A aula te dá direção e correção. A rotina transforma isso em habilidade.
+            Você treina o que realmente destrava: <b>consistência + repetição inteligente + ajuste fino</b> — com tarefas curtas, guiadas e possíveis de manter.
+          </div>
+        </details>
 
-          <details>
-            <summary>Como funcionam reposições?</summary>
-            <p>Reposição é possível mediante solicitação do aluno com 2 horas de antecedência. Máximo de 2 reposições vigentes por vez.</p>
-          </details>
+        <details>
+          <summary>
+            Em quanto tempo eu começo a sentir diferença?
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="ans">
+            Depende do seu ponto de partida e do seu ritmo, mas normalmente a primeira diferença é:
+            <b>mais clareza do que fazer</b> e menos “branco” na hora de falar.
+            Se você quiser, me chama no WhatsApp e eu te explico o caminho mais realista para o seu caso.
+          </div>
+        </details>
 
-          <details>
-            <summary>Vocês mostram preços aqui?</summary>
-            <p>Não. Primeiro eu entendo seu objetivo e disponibilidade, e então recomendo o melhor formato/plano no WhatsApp.</p>
-          </details>
+        <div style="margin-top:16px" class="cta">
+          <div>
+            <h3>Pronto(a) para destravar com direção clara?</h3>
+            <p>Se você quiser, você pode me mandar o formulário (4 min) ou já abrir o WhatsApp com mensagem pronta. Eu te respondo pessoalmente.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" id="waBtnBottom" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+            <a class="btn btn-ghost" id="formBtnBottom" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+          </div>
         </div>
+
       </div>
     </section>
+
+    <footer>
+      <div class="wrap">
+        <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px;">
+          <div>Professor Marcos Vinicius — Inglês Online (General English)</div>
+          <div>© <span id="year"></span> • Todos os direitos reservados</div>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <footer>
-    <div class="wrap">
-      <div class="foot">
-        <div>
-          <div><b>Professor Marcos Vinicius</b> — Inglês Online (General English)</div>
-          <div style="margin-top:4px;">Instagram: <b>@teacher_marcosvinicius</b></div>
-        </div>
-        <div>© <span id="y"></span> • Todos os direitos reservados</div>
-      </div>
-    </div>
-  </footer>
-
   <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+    // ============================
+    // 1) WHATSAPP (mensagem pronta)
+    // ============================
+    // Coloque seu número com DDI+DDD+numero, sem espaços (ex.: 5511999999999)
+    const WHATSAPP_PHONE = "5592985273076";
+
+    const WHATSAPP_MESSAGE = "Olá! Tenho interesse em me tornar aluno%0AGostaria de informações sobre o curso";
+
+    function buildWhatsAppLink() {
+      // Se você não preencher o número, ainda abre WhatsApp com a mensagem,
+      // mas NÃO garante abrir direto com você.
+      if (!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) {
+        return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
+      }
+      return "https://wa.me/" + WHATSAPP_PHONE + "?text=" + WHATSAPP_MESSAGE;
+    }
+
+    const waLink = buildWhatsAppLink();
+    const waBtns = ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].map(id => document.getElementById(id));
+    waBtns.forEach(btn => { if (btn) btn.href = waLink; });
+
+    // ============================
+    // 2) PROFILE IMAGE (robusto)
+    // ============================
+    // Seus arquivos estão com .webp.webp. Se você renomear depois pra .webp,
+    // este fallback evita quebrar o site.
+    const profileImg = document.getElementById("profileImg");
+    profileImg.addEventListener("error", () => {
+      if (profileImg.src.includes(".webp.webp")) {
+        profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
+      }
+    });
+
+    // ============================
+    // 3) CAROUSEL (auto suave)
+    // ============================
+    const carouselImages = [
+      "assets/carousel-01.webp.webp",
+      "assets/carousel-02.webp.webp",
+      "assets/carousel-03.webp.webp",
+      "assets/carousel-04.webp.webp",
+      "assets/carousel-05.webp.webp",
+      "assets/carousel-06.webp.webp",
+      "assets/carousel-07.webp.webp",
+      "assets/carousel-08.webp.webp",
+      "assets/carousel-09.webp.webp",
+      "assets/carousel-10.webp.webp",
+      "assets/carousel-11.webp.webp",
+      "assets/carousel-12.webp.webp"
+    ];
+
+    const imgEl = document.getElementById("carouselImg");
+    const dotsEl = document.getElementById("dots");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    let idx = 0;
+    let timer = null;
+    let hovering = false;
+
+    function createDots() {
+      dotsEl.innerHTML = "";
+      carouselImages.forEach((_, i) => {
+        const b = document.createElement("button");
+        b.className = "dotBtn" + (i === idx ? " active" : "");
+        b.setAttribute("aria-label", "Ir para imagem " + (i+1));
+        b.addEventListener("click", () => {
+          idx = i;
+          render();
+          restart();
+        });
+        dotsEl.appendChild(b);
+      });
+    }
+
+    function setActiveDot() {
+      const btns = dotsEl.querySelectorAll(".dotBtn");
+      btns.forEach((b, i) => {
+        b.classList.toggle("active", i === idx);
+      });
+    }
+
+    function render() {
+      imgEl.classList.remove("show");
+      // pequeno delay para a transição ficar suave
+      setTimeout(() => {
+        imgEl.src = carouselImages[idx];
+        imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
+        imgEl.onload = () => {
+          imgEl.classList.add("show");
+        };
+        imgEl.onerror = () => {
+          // fallback se você renomear os arquivos para .webp
+          if (imgEl.src.includes(".webp.webp")) {
+            imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
+          }
+        };
+        setActiveDot();
+      }, 80);
+    }
+
+    function next() {
+      idx = (idx + 1) % carouselImages.length;
+      render();
+    }
+    function prev() {
+      idx = (idx - 1 + carouselImages.length) % carouselImages.length;
+      render();
+    }
+
+    function start() {
+      if (timer) return;
+      timer = setInterval(() => {
+        if (!hovering) next();
+      }, 3200); // velocidade do carrossel
+    }
+    function stop() {
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
+    }
+    function restart() {
+      stop();
+      start();
+    }
+
+    prevBtn.addEventListener("click", () => { prev(); restart(); });
+    nextBtn.addEventListener("click", () => { next(); restart(); });
+
+    // Pausa ao passar mouse (desktop)
+    const carouselBox = imgEl.closest(".carousel");
+    carouselBox.addEventListener("mouseenter", () => { hovering = true; });
+    carouselBox.addEventListener("mouseleave", () => { hovering = false; });
+
+    createDots();
+    render();
+    start();
+
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
