@@ -11,20 +11,31 @@
     :root{
       --bg0:#060B18;
       --bg1:#07112A;
+
       --card: rgba(255,255,255,.06);
       --card2: rgba(255,255,255,.09);
       --line: rgba(255,255,255,.10);
+
       --text:#EAF0FF;
       --muted: rgba(234,240,255,.74);
       --muted2: rgba(234,240,255,.58);
+
       --accent:#2E7BFF;
       --accent2:#6BA6FF;
+
       --good:#39D98A;
       --warn:#FFB020;
+
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
       --radius2: 24px;
-      --max: 1320px;
+
+      /* DESKTOP MAIS AMPLO */
+      --max: 1440px;
+
+      /* Ajuste fino do enquadramento do rosto no avatar */
+      --avatar-pos-x: 50%;
+      --avatar-pos-y: 32%;
     }
 
     *{box-sizing:border-box}
@@ -56,35 +67,7 @@
     }
 
     a{color:inherit}
-    .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
-
-    /* ===== Desktop-only: mais conforto e melhor uso do espaço (sem mexer no celular) ===== */
-    @media (min-width: 1100px){
-      .wrap{padding: 0 26px;}
-
-      .brand strong{font-size: 15px;}
-      .brand span{font-size: 13px;}
-
-      .navlinks a{
-        font-size: 14px;
-        padding: 9px 12px;
-      }
-
-      .btn{padding: 15px 20px;}
-      .btn-sm{padding: 11px 13px; font-size: 14px;}
-
-      .grid2{gap: 22px;}
-      section{padding: 40px 0;}
-      .pad{padding: 26px;}
-
-      .lead{font-size: 16px;}
-      .micro{font-size: 13.5px;}
-    }
-
-    @media (min-width: 1400px){
-      .wrap{padding: 0 30px;}
-      .lead{font-size: 16.5px;}
-    }
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 22px;}
 
     .pill{
       display:inline-flex;
@@ -106,6 +89,8 @@
       background: rgba(6,11,24,.55);
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
+
+    /* DESKTOP: layout padrão (brand + nav tabs + actions) */
     .navin{
       display:flex;
       align-items:center;
@@ -113,7 +98,8 @@
       padding: 12px 0;
       gap: 14px;
     }
-    .brand{
+
+    .brandArea{
       display:flex;
       align-items:center;
       gap: 12px;
@@ -124,8 +110,9 @@
       flex-direction:column;
       line-height: 1.15;
     }
-    .brand strong{display:block; font-size: 14px; letter-spacing:.2px}
-    .brand span{display:block; font-size: 12px; color: var(--muted2)}
+    .brandText strong{display:block; font-size: 14px; letter-spacing:.2px}
+    .brandText span{display:block; font-size: 12px; color: var(--muted2)}
+
     .avatar{
       width: 44px; height: 44px;
       border-radius: 14px;
@@ -139,17 +126,26 @@
       width:100%;
       height:100%;
       object-fit: cover;
+      object-position: var(--avatar-pos-x) var(--avatar-pos-y);
       display:block;
     }
 
-    .navlinks{
+    .navArea{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    .navtabs{
       display:flex;
       gap: 6px;
-      flex-wrap: wrap;
+      flex-wrap:wrap;
       justify-content:flex-end;
       align-items:center;
     }
-    .navlinks a{
+    .navtabs a{
       text-decoration:none;
       font-size: 13px;
       padding: 8px 10px;
@@ -157,7 +153,7 @@
       color: var(--muted);
       border: 1px solid transparent;
     }
-    .navlinks a:hover{
+    .navtabs a:hover{
       border-color: rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       color: var(--text);
@@ -191,15 +187,20 @@
     .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
     .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
 
+    /* labels (para encurtar apenas no mobile, se quiser) */
+    .labelShort{display:none}
+
     /* SECTIONS */
-    section{padding: 34px 0}
-    .hero{padding-top: 26px}
+    section{padding: 44px 0}
+    .hero{padding-top: 28px}
+
     .grid2{
       display:grid;
       grid-template-columns: 1.08fr .92fr;
-      gap: 18px;
+      gap: 22px;
       align-items:stretch;
     }
+
     .card{
       background: var(--card);
       border: 1px solid rgba(255,255,255,.10);
@@ -207,31 +208,36 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .pad{padding: 22px}
+
+    .pad{padding: 26px}
+
     h1{
-      margin: 14px 0 10px;
-      font-size: clamp(28px, 3.2vw, 46px);
+      margin: 16px 0 12px;
+      font-size: clamp(30px, 3.0vw, 52px);
       line-height: 1.05;
-      letter-spacing: -.6px;
+      letter-spacing: -.7px;
     }
+
     .lead{
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-      max-width: 60ch;
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 62ch;
     }
+
     .micro{
-      margin-top: 10px;
+      margin-top: 12px;
       color: var(--muted2);
-      font-size: 12.5px;
-      line-height: 1.55;
+      font-size: 13px;
+      line-height: 1.6;
     }
+
     .chips{
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-      margin-top: 14px;
+      margin-top: 16px;
     }
     .chip{
       font-size: 12px;
@@ -258,8 +264,8 @@
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.16);
     }
-    .li b{display:block; font-size: 13px; margin-bottom: 3px}
-    .li span{display:block; font-size: 12.5px; color: var(--muted2); line-height: 1.45}
+    .li b{display:block; font-size: 13.5px; margin-bottom: 3px}
+    .li span{display:block; font-size: 13px; color: var(--muted2); line-height: 1.5}
     .bullet{
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -274,46 +280,41 @@
       align-items:flex-end;
       justify-content:space-between;
       gap: 14px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .h2{
       margin:0;
-      font-size: 22px;
+      font-size: 24px;
       letter-spacing:-.2px;
     }
     .sub{
       margin:0;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--muted2);
-      line-height: 1.45;
-      max-width: 52ch;
+      line-height: 1.55;
+      max-width: 56ch;
     }
-
-    /* ===== Foto de perfil (melhor enquadramento sem mexer no arquivo) =====
-       Se ainda não ficar perfeito, o único "ajuste" é mudar 38% para 30% (sobe) ou 50% (desce). */
-    .avatar{ --avatar-y: 38%; }
-    .avatar img{ object-position: 50% var(--avatar-y); }
 
     /* How it works */
     .grid3{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+      gap: 16px;
     }
     .mini{
-      padding: 16px;
+      padding: 18px;
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 160px;
+      min-height: 170px;
     }
     .kicker{
       display:inline-flex;
       align-items:center;
       gap:10px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing:.6px;
       color: rgba(234,240,255,.88);
       text-transform: uppercase;
@@ -324,21 +325,21 @@
     }
     .mini h3{
       margin: 12px 0 6px;
-      font-size: 16px;
+      font-size: 17px;
       letter-spacing:-.2px;
     }
     .mini p{
       margin:0;
       color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.55;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     /* Carousel */
     .carouselWrap{
       display:grid;
       grid-template-columns: 1.05fr .95fr;
-      gap: 16px;
+      gap: 18px;
       align-items: stretch;
     }
     .carousel{
@@ -414,29 +415,28 @@
       background: rgba(255,255,255,.06);
       cursor:pointer;
       color: var(--text);
-      transition: transform .15s ease, border-color .2s ease, background .2s ease;
     }
     .carBtn:hover{border-color: rgba(255,255,255,.24); transform: translateY(-1px)}
     .carHint{
       color: var(--muted2);
-      font-size: 12.5px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.55;
     }
 
     /* Trails */
     .trailGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
+      gap: 16px;
       align-items:stretch;
     }
     .trail{
-      padding: 16px;
+      padding: 18px;
       border-radius: var(--radius2);
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 260px;
+      min-height: 280px;
     }
     .trail .tag{
       display:inline-flex;
@@ -447,22 +447,22 @@
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing:.6px;
       text-transform: uppercase;
       color: rgba(234,240,255,.90);
     }
     .trail h3{
       margin: 12px 0 8px;
-      font-size: 16px;
+      font-size: 17px;
       letter-spacing:-.2px;
     }
     .trail ul{
       margin: 0;
       padding-left: 18px;
       color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.65;
     }
 
     /* FAQ */
@@ -481,15 +481,15 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
-      font-weight: 700;
+      font-weight: 800;
       color: rgba(234,240,255,.92);
     }
     summary::-webkit-details-marker{display:none}
     .ans{
       padding: 0 14px 14px;
       color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.65;
     }
     .ans b{color: rgba(234,240,255,.92)}
     .chev{
@@ -505,7 +505,7 @@
 
     /* CTA bottom */
     .cta{
-      padding: 18px;
+      padding: 20px;
       border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
       background:
@@ -518,83 +518,120 @@
       justify-content:space-between;
       gap: 14px;
     }
-    .cta h3{margin:0; font-size: 18px}
-    .cta p{margin:6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 62ch}
+    .cta h3{margin:0; font-size: 19px}
+    .cta p{margin:6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 70ch}
 
     footer{
-      padding: 24px 0 40px;
+      padding: 26px 0 44px;
       color: var(--muted2);
-      font-size: 12.5px;
+      font-size: 12.8px;
     }
 
-    /* ===== Desktop: aproveita melhor espaço (mantém mobile igual) ===== */
-    @media (min-width: 1100px){
-      /* mais presença no desktop */
-      section{padding: 46px 0;}
-      .hero{padding-top: 34px;}
+    /* ============================
+       RESPONSIVE
+       ============================ */
 
-      .navin{padding: 14px 0;}
-      .navlinks{gap: 8px;}
-
-      .h2{font-size: 26px;}
-      .sub{font-size: 14.5px; max-width: 64ch;}
-
-      .chip{font-size: 13px; padding: 9px 12px;}
-
-      .li{padding: 14px 14px;}
-      .li b{font-size: 14.5px;}
-      .li span{font-size: 14px;}
-
-      .grid3{gap: 18px;}
-      .mini{padding: 18px; min-height: 180px;}
-      .mini h3{font-size: 18px;}
-      .mini p{font-size: 15px;}
-
-      .carouselWrap{gap: 20px;}
-      .carouselStage{padding: 14px;}
-      .carControls{padding: 13px 16px;}
-      .carHint{font-size: 13.5px;}
-
-      .trailGrid{gap: 18px;}
-      .trail{padding: 18px; min-height: 290px;}
-      .trail h3{font-size: 18px;}
-      .trail ul{font-size: 15px;}
-
-      summary{padding: 16px 16px;}
-      .ans{padding: 0 16px 16px; font-size: 15px;}
-
-      .cta{padding: 22px;}
-      .cta h3{font-size: 20px;}
-      .cta p{font-size: 15px;}
-
-      footer{font-size: 13.5px;}
-
-      /* avatar um pouco maior no desktop */
-      .avatar{width: 48px; height: 48px;}
-    }
-    @media (min-width: 1400px){
-      /* telas muito grandes: sutil boost */
-      .h2{font-size: 28px;}
-      .mini h3{font-size: 19px;}
-      .trail h3{font-size: 19px;}
-      .trail ul{font-size: 15.5px;}
-    }
-
-    /* Responsive */
+    /* Mobile/tablet: layout do topo como o seu print */
     @media (max-width: 980px){
       .grid2{grid-template-columns: 1fr}
       .grid3{grid-template-columns: 1fr}
       .trailGrid{grid-template-columns: 1fr}
       .carouselWrap{grid-template-columns: 1fr}
-      .brand{min-width: 0}
-      .navlinks{justify-content:flex-start}
+      .brandArea{min-width: 0}
+
+      /* TOPO (mobile) com avatar “no meio” e 4 links 2x2, e botões numa linha */
+      .navin{
+        display:grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 12px;
+        row-gap: 10px;
+        align-items:center;
+        padding: 12px 0;
+      }
+      .brandArea{
+        grid-column: 1;
+        grid-row: 1;
+        align-items:flex-start;
+      }
+      .avatar{
+        grid-column: 2;
+        grid-row: 1;
+        justify-self:center;
+      }
+
+      .navArea{
+        grid-column: 3;
+        grid-row: 1;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-end;
+        gap: 10px;
+      }
+
+      /* 4 links em grid 2x2 (garante “Dúvidas” alinhado) */
+      .navtabs{
+        display:grid;
+        grid-template-columns: repeat(2, max-content);
+        column-gap: 14px;
+        row-gap: 8px;
+        justify-content:end;
+        align-items:center;
+      }
+      .navtabs a{
+        font-size: 13px;
+        padding: 6px 8px;
+      }
+
+      /* Botões em UMA linha, menores, ocupando menos área */
+      .navactions{
+        display:flex;
+        gap: 10px;
+        justify-content:flex-end;
+        align-items:center;
+        width: 100%;
+      }
+      .navactions .btn{
+        padding: 10px 12px;
+        font-size: 13px;
+        border-radius: 14px;
+      }
+
+      /* encurta texto do botão no mobile (mantém 4 min no resto do site) */
+      .labelLong{display:none}
+      .labelShort{display:inline}
+
+      /* faz os botões ficarem “menores” (não full-width) */
+      .navactions .btn{width:auto; max-width: 220px;}
     }
+
     @media (max-width: 520px){
+      /* Mantém seus botões do HERO em coluna (ok no mobile),
+         mas NÃO deixa os botões do TOPO virarem width:100% */
       .btn{width: 100%}
       .btn-row{width:100%}
-      .navin{align-items:flex-start}
-      .navlinks a{padding: 8px 9px}
+
+      .navactions .btn{
+        width:auto;
+        max-width: none;
+      }
+
       .avatar{width: 42px; height: 42px; border-radius: 14px}
+    }
+
+    /* Desktop extra: ainda mais confortável sem mexer no mobile */
+    @media (min-width: 1100px){
+      section{padding: 52px 0}
+      .pad{padding: 30px}
+      .h2{font-size: 26px}
+      .sub{font-size: 14.5px}
+      .lead{font-size: 17px}
+      .mini p, .trail ul, .ans{font-size: 14.8px}
+      .grid2{gap: 26px}
+      .grid3{gap: 18px}
+      .trailGrid{gap: 18px}
+      .carouselWrap{gap: 22px}
+      .navtabs a{font-size: 13.5px}
     }
   </style>
 </head>
@@ -603,32 +640,43 @@
   <header class="nav">
     <div class="wrap">
       <div class="navin">
-        <div class="brand">
+
+        <!-- ESQUERDA: título -->
+        <div class="brandArea">
           <div class="brandText">
             <strong>Professor Marcos Vinicius</strong>
             <span>Inglês Online • General English</span>
           </div>
+        </div>
 
-          <!-- Foto no topo, à direita do título (como você pediu) -->
-          <div class="avatar" title="Professor Marcos Vinicius">
-            <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+        <!-- MEIO: avatar (no mobile, fica “entre” título e as 4 opções) -->
+        <div class="avatar" title="Professor Marcos Vinicius">
+          <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+        </div>
+
+        <!-- DIREITA: 4 links + botões -->
+        <div class="navArea">
+          <nav class="navtabs" aria-label="Navegação">
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#atividades">Atividades</a>
+            <a href="#trilhas">Trilhas</a>
+            <a href="#faq">Dúvidas</a>
+          </nav>
+
+          <div class="navactions">
+            <a class="btn btn-sm btn-ghost" id="formBtnTop"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
+               target="_blank" rel="noopener">
+              <span class="labelLong">Formulário (4 min)</span>
+              <span class="labelShort">Formulário</span>
+            </a>
+
+            <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
+              Quero ser aluna(o)
+            </a>
           </div>
         </div>
 
-        <nav class="navlinks" aria-label="Navegação">
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#atividades">Atividades</a>
-          <a href="#trilhas">Trilhas</a>
-          <a href="#faq">Dúvidas</a>
-
-          <a class="btn btn-sm btn-ghost" id="formBtnTop" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
-            Formulário (4 min)
-          </a>
-
-          <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
-            Quero ser aluna(o)
-          </a>
-        </nav>
       </div>
     </div>
   </header>
@@ -638,6 +686,7 @@
     <section class="hero">
       <div class="wrap">
         <div class="grid2">
+
           <div class="card">
             <div class="pad">
               <span class="pill"><span class="dot"></span> Direção clara • prática guiada • evolução consistente</span>
@@ -651,7 +700,9 @@
 
               <div class="btn-row" style="margin-top:16px">
                 <a class="btn btn-primary" id="waBtnHero" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-                <a class="btn btn-ghost" id="formBtnHero" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+                <a class="btn btn-ghost" id="formBtnHero"
+                   href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
+                   target="_blank" rel="noopener">Formulário (4 min)</a>
               </div>
 
               <p class="micro">
@@ -714,6 +765,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -760,6 +812,7 @@
           </div>
         </div>
 
+        <div class="s
         <div class="carouselWrap">
           <div class="carousel" aria-label="Carrossel de imagens de atividades">
             <div class="carouselStage">
@@ -952,7 +1005,9 @@
           </div>
           <div class="btn-row">
             <a class="btn btn-primary" id="waBtnBottom" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-            <a class="btn btn-ghost" id="formBtnBottom" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+            <a class="btn btn-ghost" id="formBtnBottom"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
+               target="_blank" rel="noopener">Formulário (4 min)</a>
           </div>
         </div>
 
@@ -971,39 +1026,28 @@
 
   <script>
     // ============================
-    // 0) Cache-buster (opcional)
-    // ============================
-    // Se você substituir imagens mantendo o mesmo nome e o navegador insistir em mostrar a antiga,
-    // basta trocar "1" para "2" (e commitar).
-    const ASSET_VERSION = "1";
-    const asset = (p) => p + "?v=" + ASSET_VERSION;
-
-    // ============================
     // 1) WHATSAPP (mensagem pronta)
     // ============================
     const WHATSAPP_PHONE = "5592985273076";
-    const WHATSAPP_TEXT = "Olá! Tenho interesse em me tornar aluno\nGostaria de informações sobre o curso";
-    const WHATSAPP_MESSAGE = encodeURIComponent(WHATSAPP_TEXT);
+
+    const WHATSAPP_MESSAGE_RAW = "Olá! Tenho interesse em me tornar aluno\nGostaria de informações sobre o curso";
+    const WHATSAPP_MESSAGE = encodeURIComponent(WHATSAPP_MESSAGE_RAW);
 
     function buildWhatsAppLink() {
-      if (!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) {
-        return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
-      }
+      if (!WHATSAPP_PHONE) return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
       return "https://wa.me/" + WHATSAPP_PHONE + "?text=" + WHATSAPP_MESSAGE;
     }
 
     const waLink = buildWhatsAppLink();
-    ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"]
-      .map(id => document.getElementById(id))
-      .forEach(btn => { if (btn) btn.href = waLink; });
+    ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.href = waLink;
+    });
 
     // ============================
-    // 2) PROFILE IMAGE (robusto)
+    // 2) PROFILE IMAGE (fallback)
     // ============================
     const profileImg = document.getElementById("profileImg");
-    const rawProfilePath = profileImg.getAttribute("src");
-    profileImg.src = asset(rawProfilePath);
-
     profileImg.addEventListener("error", () => {
       if (profileImg.src.includes(".webp.webp")) {
         profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
@@ -1014,18 +1058,18 @@
     // 3) CAROUSEL (auto suave)
     // ============================
     const carouselImages = [
-      asset("assets/carousel-01.webp.webp"),
-      asset("assets/carousel-02.webp.webp"),
-      asset("assets/carousel-03.webp.webp"),
-      asset("assets/carousel-04.webp.webp"),
-      asset("assets/carousel-05.webp.webp"),
-      asset("assets/carousel-06.webp.webp"),
-      asset("assets/carousel-07.webp.webp"),
-      asset("assets/carousel-08.webp.webp"),
-      asset("assets/carousel-09.webp.webp"),
-      asset("assets/carousel-10.webp.webp"),
-      asset("assets/carousel-11.webp.webp"),
-      asset("assets/carousel-12.webp.webp")
+      "assets/carousel-01.webp.webp",
+      "assets/carousel-02.webp.webp",
+      "assets/carousel-03.webp.webp",
+      "assets/carousel-04.webp.webp",
+      "assets/carousel-05.webp.webp",
+      "assets/carousel-06.webp.webp",
+      "assets/carousel-07.webp.webp",
+      "assets/carousel-08.webp.webp",
+      "assets/carousel-09.webp.webp",
+      "assets/carousel-10.webp.webp",
+      "assets/carousel-11.webp.webp",
+      "assets/carousel-12.webp.webp"
     ];
 
     const imgEl = document.getElementById("carouselImg");
@@ -1060,11 +1104,13 @@
     function render() {
       imgEl.classList.remove("show");
       setTimeout(() => {
+        imgEl.onload = null;
+        imgEl.onerror = null;
+
         imgEl.src = carouselImages[idx];
         imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
 
         imgEl.onload = () => imgEl.classList.add("show");
-
         imgEl.onerror = () => {
           if (imgEl.src.includes(".webp.webp")) {
             imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
@@ -1082,7 +1128,11 @@
       if (timer) return;
       timer = setInterval(() => { if (!hovering) next(); }, 3200);
     }
-    function stop() { if (!timer) return; clearInterval(timer); timer = null; }
+    function stop() {
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
+    }
     function restart() { stop(); start(); }
 
     prevBtn.addEventListener("click", () => { prev(); restart(); });
