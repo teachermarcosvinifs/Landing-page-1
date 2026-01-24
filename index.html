@@ -24,6 +24,7 @@
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
       --radius2: 24px;
+      /* Mantém seu desktop “perfeito”: largura ampla */
       --max: 1440px;
     }
 
@@ -83,9 +84,7 @@
       justify-content:space-between;
       padding: 12px 0;
       gap: 14px;
-      flex-wrap: nowrap; /* desktop */
     }
-
     .brand{
       display:flex;
       align-items:center;
@@ -99,9 +98,8 @@
     }
     .brand strong{display:block; font-size: 14px; letter-spacing:.2px}
     .brand span{display:block; font-size: 12px; color: var(--muted2)}
-
     .avatar{
-      width: 46px; height: 46px; /* sutilmente maior */
+      width: 44px; height: 44px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -115,7 +113,6 @@
       object-fit: cover;
       display:block;
     }
-    .avatarMobile{display:none;} /* só mobile */
 
     .navlinks{
       display:flex;
@@ -136,15 +133,6 @@
       border-color: rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       color: var(--text);
-    }
-
-    .topActions{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      justify-content:flex-end;
-      flex: 0 0 auto;
-      white-space:nowrap;
     }
 
     .btn{
@@ -174,7 +162,10 @@
     }
     .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
     .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
-    .hideOnMobile{display:inline;}
+
+    /* Mobile-only header (por padrão, escondido no desktop) */
+    .mobileHead{display:none;}
+    .mobileSpacer{display:block;}
 
     /* SECTIONS */
     section{padding: 34px 0}
@@ -507,105 +498,72 @@
       font-size: 12.5px;
     }
 
-    /* ============================
-       MOBILE HEADER (Opção 1)
-       - Brand + botões em cima
-       - Links em grid 2×2 + foto central entre eles
-       ============================ */
-    @media (max-width: 860px){
-      .navin{
-        flex-wrap:wrap;
-        align-items:flex-start;
-        gap: 10px;
-      }
-      .brand{min-width: 0; flex: 1 1 210px;}
-      .brand strong{font-size: 13px}
-      .brand span{font-size: 11.5px}
-
-      /* some: foto some do topo (desktop) */
-      .avatarDesktop{display:none;}
-
-      /* botões ficam na mesma linha e menores */
-      .topActions{
-        flex: 1 1 220px;
-        justify-content:flex-end;
-        gap: 10px;
-      }
-      .topActions .btn-sm{
-        padding: 10px 12px;
-        font-size: 13px;
-      }
-      .hideOnMobile{display:none;}
-
-      /* links viram "botões clicáveis" em grid */
-      .navlinks{
-        flex: 0 0 100%;
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        justify-items:stretch;
-        align-items:center;
-        margin-top: 4px;
-        padding-top: 10px;
-        border-top: 1px solid rgba(255,255,255,.08);
-      }
-      .navlinks a{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding: 12px 10px;
-        border-radius: 14px;
-        border: 1px solid rgba(255,255,255,.12);
-        background: rgba(255,255,255,.05);
-        color: rgba(234,240,255,.88);
-        font-weight: 750;
-        letter-spacing: .1px;
-      }
-      .navlinks a:active{transform: translateY(1px)}
-      .navlinks a:hover{
-        border-color: rgba(255,255,255,.20);
-        background: rgba(255,255,255,.07);
-        color: var(--text);
-      }
-
-      /* foto centralizada entre as 4 opções */
-      .avatarMobile{
-        display:flex;
-        grid-column: 1 / -1;
-        justify-self:center;
-        width: 56px; height: 56px; /* sutilmente maior no mobile */
-        border-radius: 18px;
-        margin: 2px 0;
-      }
-    }
-
-    /* Responsive geral (layout do site) */
+    /* Responsive */
     @media (max-width: 980px){
       .grid2{grid-template-columns: 1fr}
       .grid3{grid-template-columns: 1fr}
       .trailGrid{grid-template-columns: 1fr}
       .carouselWrap{grid-template-columns: 1fr}
+      .brand{min-width: 0}
       .navlinks{justify-content:flex-start}
     }
+
+    /* MOBILE (somente aqui mexe no header) */
+    @media (max-width: 760px){
+      /* 1) remove os 4 links do header no mobile (na prática: some o bloco inteiro) */
+      .navlinks{display:none !important;}
+
+      /* 2) header em 2 linhas: linha 1 = nome; linha 2 = botões central + foto à direita */
+      .navin{
+        flex-direction:column;
+        align-items:stretch;
+        gap: 10px;
+      }
+
+      /* Mantém só o texto no topo (sem avatar aqui) */
+      .brand{
+        width:100%;
+        justify-content:flex-start;
+        gap: 12px;
+      }
+      .brand .avatar{display:none;} /* evita avatar duplicado */
+
+      /* bloco mobile: botões no centro (2 linhas) + foto à direita alinhada/centralizada */
+      .mobileHead{
+        display:grid;
+        grid-template-columns: 1fr minmax(220px, 320px) auto;
+        align-items:center;
+        gap: 12px;
+        padding: 2px 0 6px;
+      }
+      .mobileSpacer{grid-column:1;}
+      .mobileBtns{
+        grid-column:2;
+        display:flex;
+        flex-direction:column;
+        gap: 10px;
+        align-items:stretch;
+      }
+      .mobileBtns .btn{
+        width:100%;
+        text-align:center;
+      }
+
+      /* foto à direita, sutilmente maior */
+      .mobileAvatar{
+        grid-column:3;
+        justify-self:end;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+      }
+    }
+
     @media (max-width: 520px){
       .btn{width: 100%}
       .btn-row{width:100%}
-    }
-
-    /* Desktop: aumentar textos pequenos (sem mexer no mobile) */
-    @media (min-width: 1100px){
-      .sub{font-size: 14.2px}
-      .micro{font-size: 13.6px}
-      .lead{font-size: 16.2px}
-      .pill{font-size: 13.6px}
-      .chip{font-size: 12.6px}
-      .li span{font-size: 13.4px}
-      .mini p{font-size: 14.2px}
-      .trail ul{font-size: 14.2px}
-      .ans{font-size: 14.2px}
-      .cta p{font-size: 14.2px}
-      .carHint{font-size: 13px}
-      footer{font-size: 13.2px}
+      .navin{align-items:stretch}
+      .navlinks a{padding: 8px 9px}
     }
   </style>
 </head>
@@ -620,36 +578,47 @@
             <span>Inglês Online • General English</span>
           </div>
 
-          <!-- Desktop: foto ao lado do título -->
-          <div class="avatar avatarDesktop" title="Professor Marcos Vinicius">
-            <img data-profile src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+          <!-- Desktop: foto ao lado do título (mantém como estava) -->
+          <div class="avatar" title="Professor Marcos Vinicius">
+            <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
           </div>
         </div>
 
-        <div class="topActions">
-          <a class="btn btn-sm btn-ghost" id="formBtnTop"
-             href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
-             target="_blank" rel="noopener">
-            Formulário <span class="hideOnMobile">(4 min)</span>
+        <!-- Desktop: links + botões (mantém como estava) -->
+        <nav class="navlinks" aria-label="Navegação">
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#atividades">Atividades</a>
+          <a href="#trilhas">Trilhas</a>
+          <a href="#faq">Dúvidas</a>
+
+          <a class="btn btn-sm btn-ghost" id="formBtnTop" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
+            Formulário (4 min)
           </a>
 
           <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
             Quero ser aluna(o)
           </a>
-        </div>
+        </nav>
 
-        <!-- Mobile: grid 2×2 + foto central (Opção 1) -->
-        <nav class="navlinks" aria-label="Navegação">
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#atividades">Atividades</a>
+        <!-- Mobile-only: botões no centro (2 linhas) + foto à direita -->
+        <div class="mobileHead" aria-label="Ações rápidas (mobile)">
+          <div class="mobileSpacer" aria-hidden="true"></div>
 
-          <div class="avatar avatarMobile" title="Professor Marcos Vinicius">
-            <img data-profile src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+          <div class="mobileBtns">
+            <a class="btn btn-ghost" id="formBtnTopMobile" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
+              Formulário
+            </a>
+
+            <a class="btn btn-primary" id="waBtnTopMobile" href="#" target="_blank" rel="noopener">
+              Quero ser aluna(o)
+            </a>
           </div>
 
-          <a href="#trilhas">Trilhas</a>
-          <a href="#faq">Dúvidas</a>
-        </nav>
+          <div class="avatar mobileAvatar" title="Professor Marcos Vinicius">
+            <img id="profileImgMobile" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+          </div>
+        </div>
+
       </div>
     </div>
   </header>
@@ -672,9 +641,7 @@
 
               <div class="btn-row" style="margin-top:16px">
                 <a class="btn btn-primary" id="waBtnHero" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-                <a class="btn btn-ghost" id="formBtnHero"
-                   href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
-                   target="_blank" rel="noopener">Formulário (4 min)</a>
+                <a class="btn btn-ghost" id="formBtnHero" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
               </div>
 
               <p class="micro">
@@ -814,7 +781,7 @@
                 <li class="li">
                   <span class="bullet"></span>
                   <div>
-                    <b>Escuta com objetivo</b>
+                    <b>Escutai!!!uta com objetivo</b>
                     <span>atividades que treinam reconhecimento de palavras e ideias, não só “ouvir por ouvir”.</span>
                   </div>
                 </li>
@@ -975,9 +942,7 @@
           </div>
           <div class="btn-row">
             <a class="btn btn-primary" id="waBtnBottom" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-            <a class="btn btn-ghost" id="formBtnBottom"
-               href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
-               target="_blank" rel="noopener">Formulário (4 min)</a>
+            <a class="btn btn-ghost" id="formBtnBottom" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
           </div>
         </div>
 
@@ -1009,20 +974,29 @@
     }
 
     const waLink = buildWhatsAppLink();
-    const waBtns = ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].map(id => document.getElementById(id));
+    const waBtns = [
+      "waBtnTop",
+      "waBtnTopMobile",
+      "waBtnHero",
+      "waBtnMid",
+      "waBtnBottom"
+    ].map(id => document.getElementById(id));
+
     waBtns.forEach(btn => { if (btn) btn.href = waLink; });
 
     // ============================
     // 2) PROFILE IMAGE (robusto)
     // ============================
-    const profileImgs = document.querySelectorAll("img[data-profile]");
-    profileImgs.forEach(img => {
+    function attachProfileFallback(img){
+      if (!img) return;
       img.addEventListener("error", () => {
         if (img.src.includes(".webp.webp")) {
           img.src = img.src.replace(".webp.webp", ".webp");
         }
       });
-    });
+    }
+    attachProfileFallback(document.getElementById("profileImg"));
+    attachProfileFallback(document.getElementById("profileImgMobile"));
 
     // ============================
     // 3) CAROUSEL (auto suave)
@@ -1068,7 +1042,9 @@
 
     function setActiveDot() {
       const btns = dotsEl.querySelectorAll(".dotBtn");
-      btns.forEach((b, i) => b.classList.toggle("active", i === idx));
+      btns.forEach((b, i) => {
+        b.classList.toggle("active", i === idx);
+      });
     }
 
     function render() {
@@ -1076,7 +1052,7 @@
       setTimeout(() => {
         imgEl.src = carouselImages[idx];
         imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
-        imgEl.onload = () => imgEl.classList.add("show");
+        imgEl.onload = () => { imgEl.classList.add("show"); };
         imgEl.onerror = () => {
           if (imgEl.src.includes(".webp.webp")) {
             imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
@@ -1093,11 +1069,7 @@
       if (timer) return;
       timer = setInterval(() => { if (!hovering) next(); }, 3200);
     }
-    function stop() {
-      if (!timer) return;
-      clearInterval(timer);
-      timer = null;
-    }
+    function stop() { if (!timer) return; clearInterval(timer); timer = null; }
     function restart() { stop(); start(); }
 
     prevBtn.addEventListener("click", () => { prev(); restart(); });
@@ -1111,7 +1083,6 @@
     render();
     start();
 
-    // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
