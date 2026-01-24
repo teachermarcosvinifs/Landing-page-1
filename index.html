@@ -11,31 +11,20 @@
     :root{
       --bg0:#060B18;
       --bg1:#07112A;
-
       --card: rgba(255,255,255,.06);
       --card2: rgba(255,255,255,.09);
       --line: rgba(255,255,255,.10);
-
       --text:#EAF0FF;
       --muted: rgba(234,240,255,.74);
       --muted2: rgba(234,240,255,.58);
-
       --accent:#2E7BFF;
       --accent2:#6BA6FF;
-
       --good:#39D98A;
       --warn:#FFB020;
-
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
       --radius2: 24px;
-
-      /* DESKTOP MAIS AMPLO */
       --max: 1440px;
-
-      /* Ajuste fino do enquadramento do rosto no avatar */
-      --avatar-pos-x: 50%;
-      --avatar-pos-y: 32%;
     }
 
     *{box-sizing:border-box}
@@ -67,8 +56,7 @@
     }
 
     a{color:inherit}
-    .wrap{max-width:var(--max); margin:0 auto; padding: 0 22px;}
-
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
     .pill{
       display:inline-flex;
       align-items:center;
@@ -89,17 +77,16 @@
       background: rgba(6,11,24,.55);
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-
-    /* DESKTOP: layout padrão (brand + nav tabs + actions) */
     .navin{
       display:flex;
       align-items:center;
       justify-content:space-between;
       padding: 12px 0;
       gap: 14px;
+      flex-wrap: nowrap; /* desktop */
     }
 
-    .brandArea{
+    .brand{
       display:flex;
       align-items:center;
       gap: 12px;
@@ -110,11 +97,11 @@
       flex-direction:column;
       line-height: 1.15;
     }
-    .brandText strong{display:block; font-size: 14px; letter-spacing:.2px}
-    .brandText span{display:block; font-size: 12px; color: var(--muted2)}
+    .brand strong{display:block; font-size: 14px; letter-spacing:.2px}
+    .brand span{display:block; font-size: 12px; color: var(--muted2)}
 
     .avatar{
-      width: 44px; height: 44px;
+      width: 46px; height: 46px; /* sutilmente maior */
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -126,26 +113,18 @@
       width:100%;
       height:100%;
       object-fit: cover;
-      object-position: var(--avatar-pos-x) var(--avatar-pos-y);
       display:block;
     }
+    .avatarMobile{display:none;} /* só mobile */
 
-    .navArea{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap: 10px;
-      flex-wrap:wrap;
-    }
-
-    .navtabs{
+    .navlinks{
       display:flex;
       gap: 6px;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
       justify-content:flex-end;
       align-items:center;
     }
-    .navtabs a{
+    .navlinks a{
       text-decoration:none;
       font-size: 13px;
       padding: 8px 10px;
@@ -153,10 +132,19 @@
       color: var(--muted);
       border: 1px solid transparent;
     }
-    .navtabs a:hover{
+    .navlinks a:hover{
       border-color: rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       color: var(--text);
+    }
+
+    .topActions{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      justify-content:flex-end;
+      flex: 0 0 auto;
+      white-space:nowrap;
     }
 
     .btn{
@@ -186,21 +174,17 @@
     }
     .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
     .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
-
-    /* labels (para encurtar apenas no mobile, se quiser) */
-    .labelShort{display:none}
+    .hideOnMobile{display:inline;}
 
     /* SECTIONS */
-    section{padding: 44px 0}
-    .hero{padding-top: 28px}
-
+    section{padding: 34px 0}
+    .hero{padding-top: 26px}
     .grid2{
       display:grid;
       grid-template-columns: 1.08fr .92fr;
-      gap: 22px;
+      gap: 18px;
       align-items:stretch;
     }
-
     .card{
       background: var(--card);
       border: 1px solid rgba(255,255,255,.10);
@@ -208,36 +192,32 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-
-    .pad{padding: 26px}
-
+    .pad{padding: 22px}
     h1{
-      margin: 16px 0 12px;
-      font-size: clamp(30px, 3.0vw, 52px);
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 3.2vw, 46px);
       line-height: 1.05;
-      letter-spacing: -.7px;
+      letter-spacing: -.6px;
     }
-
     .lead{
       margin: 0;
       color: var(--muted);
-      font-size: 16px;
-      line-height: 1.6;
-      max-width: 62ch;
+      font-size: 15px;
+      line-height: 1.55;
+      max-width: 60ch;
     }
-
     .micro{
-      margin-top: 12px;
+      margin-top: 10px;
       color: var(--muted2);
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 12.5px;
+      line-height: 1.55;
     }
 
     .chips{
       display:flex;
       flex-wrap:wrap;
       gap:8px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
     .chip{
       font-size: 12px;
@@ -264,8 +244,8 @@
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.16);
     }
-    .li b{display:block; font-size: 13.5px; margin-bottom: 3px}
-    .li span{display:block; font-size: 13px; color: var(--muted2); line-height: 1.5}
+    .li b{display:block; font-size: 13px; margin-bottom: 3px}
+    .li span{display:block; font-size: 12.5px; color: var(--muted2); line-height: 1.45}
     .bullet{
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -280,41 +260,41 @@
       align-items:flex-end;
       justify-content:space-between;
       gap: 14px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .h2{
       margin:0;
-      font-size: 24px;
+      font-size: 22px;
       letter-spacing:-.2px;
     }
     .sub{
       margin:0;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--muted2);
-      line-height: 1.55;
-      max-width: 56ch;
+      line-height: 1.45;
+      max-width: 52ch;
     }
 
     /* How it works */
     .grid3{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 14px;
     }
     .mini{
-      padding: 18px;
+      padding: 16px;
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 170px;
+      min-height: 160px;
     }
     .kicker{
       display:inline-flex;
       align-items:center;
       gap:10px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing:.6px;
       color: rgba(234,240,255,.88);
       text-transform: uppercase;
@@ -325,21 +305,21 @@
     }
     .mini h3{
       margin: 12px 0 6px;
-      font-size: 17px;
+      font-size: 16px;
       letter-spacing:-.2px;
     }
     .mini p{
       margin:0;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 13.5px;
+      line-height: 1.55;
     }
 
     /* Carousel */
     .carouselWrap{
       display:grid;
       grid-template-columns: 1.05fr .95fr;
-      gap: 18px;
+      gap: 16px;
       align-items: stretch;
     }
     .carousel{
@@ -419,24 +399,24 @@
     .carBtn:hover{border-color: rgba(255,255,255,.24); transform: translateY(-1px)}
     .carHint{
       color: var(--muted2);
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 12.5px;
+      line-height: 1.5;
     }
 
     /* Trails */
     .trailGrid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 14px;
       align-items:stretch;
     }
     .trail{
-      padding: 18px;
+      padding: 16px;
       border-radius: var(--radius2);
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
       box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 280px;
+      min-height: 260px;
     }
     .trail .tag{
       display:inline-flex;
@@ -447,22 +427,22 @@
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing:.6px;
       text-transform: uppercase;
       color: rgba(234,240,255,.90);
     }
     .trail h3{
       margin: 12px 0 8px;
-      font-size: 17px;
+      font-size: 16px;
       letter-spacing:-.2px;
     }
     .trail ul{
       margin: 0;
       padding-left: 18px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
+      font-size: 13.5px;
+      line-height: 1.6;
     }
 
     /* FAQ */
@@ -481,15 +461,15 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
-      font-weight: 800;
+      font-weight: 700;
       color: rgba(234,240,255,.92);
     }
     summary::-webkit-details-marker{display:none}
     .ans{
       padding: 0 14px 14px;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
+      font-size: 13.5px;
+      line-height: 1.6;
     }
     .ans b{color: rgba(234,240,255,.92)}
     .chev{
@@ -505,7 +485,7 @@
 
     /* CTA bottom */
     .cta{
-      padding: 20px;
+      padding: 18px;
       border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
       background:
@@ -518,120 +498,114 @@
       justify-content:space-between;
       gap: 14px;
     }
-    .cta h3{margin:0; font-size: 19px}
-    .cta p{margin:6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 70ch}
+    .cta h3{margin:0; font-size: 18px}
+    .cta p{margin:6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 62ch}
 
     footer{
-      padding: 26px 0 44px;
+      padding: 24px 0 40px;
       color: var(--muted2);
-      font-size: 12.8px;
+      font-size: 12.5px;
     }
 
     /* ============================
-       RESPONSIVE
+       MOBILE HEADER (Opção 1)
+       - Brand + botões em cima
+       - Links em grid 2×2 + foto central entre eles
        ============================ */
+    @media (max-width: 860px){
+      .navin{
+        flex-wrap:wrap;
+        align-items:flex-start;
+        gap: 10px;
+      }
+      .brand{min-width: 0; flex: 1 1 210px;}
+      .brand strong{font-size: 13px}
+      .brand span{font-size: 11.5px}
 
-    /* Mobile/tablet: layout do topo como o seu print */
+      /* some: foto some do topo (desktop) */
+      .avatarDesktop{display:none;}
+
+      /* botões ficam na mesma linha e menores */
+      .topActions{
+        flex: 1 1 220px;
+        justify-content:flex-end;
+        gap: 10px;
+      }
+      .topActions .btn-sm{
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .hideOnMobile{display:none;}
+
+      /* links viram "botões clicáveis" em grid */
+      .navlinks{
+        flex: 0 0 100%;
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        justify-items:stretch;
+        align-items:center;
+        margin-top: 4px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,.08);
+      }
+      .navlinks a{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding: 12px 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.05);
+        color: rgba(234,240,255,.88);
+        font-weight: 750;
+        letter-spacing: .1px;
+      }
+      .navlinks a:active{transform: translateY(1px)}
+      .navlinks a:hover{
+        border-color: rgba(255,255,255,.20);
+        background: rgba(255,255,255,.07);
+        color: var(--text);
+      }
+
+      /* foto centralizada entre as 4 opções */
+      .avatarMobile{
+        display:flex;
+        grid-column: 1 / -1;
+        justify-self:center;
+        width: 56px; height: 56px; /* sutilmente maior no mobile */
+        border-radius: 18px;
+        margin: 2px 0;
+      }
+    }
+
+    /* Responsive geral (layout do site) */
     @media (max-width: 980px){
       .grid2{grid-template-columns: 1fr}
       .grid3{grid-template-columns: 1fr}
       .trailGrid{grid-template-columns: 1fr}
       .carouselWrap{grid-template-columns: 1fr}
-      .brandArea{min-width: 0}
-
-      /* TOPO (mobile) com avatar “no meio” e 4 links 2x2, e botões numa linha */
-      .navin{
-        display:grid;
-        grid-template-columns: 1fr auto 1fr;
-        grid-template-rows: auto auto;
-        column-gap: 12px;
-        row-gap: 10px;
-        align-items:center;
-        padding: 12px 0;
-      }
-      .brandArea{
-        grid-column: 1;
-        grid-row: 1;
-        align-items:flex-start;
-      }
-      .avatar{
-        grid-column: 2;
-        grid-row: 1;
-        justify-self:center;
-      }
-
-      .navArea{
-        grid-column: 3;
-        grid-row: 1;
-        display:flex;
-        flex-direction:column;
-        align-items:flex-end;
-        gap: 10px;
-      }
-
-      /* 4 links em grid 2x2 (garante “Dúvidas” alinhado) */
-      .navtabs{
-        display:grid;
-        grid-template-columns: repeat(2, max-content);
-        column-gap: 14px;
-        row-gap: 8px;
-        justify-content:end;
-        align-items:center;
-      }
-      .navtabs a{
-        font-size: 13px;
-        padding: 6px 8px;
-      }
-
-      /* Botões em UMA linha, menores, ocupando menos área */
-      .navactions{
-        display:flex;
-        gap: 10px;
-        justify-content:flex-end;
-        align-items:center;
-        width: 100%;
-      }
-      .navactions .btn{
-        padding: 10px 12px;
-        font-size: 13px;
-        border-radius: 14px;
-      }
-
-      /* encurta texto do botão no mobile (mantém 4 min no resto do site) */
-      .labelLong{display:none}
-      .labelShort{display:inline}
-
-      /* faz os botões ficarem “menores” (não full-width) */
-      .navactions .btn{width:auto; max-width: 220px;}
+      .navlinks{justify-content:flex-start}
     }
-
     @media (max-width: 520px){
-      /* Mantém seus botões do HERO em coluna (ok no mobile),
-         mas NÃO deixa os botões do TOPO virarem width:100% */
       .btn{width: 100%}
       .btn-row{width:100%}
-
-      .navactions .btn{
-        width:auto;
-        max-width: none;
-      }
-
-      .avatar{width: 42px; height: 42px; border-radius: 14px}
     }
 
-    /* Desktop extra: ainda mais confortável sem mexer no mobile */
+    /* Desktop: aumentar textos pequenos (sem mexer no mobile) */
     @media (min-width: 1100px){
-      section{padding: 52px 0}
-      .pad{padding: 30px}
-      .h2{font-size: 26px}
-      .sub{font-size: 14.5px}
-      .lead{font-size: 17px}
-      .mini p, .trail ul, .ans{font-size: 14.8px}
-      .grid2{gap: 26px}
-      .grid3{gap: 18px}
-      .trailGrid{gap: 18px}
-      .carouselWrap{gap: 22px}
-      .navtabs a{font-size: 13.5px}
+      .sub{font-size: 14.2px}
+      .micro{font-size: 13.6px}
+      .lead{font-size: 16.2px}
+      .pill{font-size: 13.6px}
+      .chip{font-size: 12.6px}
+      .li span{font-size: 13.4px}
+      .mini p{font-size: 14.2px}
+      .trail ul{font-size: 14.2px}
+      .ans{font-size: 14.2px}
+      .cta p{font-size: 14.2px}
+      .carHint{font-size: 13px}
+      footer{font-size: 13.2px}
     }
   </style>
 </head>
@@ -640,43 +614,42 @@
   <header class="nav">
     <div class="wrap">
       <div class="navin">
-
-        <!-- ESQUERDA: título -->
-        <div class="brandArea">
+        <div class="brand">
           <div class="brandText">
             <strong>Professor Marcos Vinicius</strong>
             <span>Inglês Online • General English</span>
           </div>
-        </div>
 
-        <!-- MEIO: avatar (no mobile, fica “entre” título e as 4 opções) -->
-        <div class="avatar" title="Professor Marcos Vinicius">
-          <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
-        </div>
-
-        <!-- DIREITA: 4 links + botões -->
-        <div class="navArea">
-          <nav class="navtabs" aria-label="Navegação">
-            <a href="#como-funciona">Como funciona</a>
-            <a href="#atividades">Atividades</a>
-            <a href="#trilhas">Trilhas</a>
-            <a href="#faq">Dúvidas</a>
-          </nav>
-
-          <div class="navactions">
-            <a class="btn btn-sm btn-ghost" id="formBtnTop"
-               href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
-               target="_blank" rel="noopener">
-              <span class="labelLong">Formulário (4 min)</span>
-              <span class="labelShort">Formulário</span>
-            </a>
-
-            <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
-              Quero ser aluna(o)
-            </a>
+          <!-- Desktop: foto ao lado do título -->
+          <div class="avatar avatarDesktop" title="Professor Marcos Vinicius">
+            <img data-profile src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
           </div>
         </div>
 
+        <div class="topActions">
+          <a class="btn btn-sm btn-ghost" id="formBtnTop"
+             href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor"
+             target="_blank" rel="noopener">
+            Formulário <span class="hideOnMobile">(4 min)</span>
+          </a>
+
+          <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
+            Quero ser aluna(o)
+          </a>
+        </div>
+
+        <!-- Mobile: grid 2×2 + foto central (Opção 1) -->
+        <nav class="navlinks" aria-label="Navegação">
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#atividades">Atividades</a>
+
+          <div class="avatar avatarMobile" title="Professor Marcos Vinicius">
+            <img data-profile src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+          </div>
+
+          <a href="#trilhas">Trilhas</a>
+          <a href="#faq">Dúvidas</a>
+        </nav>
       </div>
     </div>
   </header>
@@ -686,7 +659,6 @@
     <section class="hero">
       <div class="wrap">
         <div class="grid2">
-
           <div class="card">
             <div class="pad">
               <span class="pill"><span class="dot"></span> Direção clara • prática guiada • evolução consistente</span>
@@ -765,7 +737,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -812,7 +783,6 @@
           </div>
         </div>
 
-        <div class="s
         <div class="carouselWrap">
           <div class="carousel" aria-label="Carrossel de imagens de atividades">
             <div class="carouselStage">
@@ -1029,29 +999,29 @@
     // 1) WHATSAPP (mensagem pronta)
     // ============================
     const WHATSAPP_PHONE = "5592985273076";
-
-    const WHATSAPP_MESSAGE_RAW = "Olá! Tenho interesse em me tornar aluno\nGostaria de informações sobre o curso";
-    const WHATSAPP_MESSAGE = encodeURIComponent(WHATSAPP_MESSAGE_RAW);
+    const WHATSAPP_MESSAGE = "Olá! Tenho interesse em me tornar aluno%0AGostaria de informações sobre o curso";
 
     function buildWhatsAppLink() {
-      if (!WHATSAPP_PHONE) return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
+      if (!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) {
+        return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
+      }
       return "https://wa.me/" + WHATSAPP_PHONE + "?text=" + WHATSAPP_MESSAGE;
     }
 
     const waLink = buildWhatsAppLink();
-    ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.href = waLink;
-    });
+    const waBtns = ["waBtnTop", "waBtnHero", "waBtnMid", "waBtnBottom"].map(id => document.getElementById(id));
+    waBtns.forEach(btn => { if (btn) btn.href = waLink; });
 
     // ============================
-    // 2) PROFILE IMAGE (fallback)
+    // 2) PROFILE IMAGE (robusto)
     // ============================
-    const profileImg = document.getElementById("profileImg");
-    profileImg.addEventListener("error", () => {
-      if (profileImg.src.includes(".webp.webp")) {
-        profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
-      }
+    const profileImgs = document.querySelectorAll("img[data-profile]");
+    profileImgs.forEach(img => {
+      img.addEventListener("error", () => {
+        if (img.src.includes(".webp.webp")) {
+          img.src = img.src.replace(".webp.webp", ".webp");
+        }
+      });
     });
 
     // ============================
@@ -1104,19 +1074,14 @@
     function render() {
       imgEl.classList.remove("show");
       setTimeout(() => {
-        imgEl.onload = null;
-        imgEl.onerror = null;
-
         imgEl.src = carouselImages[idx];
         imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
-
         imgEl.onload = () => imgEl.classList.add("show");
         imgEl.onerror = () => {
           if (imgEl.src.includes(".webp.webp")) {
             imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
           }
         };
-
         setActiveDot();
       }, 80);
     }
@@ -1146,6 +1111,7 @@
     render();
     start();
 
+    // Footer year
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
