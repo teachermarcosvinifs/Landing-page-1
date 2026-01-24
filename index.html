@@ -24,7 +24,6 @@
       --shadow: 0 18px 55px rgba(0,0,0,.45);
       --radius: 18px;
       --radius2: 24px;
-      /* Mantém seu desktop “perfeito”: largura ampla */
       --max: 1440px;
     }
 
@@ -163,9 +162,8 @@
     .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
     .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
 
-    /* Mobile-only header (por padrão, escondido no desktop) */
-    .mobileHead{display:none;}
-    .mobileSpacer{display:block;}
+    /* Mobile-only actions (por padrão, escondido no desktop) */
+    .mobileActions{display:none;}
 
     /* SECTIONS */
     section{padding: 34px 0}
@@ -333,7 +331,7 @@
     .carouselStage img{
       width: 100%;
       height: 100%;
-      object-fit: contain; /* NÃO corta print */
+      object-fit: contain;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
@@ -508,62 +506,56 @@
       .navlinks{justify-content:flex-start}
     }
 
-    /* MOBILE (somente aqui mexe no header) */
+    /* MOBILE HEADER (somente no mobile) */
     @media (max-width: 760px){
-      /* 1) remove os 4 links do header no mobile (na prática: some o bloco inteiro) */
+      /* remove os links do header no mobile */
       .navlinks{display:none !important;}
 
-      /* 2) header em 2 linhas: linha 1 = nome; linha 2 = botões central + foto à direita */
+      /* nav vira 2 linhas: marca + ações */
       .navin{
         flex-direction:column;
         align-items:stretch;
         gap: 10px;
+        padding: 10px 0;
       }
 
-      /* Mantém só o texto no topo (sem avatar aqui) */
+      /* marca: texto à esquerda, foto à direita (sinergia) */
       .brand{
         width:100%;
-        justify-content:flex-start;
-        gap: 12px;
-      }
-      .brand .avatar{display:none;} /* evita avatar duplicado */
-
-      /* bloco mobile: botões no centro (2 linhas) + foto à direita alinhada/centralizada */
-      .mobileHead{
-        display:grid;
-        grid-template-columns: 1fr minmax(220px, 320px) auto;
+        justify-content:space-between;
         align-items:center;
         gap: 12px;
-        padding: 2px 0 6px;
       }
-      .mobileSpacer{grid-column:1;}
-      .mobileBtns{
-        grid-column:2;
-        display:flex;
-        flex-direction:column;
-        gap: 10px;
-        align-items:stretch;
-      }
-      .mobileBtns .btn{
-        width:100%;
-        text-align:center;
-      }
+      .brand strong{font-size: 15px}
+      .brand span{font-size: 12.5px}
 
-      /* foto à direita, sutilmente maior */
-      .mobileAvatar{
-        grid-column:3;
-        justify-self:end;
+      /* avatar sutilmente maior e alinhado com a marca */
+      .avatar{
         width: 52px;
         height: 52px;
         border-radius: 16px;
+      }
+
+      /* ações: botões finos em 2 linhas */
+      .mobileActions{
+        display:flex;
+        flex-direction:column;
+        gap: 10px;
+        width:100%;
+        align-items:stretch;
+        padding-bottom: 4px;
+      }
+      .mobileActions .btn{
+        width:100%;
+        padding: 10px 14px;      /* mais fino */
+        font-size: 14px;         /* levemente menor */
+        border-radius: 14px;
       }
     }
 
     @media (max-width: 520px){
       .btn{width: 100%}
       .btn-row{width:100%}
-      .navin{align-items:stretch}
-      .navlinks a{padding: 8px 9px}
     }
   </style>
 </head>
@@ -578,13 +570,12 @@
             <span>Inglês Online • General English</span>
           </div>
 
-          <!-- Desktop: foto ao lado do título (mantém como estava) -->
           <div class="avatar" title="Professor Marcos Vinicius">
             <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
           </div>
         </div>
 
-        <!-- Desktop: links + botões (mantém como estava) -->
+        <!-- Desktop: links + botões (intocado) -->
         <nav class="navlinks" aria-label="Navegação">
           <a href="#como-funciona">Como funciona</a>
           <a href="#atividades">Atividades</a>
@@ -600,23 +591,14 @@
           </a>
         </nav>
 
-        <!-- Mobile-only: botões no centro (2 linhas) + foto à direita -->
-        <div class="mobileHead" aria-label="Ações rápidas (mobile)">
-          <div class="mobileSpacer" aria-hidden="true"></div>
-
-          <div class="mobileBtns">
-            <a class="btn btn-ghost" id="formBtnTopMobile" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
-              Formulário
-            </a>
-
-            <a class="btn btn-primary" id="waBtnTopMobile" href="#" target="_blank" rel="noopener">
-              Quero ser aluna(o)
-            </a>
-          </div>
-
-          <div class="avatar mobileAvatar" title="Professor Marcos Vinicius">
-            <img id="profileImgMobile" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
-          </div>
+        <!-- Mobile: apenas os 2 botões (links removidos no mobile) -->
+        <div class="mobileActions" aria-label="Ações rápidas (mobile)">
+          <a class="btn btn-ghost" id="formBtnTopMobile" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
+            Formulário
+          </a>
+          <a class="btn btn-primary" id="waBtnTopMobile" href="#" target="_blank" rel="noopener">
+            Quero ser aluna(o)
+          </a>
         </div>
 
       </div>
@@ -781,7 +763,7 @@
                 <li class="li">
                   <span class="bullet"></span>
                   <div>
-                    <b>Escutai!!!uta com objetivo</b>
+                    <b>Escuta com objetivo</b>
                     <span>atividades que treinam reconhecimento de palavras e ideias, não só “ouvir por ouvir”.</span>
                   </div>
                 </li>
@@ -974,29 +956,19 @@
     }
 
     const waLink = buildWhatsAppLink();
-    const waBtns = [
-      "waBtnTop",
-      "waBtnTopMobile",
-      "waBtnHero",
-      "waBtnMid",
-      "waBtnBottom"
-    ].map(id => document.getElementById(id));
-
+    const waBtns = ["waBtnTop","waBtnTopMobile","waBtnHero","waBtnMid","waBtnBottom"]
+      .map(id => document.getElementById(id));
     waBtns.forEach(btn => { if (btn) btn.href = waLink; });
 
     // ============================
     // 2) PROFILE IMAGE (robusto)
     // ============================
-    function attachProfileFallback(img){
-      if (!img) return;
-      img.addEventListener("error", () => {
-        if (img.src.includes(".webp.webp")) {
-          img.src = img.src.replace(".webp.webp", ".webp");
-        }
-      });
-    }
-    attachProfileFallback(document.getElementById("profileImg"));
-    attachProfileFallback(document.getElementById("profileImgMobile"));
+    const profileImg = document.getElementById("profileImg");
+    profileImg.addEventListener("error", () => {
+      if (profileImg.src.includes(".webp.webp")) {
+        profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
+      }
+    });
 
     // ============================
     // 3) CAROUSEL (auto suave)
@@ -1031,20 +1003,14 @@
         const b = document.createElement("button");
         b.className = "dotBtn" + (i === idx ? " active" : "");
         b.setAttribute("aria-label", "Ir para imagem " + (i+1));
-        b.addEventListener("click", () => {
-          idx = i;
-          render();
-          restart();
-        });
+        b.addEventListener("click", () => { idx = i; render(); restart(); });
         dotsEl.appendChild(b);
       });
     }
 
     function setActiveDot() {
       const btns = dotsEl.querySelectorAll(".dotBtn");
-      btns.forEach((b, i) => {
-        b.classList.toggle("active", i === idx);
-      });
+      btns.forEach((b, i) => b.classList.toggle("active", i === idx));
     }
 
     function render() {
@@ -1052,11 +1018,9 @@
       setTimeout(() => {
         imgEl.src = carouselImages[idx];
         imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
-        imgEl.onload = () => { imgEl.classList.add("show"); };
+        imgEl.onload = () => imgEl.classList.add("show");
         imgEl.onerror = () => {
-          if (imgEl.src.includes(".webp.webp")) {
-            imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
-          }
+          if (imgEl.src.includes(".webp.webp")) imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
         };
         setActiveDot();
       }, 80);
@@ -1079,10 +1043,7 @@
     carouselBox.addEventListener("mouseenter", () => { hovering = true; });
     carouselBox.addEventListener("mouseleave", () => { hovering = false; });
 
-    createDots();
-    render();
-    start();
-
+    createDots(); render(); start();
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
 </body>
