@@ -391,13 +391,13 @@
     }
     .support{
       display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
+      grid-template-columns: repeat(4, minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
     .stat{
       padding:14px 14px 15px;
-      min-height: 118px;
+      min-height: 112px;
     }
     .stat small{
       display:block;
@@ -411,16 +411,18 @@
     .stat strong{
       display:block;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size:20px;
+      font-size:19px;
       line-height:1.08;
       letter-spacing:-.02em;
       margin-bottom:8px;
+      text-wrap:balance;
     }
     .stat p{
       margin:0;
       color:var(--muted);
       font-size:13px;
       line-height:1.56;
+      text-wrap:balance;
     }
     .feature-chips{display:none;display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
     .chip{
@@ -442,19 +444,21 @@
       padding:4px 2px 0;
     }
     .stage-copy h2{
-      max-width: 14ch;
+      max-width: 12ch;
       margin:0;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(24px, 2.2vw, 34px);
+      font-size: clamp(23px, 2.08vw, 32px);
       line-height:1.02;
       letter-spacing:-.03em;
+      text-wrap:balance;
     }
     .stage-copy p{
       margin:8px 0 0;
       color:var(--muted);
       font-size:13.8px;
       line-height:1.6;
-      max-width:48ch;
+      max-width:38ch;
+      text-wrap:balance;
     }
     .feature-pill{
       padding:10px 12px;
@@ -610,13 +614,16 @@
       font-size: clamp(28px, 3vw, 44px);
       line-height:1;
       letter-spacing:-.035em;
+      max-width: 24ch;
+      text-wrap:balance;
     }
     .section-head p{
       margin:0;
       color:var(--muted);
       font-size:14px;
       line-height:1.65;
-      max-width:62ch;
+      max-width:44ch;
+      text-wrap:balance;
     }
 
     .portal-grid{
@@ -640,7 +647,7 @@
     .li{display:flex; gap:12px}
     .portal-highlights{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
+      grid-template-columns: repeat(3, minmax(0,1fr));
       gap:14px;
     }
     .portal-screen{padding:12px; border-radius:24px}
@@ -662,7 +669,7 @@
       aspect-ratio: 16 / 10;
     }
     .portal-note{
-      grid-column: span 2;
+      grid-column: 1 / -1;
       padding:18px;
       display:grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
@@ -908,7 +915,7 @@
       .hero-grid,
       .portal-grid,
       .carouselWrap{grid-template-columns:1fr}
-      .support,
+      .support{grid-template-columns:repeat(2, minmax(0,1fr))}
       .grid3,
       .trailGrid{grid-template-columns:1fr}
       .portal-highlights{grid-template-columns:1fr}
@@ -1008,22 +1015,27 @@
 <a class="btn btn-primary shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero ser aluna(o)</a>
 <a class="btn btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnHero" rel="noopener" target="_blank">Formulário (4 min)</a>
 </div>
-<p class="micro">Formulário para contexto inicial  WhatsApp para contato direto</p>
+<p class="micro">Formulário para contexto inicial • WhatsApp para contato direto</p>
 <div class="support">
 <div class="stat shine">
-<small>Estrutura</small>
-<strong>Portal próprio para materiais, atividades e histórico</strong>
-<p>Tudo fica reunido em um só ambiente com leitura clara e navegação simples</p>
+<small>Materiais</small>
+<strong>PDFs, fotos, vídeos e links em um só lugar</strong>
+<p>O aluno encontra tudo em um ambiente único, organizado e fácil de consultar</p>
 </div>
 <div class="stat shine">
-<small>Acompanhamento</small>
-<strong>Visão objetiva do que fazer e do que já avançou</strong>
-<p>O estudo deixa de depender de memória, improviso ou tentativa solta</p>
+<small>Atividades</small>
+<strong>Acesso rápido com leitura clara</strong>
+<p>As tarefas ficam visíveis e acessíveis sem dispersão ou procura desnecessária</p>
 </div>
 <div class="stat shine">
-<small>Experiência</small>
-<strong>Organização contínua antes, durante e depois da aula</strong>
-<p>A rotina fica mais estável, mais clara e mais compatível com a vida real</p>
+<small>Ranking</small>
+<strong>Evolução visível no portal</strong>
+<p>O ranking torna o avanço mais concreto e dá leitura imediata do desempenho</p>
+</div>
+<div class="stat shine">
+<small>Histórico</small>
+<strong>Continuidade do acompanhamento</strong>
+<p>Materiais, atividades e progresso mantêm contexto entre uma aula e outra</p>
 </div>
 </div>
 </article>
@@ -1031,8 +1043,8 @@
 <div class="stage-top">
 <div class="stage-copy">
 <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>Uma experiência organizada para aluno e professor</h2>
-<p>Atividades, materiais, relatórios e histórico em um ambiente próprio, com leitura clara e visual consistente</p>
+<h2>Um sistema claro para aluno e professor</h2>
+<p>Materiais, atividades, relatórios e histórico em um ambiente organizado</p>
 </div>
 </div>
 <div class="mockup-window shine" id="heroMockup">
@@ -1059,13 +1071,13 @@
 </div>
 <div class="mockup-caption">
 <div>
-<strong id="heroCaptionTitle">Visão do aluno com navegação direta</strong>
-<p id="heroCaptionText">Atividades, materiais e atalhos aparecem com clareza e sem dispersão</p>
+<strong id="heroCaptionTitle">Visão do aluno com leitura imediata</strong>
+<p id="heroCaptionText">Atividades, ranking e atalhos aparecem com clareza desde a primeira leitura</p>
 </div>
 <div class="caption-badges">
-<span>Aluno</span>
-<span>Professor</span>
 <span>Materiais</span>
+<span>Atividades</span>
+<span>Ranking</span>
 <span>Histórico</span>
 </div>
 </div>
@@ -1079,8 +1091,8 @@
 <div class="section-head">
 <div>
 <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>O Portal dos Alunos mostra como o trabalho continua fora da aula</h2>
-<p>Ele organiza a rotina, centraliza materiais e torna o acompanhamento visível desde o primeiro contato</p>
+<h2>O Portal dos Alunos mantém o estudo visível fora da aula</h2>
+<p>Materiais, atividades e progresso ficam visíveis desde o início</p>
 </div>
 </div>
 <div class="portal-grid">
@@ -1089,29 +1101,29 @@
 <li class="li shine">
 <span class="bullet"></span>
 <div>
-<b>O aluno encontra rápido o que precisa</b>
-<span>Atividades, materiais, relatórios e progresso aparecem em um só lugar com leitura clara</span>
+<b>Materiais em um só lugar</b>
+<span>PDFs, fotos, vídeos e links ficam organizados em um ambiente com leitura clara</span>
 </div>
 </li>
 <li class="li shine">
 <span class="bullet"></span>
 <div>
-<b>O professor acompanha com clareza</b>
-<span>Há visão do aluno, materiais, histórico e leitura objetiva da rotina</span>
+<b>Atividades com acesso rápido</b>
+<span>O aluno entra e sabe onde olhar para continuar o estudo sem dispersão</span>
 </div>
 </li>
 <li class="li shine">
 <span class="bullet"></span>
 <div>
-<b>O ambiente reforça profissionalismo</b>
-<span>A apresentação visual e a organização ajudam a transmitir método, cuidado e continuidade</span>
+<b>Ranking visível</b>
+<span>A evolução aparece no próprio ambiente e dá leitura imediata do desempenho</span>
 </div>
 </li>
 <li class="li shine">
 <span class="bullet"></span>
 <div>
-<b>A experiência tem continuidade real</b>
-<span>O portal sustenta o estudo entre as aulas e reduz a sensação de fragmentação</span>
+<b>Histórico e continuidade</b>
+<span>Materiais, atividades e progresso mantêm contexto entre uma aula e outra</span>
 </div>
 </li>
 </ul>
@@ -1129,18 +1141,22 @@
 <small>Central de materiais</small>
 <img alt="Central de materiais do aluno" loading="lazy" src="assets/portal-student-materials.webp"/>
 </div>
+<div class="portal-screen shine">
+<small>Ranking</small>
+<img alt="Ranking do Portal dos Alunos" loading="lazy" src="assets/portal-ranking.webp"/>
+</div>
 <div class="portal-note shine">
 <div class="proof-card shine">
 <strong>Continuidade fora da aula</strong>
-<p>O portal sustenta a rotina entre encontros ao vivo e dá mais sequência ao estudo</p>
+<p>O portal mantém materiais, tarefas e progresso conectados entre uma aula e outra</p>
 </div>
 <div class="proof-card shine">
-<strong>Confiança visual e funcional</strong>
-<p>Organização, clareza e consistência fortalecem a leitura do serviço</p>
+<strong>Leitura simples</strong>
+<p>Organização e consistência deixam claro o que existe e como cada parte funciona</p>
 </div>
 <div class="proof-card shine">
 <strong>Bastidor do professor visível</strong>
-<p>A visão do professor mostra método, acompanhamento e leitura do progresso</p>
+<p>Aluno e professor compartilham um mesmo sistema com leitura clara da rotina</p>
 </div>
 </div>
 </div>
@@ -1423,16 +1439,16 @@
 
     const heroFrames = {
       student: {
-        title: 'Visão do aluno com navegação direta',
-        text: 'Atividades, materiais e atalhos aparecem com clareza e sem dispersão'
+        title: 'Visão do aluno com leitura imediata',
+        text: 'Atividades, ranking e atalhos aparecem com clareza desde a primeira leitura'
       },
       materials: {
         title: 'Central de materiais com leitura simples',
-        text: 'Os materiais ficam organizados em um ambiente próprio e fácil de consultar'
+        text: 'PDFs, fotos, vídeos e links ficam no mesmo ambiente e podem ser consultados com rapidez'
       },
       teacher: {
         title: 'Visão do professor com leitura rápida da rotina',
-        text: 'O bastidor do professor reforça método, organização e acompanhamento'
+        text: 'O professor acompanha materiais, histórico e progresso no mesmo sistema'
       }
     };
 
