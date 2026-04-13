@@ -355,7 +355,7 @@
     .hero{padding:32px 0 18px}
     .hero-grid{
       display:grid;
-      grid-template-columns: 1.06fr .94fr;
+      grid-template-columns: 1fr 1fr;
       gap:18px;
       align-items:stretch;
     }
@@ -366,8 +366,8 @@
       font-size: clamp(38px, 4.8vw, 76px);
       line-height: .98;
       letter-spacing:-.045em;
-      max-width: 11ch;
-      text-wrap: balance;
+      max-width: 13ch;
+      text-wrap: initial;
     }
     .hero-copy h1 .accent-word{
       background: linear-gradient(135deg, #ffffff, #d6c6ff 42%, #9a74ff 88%);
@@ -381,7 +381,7 @@
       color:var(--muted);
       font-size:16.5px;
       line-height:1.72;
-      max-width: 60ch;
+      max-width: 52ch;
     }
     .micro{
       margin-top:14px;
@@ -392,14 +392,14 @@
     }
     .support{
       display:grid;
-      grid-template-columns: repeat(4, minmax(0,1fr));
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap:12px;
       margin-top:18px;
       align-items:stretch;
     }
     .stat{
       padding:16px 15px 16px;
-      min-height: 126px;
+      min-height: 118px;
     }
     .stat small{
       display:block;
@@ -413,11 +413,11 @@
     .stat strong{
       display:block;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size:18px;
+      font-size:17px;
       line-height:1.1;
       letter-spacing:-.02em;
       margin-bottom:8px;
-      text-wrap:balance;
+      text-wrap:initial;
     }
     .stat p{
       margin:0;
@@ -449,10 +449,10 @@
       max-width: none;
       margin:0;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(22px, 1.88vw, 30px);
-      line-height:1.04;
+      font-size: clamp(20px, 1.7vw, 27px);
+      line-height:1.08;
       letter-spacing:-.03em;
-      text-wrap:balance;
+      text-wrap:initial;
     }
     .stage-copy h2 br, .section-head h2 br{display:block; content:''}
     .stage-copy p{
@@ -460,7 +460,7 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.62;
-      max-width:40ch;
+      max-width:46ch;
       text-wrap:pretty;
     }
     .feature-pill{
@@ -611,10 +611,10 @@
     .section-head h2{
       margin:10px 0 10px;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(27px, 2.62vw, 40px);
+      font-size: clamp(28px, 2.45vw, 42px);
       line-height:1.05;
       letter-spacing:-.035em;
-      max-width:34ch;
+      max-width:46ch;
       text-wrap:initial;
     }
     .section-head p{
@@ -622,7 +622,7 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.62;
-      max-width:78ch;
+      max-width:64ch;
       text-wrap:initial;
     }
 
@@ -1044,7 +1044,7 @@
 <div class="stage-top">
 <div class="stage-copy">
 <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>Um sistema claro<br/>para aluno e professor</h2>
+<h2>Um sistema claro para aluno e professor</h2>
 <p>Materiais, atividades, relatórios e histórico em um ambiente organizado</p>
 </div>
 </div>
