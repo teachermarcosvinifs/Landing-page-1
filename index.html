@@ -485,9 +485,9 @@
       animation: floatMockup 8s ease-in-out infinite;
     }
     .mockup-topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:start;
       gap:12px;
       padding:0 4px 12px;
     }
@@ -507,7 +507,17 @@
       text-transform:uppercase;
       font-weight:700;
     }
-    .portal-tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .portal-tabs{
+      display:grid;
+      grid-template-columns:repeat(2, max-content);
+      gap:8px;
+      align-content:start;
+      justify-content:start;
+    }
+    .portal-tabs .portal-tab:nth-child(3){
+      grid-column:1 / span 2;
+      justify-self:start;
+    }
     .portal-tab{
       appearance:none;
       border:none;
@@ -592,9 +602,17 @@
       line-height:1.55;
       max-width:44ch;
     }
-    .caption-badges{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .caption-badges{
+      display:grid;
+      grid-template-columns:repeat(2, max-content);
+      gap:8px;
+      justify-content:end;
+      align-content:start;
+    }
     .caption-badges span{
-      padding:9px 10px;
+      min-width:118px;
+      padding:9px 12px;
+      text-align:center;
       border-radius:12px;
       border:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.04);
@@ -922,7 +940,7 @@
       .portal-note{grid-column: span 1; grid-template-columns:1fr}
       .hero-copy h1{max-width:12ch}
       .mockup-caption{flex-direction:column}
-      .caption-badges{justify-content:flex-start}
+      .caption-badges{justify-content:start}
     }
 
     @media (max-width: 860px){
@@ -950,6 +968,8 @@
       .feature-chips,
       .portal-tabs,
       .caption-badges{gap:8px}
+      .portal-tabs{grid-template-columns:repeat(2, max-content)}
+      .caption-badges{grid-template-columns:repeat(2, max-content)}
       .section-head h2{font-size: clamp(26px, 9vw, 36px); max-width:none}
       .section-head p{max-width:none}
       .hero-copy h1{max-width:none}
