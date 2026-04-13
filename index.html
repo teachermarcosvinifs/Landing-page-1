@@ -605,28 +605,25 @@
     }
 
     .section-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:16px;
+      display:block;
+      margin-bottom:18px;
     }
     .section-head h2{
-      margin:10px 0 8px;
+      margin:10px 0 10px;
       font-family:'Outfit', 'Inter', sans-serif;
       font-size: clamp(27px, 2.62vw, 40px);
-      line-height:1.04;
+      line-height:1.05;
       letter-spacing:-.035em;
-      max-width: 24ch;
-      text-wrap:balance;
+      max-width:34ch;
+      text-wrap:initial;
     }
     .section-head p{
       margin:0;
       color:var(--muted);
       font-size:14px;
       line-height:1.62;
-      max-width:56ch;
-      text-wrap:pretty;
+      max-width:78ch;
+      text-wrap:initial;
     }
 
     .portal-grid{
@@ -953,7 +950,8 @@
       .feature-chips,
       .portal-tabs,
       .caption-badges{gap:8px}
-      .section-head h2{font-size: clamp(26px, 9vw, 36px)}
+      .section-head h2{font-size: clamp(26px, 9vw, 36px); max-width:none}
+      .section-head p{max-width:none}
       .hero-copy h1{max-width:none}
       .support{grid-template-columns:1fr}
       .stat{min-height:auto}
