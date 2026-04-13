@@ -331,13 +331,14 @@
     .btn:hover{transform:translateY(-2px); border-color: rgba(255,255,255,.16)}
     .btn-primary{
       background:
-        linear-gradient(135deg, rgba(123,62,255,.96), rgba(180,118,255,.92));
-      box-shadow: 0 22px 55px rgba(109,40,217,.28), inset 0 1px 0 rgba(255,255,255,.18);
-      border-color: rgba(159,112,255,.42);
+        linear-gradient(180deg, #3D2971 0%, #34294E 56%, #261944 100%);
+      box-shadow: 0 20px 52px rgba(35,22,68,.34), inset 0 1px 0 rgba(255,255,255,.1);
+      border-color: rgba(106,76,194,.62);
       color:#fff;
     }
     .btn-primary:hover{
-      box-shadow: 0 26px 66px rgba(109,40,217,.36), inset 0 1px 0 rgba(255,255,255,.22);
+      box-shadow: 0 24px 62px rgba(35,22,68,.42), inset 0 1px 0 rgba(255,255,255,.14);
+      border-color: rgba(106,76,194,.74);
     }
     .btn-ghost{
       background: rgba(255,255,255,.04);
@@ -394,10 +395,11 @@
       grid-template-columns: repeat(4, minmax(0,1fr));
       gap:12px;
       margin-top:18px;
+      align-items:stretch;
     }
     .stat{
-      padding:14px 14px 15px;
-      min-height: 112px;
+      padding:16px 15px 16px;
+      min-height: 126px;
     }
     .stat small{
       display:block;
@@ -411,8 +413,8 @@
     .stat strong{
       display:block;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size:19px;
-      line-height:1.08;
+      font-size:18px;
+      line-height:1.1;
       letter-spacing:-.02em;
       margin-bottom:8px;
       text-wrap:balance;
@@ -420,9 +422,9 @@
     .stat p{
       margin:0;
       color:var(--muted);
-      font-size:13px;
-      line-height:1.56;
-      text-wrap:balance;
+      font-size:12.7px;
+      line-height:1.58;
+      text-wrap:pretty;
     }
     .feature-chips{display:none;display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
     .chip{
@@ -444,21 +446,22 @@
       padding:4px 2px 0;
     }
     .stage-copy h2{
-      max-width: 12ch;
+      max-width: none;
       margin:0;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(23px, 2.08vw, 32px);
-      line-height:1.02;
+      font-size: clamp(22px, 1.88vw, 30px);
+      line-height:1.04;
       letter-spacing:-.03em;
       text-wrap:balance;
     }
+    .stage-copy h2 br, .section-head h2 br{display:block; content:''}
     .stage-copy p{
-      margin:8px 0 0;
+      margin:10px 0 0;
       color:var(--muted);
-      font-size:13.8px;
-      line-height:1.6;
-      max-width:38ch;
-      text-wrap:balance;
+      font-size:14px;
+      line-height:1.62;
+      max-width:31ch;
+      text-wrap:pretty;
     }
     .feature-pill{
       padding:10px 12px;
@@ -522,10 +525,10 @@
     }
     .portal-tab:hover{transform:translateY(-1px)}
     .portal-tab.is-active{
-      background: linear-gradient(135deg, rgba(123,62,255,.22), rgba(168,85,247,.12));
+      background: linear-gradient(180deg, rgba(61,41,113,.95), rgba(38,25,68,.95));
       color:#fff;
-      border-color: rgba(139,92,255,.28);
-      box-shadow: 0 0 0 1px rgba(139,92,255,.1), 0 10px 28px rgba(109,40,217,.16);
+      border-color: rgba(106,76,194,.55);
+      box-shadow: 0 0 0 1px rgba(106,76,194,.16), 0 10px 28px rgba(35,22,68,.2);
     }
 
     .mockup-viewport{
@@ -609,21 +612,21 @@
       margin-bottom:16px;
     }
     .section-head h2{
-      margin:10px 0 6px;
+      margin:10px 0 8px;
       font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(28px, 3vw, 44px);
-      line-height:1;
+      font-size: clamp(27px, 2.62vw, 40px);
+      line-height:1.04;
       letter-spacing:-.035em;
-      max-width: 24ch;
+      max-width: 17ch;
       text-wrap:balance;
     }
     .section-head p{
       margin:0;
       color:var(--muted);
       font-size:14px;
-      line-height:1.65;
-      max-width:44ch;
-      text-wrap:balance;
+      line-height:1.62;
+      max-width:30ch;
+      text-wrap:pretty;
     }
 
     .portal-grid{
@@ -1043,7 +1046,7 @@
 <div class="stage-top">
 <div class="stage-copy">
 <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>Um sistema claro para aluno e professor</h2>
+<h2>Um sistema claro<br/>para aluno e professor</h2>
 <p>Materiais, atividades, relatórios e histórico em um ambiente organizado</p>
 </div>
 </div>
@@ -1091,7 +1094,7 @@
 <div class="section-head">
 <div>
 <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>O Portal dos Alunos mantém o estudo visível fora da aula</h2>
+<h2>O Portal dos Alunos mantém<br/>o estudo visível fora da aula</h2>
 <p>Materiais, atividades e progresso ficam visíveis desde o início</p>
 </div>
 </div>
