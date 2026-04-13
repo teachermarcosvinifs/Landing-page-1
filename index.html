@@ -3,686 +3,1175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Aulas de inglês online (iniciante, intermediário e avançado) com direção clara, prática guiada e rotina fora da aula para evolução consistente." />
-  <meta name="theme-color" content="#070B18" />
-  <title>Professor Marcos Vinicius — Inglês Online (General English)</title>
+  <meta name="description" content="Professor Marcos Vinicius | English Mentoring com Portal dos Alunos, materiais organizados, atividades, acompanhamento real e uma experiência premium além da aula." />
+  <meta name="theme-color" content="#06040d" />
+  <meta property="og:title" content="Professor Marcos Vinicius | English Mentoring" />
+  <meta property="og:description" content="English Mentoring com Portal dos Alunos, materiais, atividades e acompanhamento real em uma experiência premium." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://teachermarcosvinifs.github.io/Landing-page-1/" />
+  <meta property="og:image" content="https://teachermarcosvinifs.github.io/Landing-page-1/assets/og-cover.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Professor Marcos Vinicius | English Mentoring" />
+  <meta name="twitter:description" content="Acompanhamento premium, Portal dos Alunos, materiais organizados e direção clara para evolução consistente." />
+  <meta name="twitter:image" content="https://teachermarcosvinifs.github.io/Landing-page-1/assets/og-cover.jpg" />
+  <title>Professor Marcos Vinicius | English Mentoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg0:#060B18;
-      --bg1:#07112A;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.09);
-      --line: rgba(255,255,255,.10);
-      --text:#EAF0FF;
-      --muted: rgba(234,240,255,.74);
-      --muted2: rgba(234,240,255,.58);
-      --accent:#2E7BFF;
-      --accent2:#6BA6FF;
-      --good:#39D98A;
-      --warn:#FFB020;
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
-      --radius: 18px;
-      --radius2: 24px;
+      --bg:#04040A;
+      --bg2:#080813;
+      --panel: rgba(10,10,18,.78);
+      --panel-soft: rgba(14,13,25,.68);
+      --panel-strong: rgba(15,13,26,.9);
+      --line: rgba(255,255,255,.09);
+      --line-strong: rgba(255,255,255,.16);
+      --text:#F4F1FF;
+      --muted: rgba(233,227,255,.78);
+      --muted2: rgba(233,227,255,.54);
+      --purple:#8B5CFF;
+      --purple-2:#B28CFF;
+      --violet:#6D28D9;
+      --cyan:#14D7FF;
+      --emerald:#26E0B3;
+      --rose:#FF4D8D;
+      --amber:#FFB84D;
+      --shadow: 0 30px 90px rgba(0,0,0,.55);
+      --radius: 22px;
+      --radius-lg: 30px;
       --max: 1440px;
+      --mx: 50%;
+      --my: 50%;
     }
 
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
-        radial-gradient(1200px 600px at 15% 12%, rgba(46,123,255,.26), transparent 60%),
-        radial-gradient(900px 500px at 85% 18%, rgba(107,166,255,.18), transparent 55%),
-        radial-gradient(800px 500px at 50% 90%, rgba(46,123,255,.12), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+        radial-gradient(1200px 620px at 15% 10%, rgba(139,92,255,.17), transparent 58%),
+        radial-gradient(920px 540px at 85% 12%, rgba(20,215,255,.10), transparent 58%),
+        radial-gradient(920px 620px at 52% 85%, rgba(255,77,141,.08), transparent 60%),
+        linear-gradient(180deg, #05050b 0%, #080611 45%, #05050b 100%);
       overflow-x:hidden;
     }
 
-    /* subtle grid */
-    body:before{
+    body::before,
+    body::after{
       content:"";
       position:fixed;
-      inset:0;
-      background-image:
-        linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 64px 64px;
-      opacity:.18;
+      inset:-12%;
       pointer-events:none;
-      -webkit-mask-image: radial-gradient(800px 520px at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0));
-              mask-image: radial-gradient(800px 520px at 50% 20%, rgba(0,0,0,1), rgba(0,0,0,0));
+      z-index:-3;
+      opacity:.85;
+      filter: blur(36px);
+      mix-blend-mode: screen;
+    }
+    body::before{
+      background:
+        radial-gradient(38% 24% at 20% 22%, rgba(139,92,255,.22), transparent 72%),
+        radial-gradient(34% 22% at 80% 18%, rgba(20,215,255,.12), transparent 72%),
+        radial-gradient(28% 18% at 56% 84%, rgba(255,77,141,.10), transparent 72%);
+      animation: driftA 22s ease-in-out infinite alternate;
+    }
+    body::after{
+      background:
+        radial-gradient(24% 18% at 66% 22%, rgba(178,140,255,.16), transparent 72%),
+        radial-gradient(28% 18% at 16% 76%, rgba(38,224,179,.08), transparent 72%),
+        radial-gradient(20% 14% at 82% 70%, rgba(255,184,77,.07), transparent 72%);
+      animation: driftB 27s ease-in-out infinite alternate;
     }
 
+    .page-noise,
+    .page-grid,
+    .page-spotlight{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
+    .page-grid{
+      opacity:.12;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 74px 74px;
+      mask-image: radial-gradient(900px 580px at 50% 14%, rgba(0,0,0,1), rgba(0,0,0,0));
+      -webkit-mask-image: radial-gradient(900px 580px at 50% 14%, rgba(0,0,0,1), rgba(0,0,0,0));
+    }
+    .page-noise{
+      opacity:.035;
+      background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="160" height="160" filter="url(%23n)" opacity="1"/></svg>');
+      background-size: 180px 180px;
+      mix-blend-mode: soft-light;
+    }
+    .page-spotlight{
+      background:
+        radial-gradient(420px 260px at var(--mx) var(--my), rgba(178,140,255,.12), transparent 65%),
+        radial-gradient(320px 220px at calc(var(--mx) + 10%) calc(var(--my) + 4%), rgba(20,215,255,.05), transparent 65%);
+      opacity:.85;
+      transition: background .16s ease-out;
+    }
+
+    img{max-width:100%; display:block}
     a{color:inherit}
-    .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
-    .pill{
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 22px}
+    .section{padding: 42px 0}
+    .section-lg{padding: 58px 0}
+    .eyebrow{
       display:inline-flex;
       align-items:center;
       gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border:1px solid var(--line);
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size: 13px;
+      color: rgba(245,240,255,.86);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
-    .dot{width:10px; height:10px; border-radius:50%; background: rgba(46,123,255,.9); box-shadow:0 0 0 4px rgba(46,123,255,.18)}
+    .eyebrow .signal{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--purple), var(--purple-2));
+      box-shadow: 0 0 0 5px rgba(139,92,255,.16), 0 0 28px rgba(139,92,255,.24);
+    }
 
-    /* NAV */
+    .glass,
+    .mini,
+    .trail,
+    details,
+    .cta,
+    .portal-screen,
+    .portal-note,
+    .proof-card,
+    .hero-stage,
+    .mockup-window,
+    .nav,
+    .navlinks a,
+    .btn,
+    .li,
+    .chip,
+    .stat,
+    .feature-pill{
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .glass::before,
+    .mini::before,
+    .trail::before,
+    details::before,
+    .cta::before,
+    .portal-screen::before,
+    .portal-note::before,
+    .proof-card::before,
+    .hero-stage::before,
+    .mockup-window::before,
+    .li::before,
+    .stat::before,
+    .feature-pill::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      padding:1px;
+      border-radius:inherit;
+      background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.03) 24%, rgba(139,92,255,.36) 48%, rgba(20,215,255,.18) 72%, rgba(255,255,255,.08));
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      pointer-events:none;
+      opacity:.88;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+
+    .glass::after,
+    .mini::after,
+    .trail::after,
+    details::after,
+    .cta::after,
+    .portal-screen::after,
+    .portal-note::after,
+    .proof-card::after,
+    .hero-stage::after,
+    .mockup-window::after,
+    .li::after,
+    .stat::after,
+    .feature-pill::after,
+    .btn::after,
+    .navlinks a::after{
+      content:"";
+      position:absolute;
+      inset:-35%;
+      background: radial-gradient(240px 160px at var(--mx) var(--my), rgba(255,255,255,.12), transparent 55%);
+      opacity:0;
+      transition: opacity .25s ease;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .shine:hover::after,
+    .shine:focus-visible::after{opacity:1}
+
+    .glass,
+    .proof-card,
+    .hero-stage,
+    .cta,
+    details,
+    .mini,
+    .trail,
+    .portal-note,
+    .portal-screen,
+    .mockup-window,
+    .li,
+    .stat,
+    .feature-pill{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+        rgba(10,10,18,.74);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.04);
+      backdrop-filter: blur(18px) saturate(130%);
+    }
+
     .nav{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter: blur(14px);
-      background: rgba(6,11,24,.55);
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      position:sticky;
+      top:0;
+      z-index:70;
+      backdrop-filter: blur(20px) saturate(150%);
+      background: rgba(7,6,15,.58);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,.24);
     }
     .navin{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding: 12px 0;
-      gap: 14px;
+      gap:18px;
+      padding:12px 0;
     }
     .brand{
       display:flex;
       align-items:center;
-      gap: 12px;
-      min-width: 260px;
+      gap:14px;
+      min-width:280px;
     }
-    .brandText{
-      display:flex;
-      flex-direction:column;
-      line-height: 1.15;
-    }
-    .brand strong{display:block; font-size: 14px; letter-spacing:.2px}
-    .brand span{display:block; font-size: 12px; color: var(--muted2)}
     .avatar{
-      width: 44px; height: 44px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      width:48px;
+      height:48px;
+      flex:0 0 auto;
+      border-radius:16px;
       overflow:hidden;
-      flex: 0 0 auto;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: 0 14px 36px rgba(0,0,0,.36), 0 0 0 1px rgba(139,92,255,.12);
     }
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit: cover;
-      display:block;
+    .avatar img{width:100%; height:100%; object-fit:cover}
+    .brandText{display:flex; flex-direction:column; line-height:1.04}
+    .brandText strong{
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.01em;
     }
-
+    .brandText span{
+      margin-top:4px;
+      color:var(--muted2);
+      font-size:12.5px;
+      letter-spacing:.02em;
+    }
     .navlinks{
       display:flex;
-      gap: 6px;
-      flex-wrap: wrap;
+      flex-wrap:wrap;
       justify-content:flex-end;
       align-items:center;
+      gap:8px;
     }
     .navlinks a{
       text-decoration:none;
-      font-size: 13px;
-      padding: 8px 10px;
-      border-radius: 12px;
+      padding:10px 12px;
+      border-radius:14px;
       color: var(--muted);
-      border: 1px solid transparent;
+      border:1px solid transparent;
+      transition: transform .2s ease, color .2s ease, border-color .2s ease, background .2s ease;
+      z-index:1;
     }
-    .navlinks a:hover{
+    .navlinks a:not(.btn):hover{
+      color: var(--text);
+      transform: translateY(-1px);
       border-color: rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      color: var(--text);
     }
 
     .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap: 10px;
+      gap:10px;
+      min-height: 52px;
       padding: 14px 18px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.1);
       text-decoration:none;
-      font-weight: 650;
-      letter-spacing:.2px;
-      transition: transform .15s ease, background .2s ease, border-color .2s ease;
-      user-select:none;
+      font-weight: 750;
+      letter-spacing:.01em;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .25s ease, background .25s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+      z-index:1;
       white-space:nowrap;
     }
-    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22)}
+    .btn:hover{transform:translateY(-2px); border-color: rgba(255,255,255,.16)}
     .btn-primary{
-      background: linear-gradient(135deg, rgba(46,123,255,.95), rgba(107,166,255,.85));
-      border-color: rgba(46,123,255,.55);
-      box-shadow: 0 18px 52px rgba(46,123,255,.24);
+      background:
+        linear-gradient(135deg, rgba(123,62,255,.96), rgba(180,118,255,.92));
+      box-shadow: 0 22px 55px rgba(109,40,217,.28), inset 0 1px 0 rgba(255,255,255,.18);
+      border-color: rgba(159,112,255,.42);
+      color:#fff;
+    }
+    .btn-primary:hover{
+      box-shadow: 0 26px 66px rgba(109,40,217,.36), inset 0 1px 0 rgba(255,255,255,.22);
     }
     .btn-ghost{
       background: rgba(255,255,255,.04);
       color: var(--text);
     }
-    .btn-sm{padding: 10px 12px; font-size: 13px; border-radius: 12px}
-    .btn-row{display:flex; gap: 10px; flex-wrap: wrap; align-items:center}
+    .btn-dark{
+      background: rgba(0,0,0,.22);
+      color: var(--text);
+    }
+    .btn-sm{min-height:42px; padding:10px 12px; font-size:13px; border-radius:14px}
+    .btn-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px}
+    .mobileActions{display:none}
 
-    /* Mobile-only actions (por padrão, escondido no desktop) */
-    .mobileActions{display:none;}
-
-    /* SECTIONS */
-    section{padding: 34px 0}
-    .hero{padding-top: 26px}
-    .grid2{
+    .hero{padding:32px 0 18px}
+    .hero-grid{
       display:grid;
-      grid-template-columns: 1.08fr .92fr;
-      gap: 18px;
+      grid-template-columns: 1.06fr .94fr;
+      gap:18px;
       align-items:stretch;
     }
-    .card{
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    .hero-copy{padding:28px}
+    .hero-copy h1{
+      margin:18px 0 12px;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size: clamp(38px, 4.8vw, 76px);
+      line-height: .98;
+      letter-spacing:-.045em;
+      max-width: 11ch;
+      text-wrap: balance;
     }
-    .pad{padding: 22px}
-    h1{
-      margin: 14px 0 10px;
-      font-size: clamp(28px, 3.2vw, 46px);
-      line-height: 1.05;
-      letter-spacing: -.6px;
+    .hero-copy h1 .accent-word{
+      background: linear-gradient(135deg, #ffffff, #d6c6ff 42%, #9a74ff 88%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      text-shadow: 0 0 30px rgba(139,92,255,.18);
     }
     .lead{
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
+      margin:0;
+      color:var(--muted);
+      font-size:16.5px;
+      line-height:1.72;
       max-width: 60ch;
     }
     .micro{
-      margin-top: 10px;
-      color: var(--muted2);
-      font-size: 12.5px;
-      line-height: 1.55;
+      margin-top:14px;
+      color:var(--muted2);
+      font-size:12.8px;
+      line-height:1.62;
+      max-width:58ch;
     }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top: 14px;
+    .support{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
+    .stat{
+      padding:14px 14px 15px;
+      min-height: 118px;
+    }
+    .stat small{
+      display:block;
+      color:var(--muted2);
+      font-size:11.5px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin-bottom:10px;
+      font-weight:800;
+    }
+    .stat strong{
+      display:block;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size:20px;
+      line-height:1.08;
+      letter-spacing:-.02em;
+      margin-bottom:8px;
+    }
+    .stat p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.56;
+    }
+    .feature-chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
     .chip{
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
+      font-size:12.5px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
       background: rgba(255,255,255,.04);
-      color: var(--muted);
+      color:var(--muted);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
 
-    .list{
+    .hero-stage{padding:18px; display:flex; flex-direction:column; gap:14px; min-height:100%}
+    .stage-top{
       display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin: 10px 0 0;
-      padding: 0;
-      list-style:none;
-    }
-    .li{
-      display:flex;
-      gap: 12px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-    }
-    .li b{display:block; font-size: 13px; margin-bottom: 3px}
-    .li span{display:block; font-size: 12.5px; color: var(--muted2); line-height: 1.45}
-    .bullet{
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      margin-top: 4px;
-      background: rgba(46,123,255,.9);
-      box-shadow: 0 0 0 4px rgba(46,123,255,.18);
-      flex: 0 0 auto;
-    }
-
-    .titleRow{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-    .h2{
-      margin:0;
-      font-size: 22px;
-      letter-spacing:-.2px;
-    }
-    .sub{
-      margin:0;
-      font-size: 13px;
-      color: var(--muted2);
-      line-height: 1.45;
-      max-width: 52ch;
-    }
-
-    /* How it works */
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-    .mini{
-      padding: 16px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 160px;
-    }
-    .kicker{
-      display:inline-flex;
       align-items:center;
-      gap:10px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing:.6px;
-      color: rgba(234,240,255,.88);
-      text-transform: uppercase;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
+      justify-content:space-between;
+      gap:12px;
+      padding:4px 2px 0;
     }
-    .mini h3{
-      margin: 12px 0 6px;
-      font-size: 16px;
-      letter-spacing:-.2px;
-    }
-    .mini p{
+    .stage-copy h2{
       margin:0;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.55;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size: clamp(24px, 2.2vw, 34px);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+    .stage-copy p{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:13.8px;
+      line-height:1.6;
+      max-width:48ch;
+    }
+    .feature-pill{
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      color:rgba(243,238,255,.88);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
     }
 
-    /* Carousel */
-    .carouselWrap{
-      display:grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 16px;
-      align-items: stretch;
+    .mockup-window{
+      flex:1;
+      padding:14px;
+      border-radius:26px;
+      background:
+        linear-gradient(180deg, rgba(17,15,31,.96), rgba(10,9,20,.92));
+      box-shadow: 0 34px 90px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.05), 0 0 40px rgba(139,92,255,.12);
+      animation: floatMockup 8s ease-in-out infinite;
     }
-    .carousel{
+    .mockup-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 4px 12px;
+    }
+    .mockup-dots{display:flex; gap:7px; align-items:center}
+    .mockup-dots span{
+      width:9px; height:9px; border-radius:999px;
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 0 18px rgba(255,255,255,.08);
+    }
+    .mockup-dots span:nth-child(1){background: rgba(255,77,141,.85)}
+    .mockup-dots span:nth-child(2){background: rgba(255,184,77,.85)}
+    .mockup-dots span:nth-child(3){background: rgba(38,224,179,.8)}
+    .mockup-label{
+      color:var(--muted2);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .portal-tabs{display:flex; gap:8px; flex-wrap:wrap}
+    .portal-tab{
+      appearance:none;
+      border:none;
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      border-radius:999px;
+      padding:10px 12px;
+      font: inherit;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.02em;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.08);
+      transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .portal-tab:hover{transform:translateY(-1px)}
+    .portal-tab.is-active{
+      background: linear-gradient(135deg, rgba(123,62,255,.22), rgba(20,215,255,.12));
+      color:#fff;
+      border-color: rgba(139,92,255,.28);
+      box-shadow: 0 0 0 1px rgba(139,92,255,.1), 0 10px 28px rgba(109,40,217,.16);
+    }
+
+    .mockup-viewport{
       position:relative;
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
+      aspect-ratio: 16 / 10.4;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.08);
       overflow:hidden;
-      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(13,12,21,.95), rgba(8,8,15,.95));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05), inset 0 -50px 120px rgba(123,62,255,.06);
     }
-    .carouselStage{
-      position:relative;
-      width: 100%;
-      aspect-ratio: 16 / 10;
+    .screen-frame{
+      position:absolute;
+      inset:0;
+      opacity:0;
+      transform: scale(1.02);
+      transition: opacity .7s ease, transform .9s ease;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 12px;
+      padding:14px;
+    }
+    .screen-frame.is-active{
+      opacity:1;
+      transform: scale(1);
+    }
+    .screen-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow: 0 14px 44px rgba(0,0,0,.38);
+    }
+    .mockup-overlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 14%, transparent 72%, rgba(0,0,0,.3) 100%),
+        radial-gradient(240px 140px at 80% 12%, rgba(139,92,255,.18), transparent 70%),
+        radial-gradient(260px 160px at 20% 80%, rgba(20,215,255,.06), transparent 70%);
+    }
+    .mockup-caption{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:12px;
+      align-items:flex-start;
+    }
+    .mockup-caption strong{
+      display:block;
+      font-size:13.5px;
+      color:#fff;
+      margin-bottom:5px;
+    }
+    .mockup-caption p{
+      margin:0;
+      color:var(--muted2);
+      font-size:12.5px;
+      line-height:1.55;
+      max-width:44ch;
+    }
+    .caption-badges{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .caption-badges span{
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:11.5px;
+      font-weight:700;
+      letter-spacing:.03em;
+    }
+
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .section-head h2{
+      margin:10px 0 6px;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size: clamp(28px, 3vw, 44px);
+      line-height:1;
+      letter-spacing:-.035em;
+    }
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+      max-width:62ch;
+    }
+
+    .portal-grid{
+      display:grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .portal-copy{padding:24px}
+    .portal-copy .list{margin-top:16px}
+    .portal-copy .li{background: rgba(255,255,255,.03); padding:14px 14px}
+    .portal-copy .li b{display:block; font-size:14px; margin-bottom:4px}
+    .portal-copy .li span{display:block; font-size:13px; color:var(--muted); line-height:1.55}
+    .bullet{
+      width:10px; height:10px; border-radius:50%;
+      margin-top:5px; flex:0 0 auto;
+      background: linear-gradient(135deg, var(--purple), var(--purple-2));
+      box-shadow: 0 0 0 5px rgba(139,92,255,.12), 0 0 22px rgba(139,92,255,.18);
+    }
+    .list{display:flex; flex-direction:column; gap:10px; margin:0; padding:0; list-style:none}
+    .li{display:flex; gap:12px}
+    .portal-highlights{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+    .portal-screen{padding:12px; border-radius:24px}
+    .portal-screen small{
+      display:block;
+      margin:0 0 10px;
+      color:var(--muted2);
+      font-size:11.8px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .portal-screen img{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 18px 48px rgba(0,0,0,.35);
+      width:100%;
+      object-fit:cover;
+      aspect-ratio: 16 / 10;
+    }
+    .portal-note{
+      grid-column: span 2;
+      padding:18px;
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:12px;
+    }
+    .proof-card{
+      padding:16px;
+      border-radius:20px;
+      min-height:126px;
+      background: rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .proof-card strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:8px;
+      letter-spacing:.01em;
+    }
+    .proof-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.58;
+    }
+
+    .grid3,
+    .trailGrid{display:grid; gap:14px}
+    .grid3{grid-template-columns:repeat(3, minmax(0,1fr))}
+    .mini{padding:18px; min-height:190px}
+    .mini .kicker,
+    .trail .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      color: rgba(243,238,255,.88);
+      font-size:11.5px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .mini h3,
+    .trail h3{
+      margin:14px 0 8px;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size:20px;
+      letter-spacing:-.02em;
+      line-height:1.08;
+    }
+    .mini p,
+    .trail ul,
+    .trail li,
+    .carHint,
+    .sub,
+    .ans,
+    .cta p{
+      color:var(--muted);
+      font-size:13.6px;
+      line-height:1.66;
+    }
+    .mini:hover,
+    .trail:hover,
+    .portal-screen:hover,
+    .portal-note:hover,
+    .proof-card:hover,
+    .li:hover,
+    .stat:hover,
+    details:hover,
+    .glass:hover,
+    .hero-stage:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 34px 96px rgba(0,0,0,.58);
+    }
+    .mini,
+    .trail,
+    .portal-screen,
+    .portal-note,
+    .proof-card,
+    .li,
+    .stat,
+    details,
+    .glass,
+    .hero-stage{transition: transform .25s ease, box-shadow .3s ease, border-color .25s ease}
+
+    .carouselWrap{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .carousel{
+      position:relative;
+      border-radius: 28px;
+      border:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(14,13,24,.94), rgba(9,8,16,.96));
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      isolation:isolate;
+    }
+    .carousel::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(420px 240px at 18% 18%, rgba(139,92,255,.14), transparent 70%),
+        radial-gradient(360px 220px at 82% 84%, rgba(20,215,255,.06), transparent 72%);
+      opacity:.9;
+    }
+    .carouselStage{
+      position:relative;
+      width:100%;
+      aspect-ratio:16 / 10;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
     }
     .carouselStage img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
+      width:100%; height:100%; object-fit:contain;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.03);
-      display:block;
-      opacity: 0;
-      transform: scale(1.01);
-      transition: opacity .5s ease, transform .7s ease;
+      opacity:0;
+      transform: scale(1.012);
+      transition: opacity .55s ease, transform .7s ease;
+      box-shadow: 0 20px 44px rgba(0,0,0,.34);
     }
-    .carouselStage img.show{
-      opacity: 1;
-      transform: scale(1.0);
-    }
+    .carouselStage img.show{opacity:1; transform:scale(1)}
     .carControls{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      gap:10px;
+      padding: 14px 16px;
+      border-top:1px solid rgba(255,255,255,.08);
       background: rgba(255,255,255,.03);
     }
-    .dots{
-      display:flex;
-      gap: 8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .dots{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
     .dotBtn{
-      width: 10px;
-      height: 10px;
-      border-radius: 99px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.10);
-      cursor:pointer;
-      padding:0;
+      width: 10px; height:10px; border-radius:999px; border:none; padding:0;
+      background: rgba(255,255,255,.12);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.14);
+      cursor:pointer; transition: all .25s ease;
     }
     .dotBtn.active{
-      width: 22px;
-      background: rgba(46,123,255,.9);
-      border-color: rgba(46,123,255,.65);
-      box-shadow: 0 0 0 4px rgba(46,123,255,.18);
+      width: 24px;
+      background: linear-gradient(135deg, rgba(123,62,255,.92), rgba(180,118,255,.92));
+      box-shadow: 0 0 0 4px rgba(139,92,255,.16);
     }
     .carBtn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width: 38px; height: 38px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      cursor:pointer;
-      color: var(--text);
+      display:inline-flex; align-items:center; justify-content:center;
+      width:42px; height:42px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.05);
+      cursor:pointer; color:var(--text);
+      font-size:22px; line-height:1;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
     }
-    .carBtn:hover{border-color: rgba(255,255,255,.24); transform: translateY(-1px)}
-    .carHint{
-      color: var(--muted2);
-      font-size: 12.5px;
-      line-height: 1.5;
-    }
+    .carBtn:hover{transform:translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.08)}
 
-    /* Trails */
-    .trailGrid{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      align-items:stretch;
-    }
-    .trail{
-      padding: 16px;
-      border-radius: var(--radius2);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      box-shadow: 0 14px 35px rgba(0,0,0,.25);
-      min-height: 260px;
-    }
-    .trail .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing:.6px;
-      text-transform: uppercase;
-      color: rgba(234,240,255,.90);
-    }
-    .trail h3{
-      margin: 12px 0 8px;
-      font-size: 16px;
-      letter-spacing:-.2px;
-    }
-    .trail ul{
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
-    }
+    .trailGrid{grid-template-columns:repeat(3, minmax(0,1fr))}
+    .trail{padding:18px; min-height:308px}
+    .trail ul{margin:0; padding-left:18px}
 
-    /* FAQ */
-    details{
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-      overflow:hidden;
-    }
-    details + details{margin-top: 10px}
+    details{border-radius:22px; background: rgba(12,11,22,.78)}
+    details + details{margin-top:10px}
     summary{
       cursor:pointer;
-      padding: 14px 14px;
+      padding:16px 16px;
       list-style:none;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      font-weight: 700;
-      color: rgba(234,240,255,.92);
+      gap:12px;
+      font-size:14.5px;
+      font-weight:750;
+      color:rgba(244,240,255,.94);
     }
     summary::-webkit-details-marker{display:none}
-    .ans{
-      padding: 0 14px 14px;
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
-    }
-    .ans b{color: rgba(234,240,255,.92)}
     .chev{
-      width: 26px; height: 26px;
+      width:30px; height:30px;
       display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      flex: 0 0 auto;
-      transition: transform .2s ease;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      flex:0 0 auto;
+      transition: transform .22s ease;
     }
-    details[open] .chev{transform: rotate(180deg)}
+    details[open] .chev{transform:rotate(180deg)}
+    .ans{padding:0 16px 16px}
 
-    /* CTA bottom */
     .cta{
-      padding: 18px;
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(800px 260px at 15% 30%, rgba(46,123,255,.20), transparent 60%),
-        rgba(255,255,255,.04);
-      box-shadow: var(--shadow);
+      padding:22px;
       display:flex;
-      flex-wrap:wrap;
-      align-items:center;
       justify-content:space-between;
-      gap: 14px;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      background:
+        radial-gradient(620px 260px at 14% 24%, rgba(123,62,255,.18), transparent 62%),
+        radial-gradient(440px 220px at 86% 76%, rgba(20,215,255,.08), transparent 62%),
+        linear-gradient(180deg, rgba(15,14,28,.94), rgba(10,9,18,.96));
     }
-    .cta h3{margin:0; font-size: 18px}
-    .cta p{margin:6px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 62ch}
+    .cta h3{
+      margin:0;
+      font-family:'Outfit', 'Inter', sans-serif;
+      font-size: clamp(22px, 2.4vw, 32px);
+      letter-spacing:-.03em;
+      line-height:1.02;
+    }
 
     footer{
-      padding: 24px 0 40px;
-      color: var(--muted2);
-      font-size: 12.5px;
+      padding: 22px 0 40px;
+      color:var(--muted2);
+      font-size:12.6px;
     }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .grid2{grid-template-columns: 1fr}
-      .grid3{grid-template-columns: 1fr}
-      .trailGrid{grid-template-columns: 1fr}
-      .carouselWrap{grid-template-columns: 1fr}
-      .brand{min-width: 0}
-      .navlinks{justify-content:flex-start}
+    @keyframes driftA{
+      0%{transform: translate3d(0,0,0) scale(1)}
+      50%{transform: translate3d(2%,-2%,0) scale(1.04)}
+      100%{transform: translate3d(-3%,2%,0) scale(1.02)}
+    }
+    @keyframes driftB{
+      0%{transform: translate3d(0,0,0) scale(1)}
+      50%{transform: translate3d(-2%,2%,0) scale(1.04)}
+      100%{transform: translate3d(2%,-1%,0) scale(1.03)}
+    }
+    @keyframes floatMockup{
+      0%,100%{transform: translateY(0px)}
+      50%{transform: translateY(-5px)}
+    }
+    @keyframes pulseGlow{
+      0%,100%{opacity:.45}
+      50%{opacity:.8}
     }
 
-    /* MOBILE HEADER (somente no mobile) */
-    @media (max-width: 760px){
-      /* remove os links do header no mobile */
-      .navlinks{display:none !important;}
-
-      /* nav vira 2 linhas: marca + ações */
-      .navin{
-        flex-direction:column;
-        align-items:stretch;
-        gap: 10px;
-        padding: 10px 0;
-      }
-
-      /* marca: texto à esquerda, foto à direita (sinergia) */
-      .brand{
-        width:100%;
-        justify-content:space-between;
-        align-items:center;
-        gap: 12px;
-      }
-      .brand strong{font-size: 15px}
-      .brand span{font-size: 12.5px}
-
-      /* avatar sutilmente maior e alinhado com a marca */
-      .avatar{
-        width: 52px;
-        height: 52px;
-        border-radius: 16px;
-      }
-
-      /* ações: botões finos em 2 linhas */
-      .mobileActions{
-        display:flex;
-        flex-direction:column;
-        gap: 10px;
-        width:100%;
-        align-items:stretch;
-        padding-bottom: 4px;
-      }
-      .mobileActions .btn{
-        width:100%;
-        padding: 10px 14px;      /* mais fino */
-        font-size: 14px;         /* levemente menor */
-        border-radius: 14px;
-      }
+    @media (max-width: 1100px){
+      .hero-grid,
+      .portal-grid,
+      .carouselWrap{grid-template-columns:1fr}
+      .support,
+      .grid3,
+      .trailGrid{grid-template-columns:1fr}
+      .portal-highlights{grid-template-columns:1fr}
+      .portal-note{grid-column: span 1; grid-template-columns:1fr}
+      .hero-copy h1{max-width:12ch}
+      .mockup-caption{flex-direction:column}
+      .caption-badges{justify-content:flex-start}
     }
 
-    @media (max-width: 520px){
-      .btn{width: 100%}
+    @media (max-width: 860px){
+      .navlinks{display:none !important}
+      .navin{flex-direction:column; align-items:stretch; gap:10px}
+      .brand{width:100%; justify-content:space-between; min-width:0}
+      .avatar{width:54px; height:54px; border-radius:18px}
+      .mobileActions{display:flex; flex-direction:column; gap:10px; width:100%}
+      .mobileActions .btn{width:100%}
+      .hero-copy,
+      .hero-stage,
+      .portal-copy,
+      .mini,
+      .trail,
+      .cta{padding:18px}
+      .section{padding:34px 0}
+      .section-lg{padding:44px 0}
+      .hero-copy h1{font-size: clamp(34px, 10vw, 56px)}
+    }
+
+    @media (max-width: 620px){
+      .wrap{padding:0 16px}
+      .btn{width:100%}
       .btn-row{width:100%}
+      .feature-chips,
+      .portal-tabs,
+      .caption-badges{gap:8px}
+      .section-head h2{font-size: clamp(26px, 9vw, 36px)}
+      .hero-copy h1{max-width:none}
+      .support{grid-template-columns:1fr}
+      .stat{min-height:auto}
+      .mockup-window{padding:12px}
+      .portal-screen img{aspect-ratio:16 / 10.8}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+        scroll-behavior:auto !important;
+      }
+      body::before,
+      body::after,
+      .page-spotlight{display:none}
     }
   </style>
 </head>
-
 <body>
+  <div class="page-grid"></div>
+  <div class="page-noise"></div>
+  <div class="page-spotlight"></div>
+
   <header class="nav">
     <div class="wrap">
       <div class="navin">
         <div class="brand">
           <div class="brandText">
             <strong>Professor Marcos Vinicius</strong>
-            <span>Inglês Online • General English</span>
+            <span>English Mentoring • acompanhamento premium</span>
           </div>
-
           <div class="avatar" title="Professor Marcos Vinicius">
-            <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager">
+            <img id="profileImg" src="assets/profile.webp.webp" alt="Foto do professor" loading="eager" />
           </div>
         </div>
 
-        <!-- Desktop: links + botões (intocado) -->
-        <nav class="navlinks" aria-label="Navegação">
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#atividades">Atividades</a>
-          <a href="#trilhas">Trilhas</a>
-          <a href="#faq">Dúvidas</a>
-
-          <a class="btn btn-sm btn-ghost" id="formBtnTop" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
-            Formulário (4 min)
-          </a>
-
-          <a class="btn btn-sm btn-primary" id="waBtnTop" href="#" target="_blank" rel="noopener">
-            Quero ser aluna(o)
-          </a>
+        <nav class="navlinks" aria-label="Navegação principal">
+          <a class="shine" href="#portal">Portal dos Alunos</a>
+          <a class="shine" href="#como-funciona">Como funciona</a>
+          <a class="shine" href="#atividades">Atividades</a>
+          <a class="shine" href="#trilhas">Trilhas</a>
+          <a class="shine" href="#faq">Dúvidas</a>
+          <a class="btn btn-sm btn-ghost shine" id="formBtnTop" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+          <a class="btn btn-sm btn-primary shine" id="waBtnTop" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
         </nav>
 
-        <!-- Mobile: apenas os 2 botões (links removidos no mobile) -->
         <div class="mobileActions" aria-label="Ações rápidas (mobile)">
-          <a class="btn btn-ghost" id="formBtnTopMobile" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">
-            Formulário
-          </a>
-          <a class="btn btn-primary" id="waBtnTopMobile" href="#" target="_blank" rel="noopener">
-            Quero ser aluna(o)
-          </a>
+          <a class="btn btn-ghost shine" id="formBtnTopMobile" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário</a>
+          <a class="btn btn-primary shine" id="waBtnTopMobile" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
         </div>
-
       </div>
     </div>
   </header>
 
   <main>
-    <!-- HERO -->
-    <section class="hero">
+    <section class="hero section-lg">
       <div class="wrap">
-        <div class="grid2">
-          <div class="card">
-            <div class="pad">
-              <span class="pill"><span class="dot"></span> Direção clara • prática guiada • evolução consistente</span>
+        <div class="hero-grid">
+          <article class="glass hero-copy shine">
+            <span class="eyebrow"><span class="signal"></span> English Mentoring • Portal dos Alunos • evolução consistente</span>
+            <h1>Seu inglês merece <span class="accent-word">mais do que uma aula por semana.</span></h1>
+            <p class="lead">
+              English Mentoring com direção clara, acompanhamento real e uma experiência premium que continua além da aula: Portal dos Alunos, materiais organizados, atividades, histórico e progresso em um ambiente pensado para gerar consistência.
+            </p>
+            <div class="btn-row" style="margin-top:18px">
+              <a class="btn btn-primary shine" id="waBtnHero" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+              <a class="btn btn-ghost shine" id="formBtnHero" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+            </div>
+            <p class="micro">
+              No formulário, você me diz seu objetivo e disponibilidade. Eu leio com atenção e te retorno no WhatsApp com direcionamento real. No botão “Quero ser aluna(o)”, você já abre a conversa com mensagem pronta.
+            </p>
 
-              <h1>Inglês real, com estrutura e segurança — do iniciante ao avançado.</h1>
-
-              <p class="lead">
-                Aulas online para ganhar controle: formar frases com clareza, entender melhor no listening e falar com mais naturalidade
-                — sem depender de “decorar regra” ou ficar travando em situações reais.
-              </p>
-
-              <div class="btn-row" style="margin-top:16px">
-                <a class="btn btn-primary" id="waBtnHero" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-                <a class="btn btn-ghost" id="formBtnHero" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+            <div class="support">
+              <div class="stat shine">
+                <small>Estrutura</small>
+                <strong>Portal próprio para continuar além da aula</strong>
+                <p>Materiais, atividades, relatórios e atalhos de ação reunidos em uma experiência autoral.</p>
               </div>
-
-              <p class="micro">
-                Ao clicar em <b>“Formulário (4 min)”</b>, você me diz seu objetivo e disponibilidade. Eu leio e te retorno no WhatsApp com direcionamento e opções.
-                Ao clicar em <b>“Quero ser aluna(o)”</b>, você abre o WhatsApp com uma mensagem pronta.
-              </p>
-
-              <div class="chips">
-                <span class="chip">General English (vida real)</span>
-                <span class="chip">Turmas (4–6) + Individuais</span>
-                <span class="chip">Rotina fora da aula</span>
-                <span class="chip">Contrato semestral</span>
-                <span class="chip">Suporte por WhatsApp</span>
+              <div class="stat shine">
+                <small>Acompanhamento</small>
+                <strong>Visão clara do que fazer e do que está avançando</strong>
+                <p>O estudo deixa de depender só de memória, improviso ou motivação do momento.</p>
+              </div>
+              <div class="stat shine">
+                <small>Experiência</small>
+                <strong>Rotina guiada, sem parecer improvisada</strong>
+                <p>Você recebe direção, sequência e materiais organizados para evoluir com consistência.</p>
               </div>
             </div>
-          </div>
 
-          <div class="card">
-            <div class="pad">
-              <div class="titleRow">
-                <div>
-                  <h2 class="h2">Se você se reconhece aqui, faz sentido conversar:</h2>
-                  <p class="sub">Sem promessas mágicas — com diagnóstico, estratégia e treino inteligente.</p>
+            <div class="feature-chips">
+              <span class="chip">Portal dos Alunos</span>
+              <span class="chip">General English (vida real)</span>
+              <span class="chip">Turmas + individuais</span>
+              <span class="chip">Materiais organizados</span>
+              <span class="chip">Suporte por WhatsApp</span>
+            </div>
+          </article>
+
+          <aside class="hero-stage shine">
+            <div class="stage-top">
+              <div class="stage-copy">
+                <span class="eyebrow"><span class="signal"></span> experiência visual premium</span>
+                <h2>Uma estrutura que o aluno sente na prática.</h2>
+                <p>O que você vê aqui não é “enfeite”. É a prova visual de que existe acompanhamento, organização e continuidade real por trás das aulas.</p>
+              </div>
+              <span class="feature-pill shine">Cinemático • moderno • autoral</span>
+            </div>
+
+            <div class="mockup-window shine" id="heroMockup">
+              <div class="mockup-topbar">
+                <div class="mockup-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="portal-tabs" role="tablist" aria-label="Visões do portal">
+                  <button class="portal-tab is-active" type="button" data-screen="student">Visão do aluno</button>
+                  <button class="portal-tab" type="button" data-screen="materials">Central de materiais</button>
+                  <button class="portal-tab" type="button" data-screen="teacher">Visão do professor</button>
                 </div>
+                <span class="mockup-label">Portal dos Alunos</span>
               </div>
 
-              <ul class="list">
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Você trava pra começar a frase</b>
-                    <span>não por falta de vontade, mas porque a estrutura “não vem”.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Sua mente dá branco com coisas simples</b>
-                    <span>e você perde a confiança na hora.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Você tenta traduzir e se perde</b>
-                    <span>e quer parar de depender do tradutor.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Você quer método organizado</b>
-                    <span>com orientação real — sem enrolação e sem “modelo pronto”.</span>
-                  </div>
-                </li>
-              </ul>
+              <div class="mockup-viewport">
+                <div class="screen-frame is-active" data-screen-frame="student">
+                  <img src="assets/portal-student-dashboard.webp" alt="Dashboard do aluno no Portal dos Alunos" loading="eager" />
+                </div>
+                <div class="screen-frame" data-screen-frame="materials">
+                  <img src="assets/portal-student-materials.webp" alt="Central de materiais do aluno" loading="lazy" />
+                </div>
+                <div class="screen-frame" data-screen-frame="teacher">
+                  <img src="assets/portal-teacher-dashboard.webp" alt="Visão do professor no English Mentoring" loading="lazy" />
+                </div>
+                <div class="mockup-overlay"></div>
+              </div>
 
-              <div style="margin-top:14px" class="carHint">
-                <b>Objetivo do meu trabalho:</b> te dar um caminho claro + treino consistente para você ganhar autonomia em fala, escuta, estrutura e confiança.
+              <div class="mockup-caption">
+                <div>
+                  <strong id="heroCaptionTitle">Visão do aluno organizada para ação</strong>
+                  <p id="heroCaptionText">Atividades, materiais e atalhos rápidos reunidos em uma tela que comunica clareza, prioridade e acompanhamento.</p>
+                </div>
+                <div class="caption-badges">
+                  <span>Atividades</span>
+                  <span>Materiais</span>
+                  <span>Relatórios</span>
+                  <span>Histórico</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="portal">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
+            <h2>O portal entra cedo porque ele muda a percepção do serviço.</h2>
+            <p>Você não entrega só aula. Você entrega uma experiência em que o aluno sente organização, clareza e acompanhamento contínuo — e isso aumenta confiança antes mesmo da primeira aula começar.</p>
+          </div>
+        </div>
+
+        <div class="portal-grid">
+          <article class="glass portal-copy shine">
+            <ul class="list">
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>O aluno sabe para onde olhar.</b>
+                  <span>Atividades, materiais, relatórios e progresso deixam de ficar espalhados. A experiência transmite controle e reduz sensação de estudo solto.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>O professor tem bastidor real.</b>
+                  <span>Existe visão do professor, acompanhamento do aluno, organização de materiais e leitura clara da jornada — e isso comunica seriedade.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>Valor percebido sobe sem promessa artificial.</b>
+                  <span>O portal funciona como prova concreta de método, cuidado e continuidade. O visitante sente que há estrutura de verdade por trás do serviço.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>English Mentoring deixa de parecer genérico.</b>
+                  <span>Quando o visual, a organização e a experiência andam juntos, a proposta sai da categoria “aula online comum”.</span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="btn-row" style="margin-top:16px">
+              <a class="btn btn-primary shine" id="waBtnPortal" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+              <a class="btn btn-dark shine" href="#como-funciona">Como funciona</a>
+            </div>
+          </article>
+
+          <div class="portal-highlights">
+            <div class="portal-screen shine">
+              <small>Visão do aluno</small>
+              <img src="assets/portal-student-dashboard.webp" alt="Dashboard do aluno" loading="lazy" />
+            </div>
+            <div class="portal-screen shine">
+              <small>Central de materiais</small>
+              <img src="assets/portal-student-materials.webp" alt="Central de materiais do aluno" loading="lazy" />
+            </div>
+            <div class="portal-note shine">
+              <div class="proof-card shine">
+                <strong>Experiência premium que continua fora da aula</strong>
+                <p>O portal sustenta a rotina entre encontros ao vivo e ajuda o aluno a sentir sequência, não fragmentação.</p>
+              </div>
+              <div class="proof-card shine">
+                <strong>Confiança visual e funcional</strong>
+                <p>Quando o ambiente parece sério, organizado e vivo, a credibilidade do serviço sobe junto com a percepção de valor.</p>
+              </div>
+              <div class="proof-card shine">
+                <strong>Bastidor do professor como prova de autoridade</strong>
+                <p>A visão do professor mostra que existe método, leitura do progresso e acompanhamento real — não só improviso.</p>
               </div>
             </div>
           </div>
@@ -690,45 +1179,43 @@
       </div>
     </section>
 
-    <!-- COMO FUNCIONA -->
-    <section id="como-funciona">
+    <section class="section" id="como-funciona">
       <div class="wrap">
-        <div class="titleRow">
+        <div class="section-head">
           <div>
-            <h2 class="h2">Como funciona (sem mistério)</h2>
-            <p class="sub">Estrutura simples por fora — bem pensada por dentro.</p>
+            <span class="eyebrow"><span class="signal"></span> Como funciona</span>
+            <h2>Estrutura simples por fora. Muito bem pensada por dentro.</h2>
+            <p>O objetivo aqui não é te impressionar com complexidade, e sim te dar clareza, continuidade e treino inteligente para sair da dependência de “decorar” ou travar em situações reais.</p>
           </div>
         </div>
 
         <div class="grid3">
-          <div class="mini">
+          <article class="mini shine">
             <span class="kicker">1) Direção</span>
-            <h3>Diagnóstico + caminho</h3>
-            <p>Eu identifico seu nível real e o que está travando (estrutura, confiança, consistência, listening, etc.). Depois disso, você fica claro(a) do que fazer — sem ficar perdido(a).</p>
-          </div>
-
-          <div class="mini">
+            <h3>Diagnóstico + caminho real</h3>
+            <p>Eu identifico seu nível de verdade e o que está te travando: estrutura, confiança, consistência, listening ou outro ponto central. Depois disso, você não fica perdido(a).</p>
+          </article>
+          <article class="mini shine">
             <span class="kicker">2) Aula ao vivo</span>
-            <h3>Guia de raciocínio (scaffolding)</h3>
-            <p>Eu te conduzo para entender e produzir — não só repetir. O foco é sair da dependência de “decorar” e construir controle de verdade.</p>
-          </div>
-
-          <div class="mini">
+            <h3>Guia de raciocínio, não só repetição</h3>
+            <p>Nas aulas, eu te conduzo para entender, produzir e ganhar controle. O foco é construir autonomia, e não só decorar regra ou frase pronta.</p>
+          </article>
+          <article class="mini shine">
             <span class="kicker">3) Rotina</span>
-            <h3>Treino fora da aula (de verdade)</h3>
-            <p>Você recebe tarefas curtas e direcionadas (áudio, ditado, revisões, produção guiada). A rotina é o que transforma aula em evolução consistente.</p>
-          </div>
+            <h3>Treino curto, guiado e sustentável</h3>
+            <p>Você recebe tarefas com direção. A rotina fora da aula é o que transforma explicação em habilidade, sem virar peso caótico ou impossível de manter.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ATIVIDADES + CARROSSEL -->
-    <section id="atividades">
+    <section class="section" id="atividades">
       <div class="wrap">
-        <div class="titleRow">
+        <div class="section-head">
           <div>
-            <h2 class="h2">Como são as atividades na prática</h2>
-            <p class="sub">Abaixo estão exemplos reais (prints) de atividades e formatos que ajudam a consolidar fala, escuta e estrutura.</p>
+            <span class="eyebrow"><span class="signal"></span> Atividades reais</span>
+            <h2>Exemplos concretos de como o treino aparece na prática.</h2>
+            <p>Abaixo estão prints reais de atividades e formatos usados para consolidar fala, escuta, estrutura e autonomia. As fotos permanecem como prova visual do que você realmente recebe.</p>
           </div>
         </div>
 
@@ -737,204 +1224,154 @@
             <div class="carouselStage">
               <img id="carouselImg" alt="Exemplo de atividade" loading="lazy" />
             </div>
-
             <div class="carControls">
               <div class="btn-row" style="gap:8px">
                 <button class="carBtn" id="prevBtn" aria-label="Imagem anterior">‹</button>
                 <button class="carBtn" id="nextBtn" aria-label="Próxima imagem">›</button>
               </div>
-
               <div class="dots" id="dots" aria-label="Indicadores do carrossel"></div>
-
-              <div class="carHint">
-                Carrossel automático suave • pausa ao passar o mouse
-              </div>
+              <div class="carHint">Carrossel automático suave • pausa ao passar o mouse</div>
             </div>
           </div>
 
-          <div class="card">
-            <div class="pad">
-              <h2 class="h2" style="margin-bottom:8px">O que esses exemplos mostram?</h2>
-              <p class="sub" style="max-width: none">
-                Você não fica “jogado(a)”. O treino é pensado para reduzir fricção e aumentar controle:
-              </p>
-
-              <ul class="list" style="margin-top:12px">
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Escuta com objetivo</b>
-                    <span>atividades que treinam reconhecimento de palavras e ideias, não só “ouvir por ouvir”.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Produção guiada</b>
-                    <span>você fala e escreve com estrutura, sem depender de “frase pronta”.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Correção que vira clareza</b>
-                    <span>feedback para você entender o erro e construir o raciocínio certo.</span>
-                  </div>
-                </li>
-                <li class="li">
-                  <span class="bullet"></span>
-                  <div>
-                    <b>Rotina leve e sustentável</b>
-                    <span>tarefas curtas, consistentes e alinhadas ao seu momento — para evoluir sem se esgotar.</span>
-                  </div>
-                </li>
-              </ul>
-
-              <div style="margin-top:14px" class="btn-row">
-                <a class="btn btn-primary" id="waBtnMid" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-                <a class="btn btn-ghost" href="#faq">Ver dúvidas comuns</a>
-              </div>
+          <article class="glass shine" style="padding:22px">
+            <h3 style="margin:0 0 8px; font-family:'Outfit','Inter',sans-serif; font-size:28px; letter-spacing:-.03em; line-height:1.02;">O que esses exemplos revelam?</h3>
+            <p class="sub" style="margin:0; max-width:none">Você não fica “jogado(a)”. O treino é desenhado para reduzir fricção e aumentar controle real.</p>
+            <ul class="list" style="margin-top:14px">
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>Escuta com objetivo</b>
+                  <span>Atividades que treinam reconhecimento de palavras e ideias, não apenas “ouvir por ouvir”.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>Produção guiada</b>
+                  <span>Você fala e escreve com estrutura, sem depender de frase pronta nem do tradutor.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>Correção que vira clareza</b>
+                  <span>O feedback é pensado para te mostrar o raciocínio certo, não só apontar erro.</span>
+                </div>
+              </li>
+              <li class="li shine">
+                <span class="bullet"></span>
+                <div>
+                  <b>Rotina possível de manter</b>
+                  <span>Tarefas curtas, consistentes e alinhadas ao seu momento, para evoluir sem se esgotar.</span>
+                </div>
+              </li>
+            </ul>
+            <div class="btn-row" style="margin-top:16px">
+              <a class="btn btn-primary shine" id="waBtnMid" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+              <a class="btn btn-ghost shine" href="#faq">Ver dúvidas comuns</a>
             </div>
-          </div>
+          </article>
         </div>
-
       </div>
     </section>
 
-    <!-- TRILHAS -->
-    <section id="trilhas">
+    <section class="section" id="trilhas">
       <div class="wrap">
-        <div class="titleRow">
+        <div class="section-head">
           <div>
-            <h2 class="h2">Trilhas (iniciante, intermediário, avançado)</h2>
-            <p class="sub">Você entra onde faz sentido — e eu ajusto o caminho para seu nível real e seus bloqueios.</p>
+            <span class="eyebrow"><span class="signal"></span> Trilhas</span>
+            <h2>Você entra onde faz sentido — e eu ajusto o caminho ao seu nível real.</h2>
+            <p>Iniciante, intermediário ou avançado: a lógica não é te encaixar em um molde. É te colocar no ponto em que o trabalho realmente começa a render.</p>
           </div>
         </div>
 
         <div class="trailGrid">
-          <div class="trail">
+          <article class="trail shine">
             <span class="tag">Trilha 1 • Iniciante</span>
             <h3>Sair do zero com base sólida</h3>
             <ul>
-              <li>Formar frases simples com segurança (sem travar no “começo”).</li>
-              <li>Construir vocabulário funcional para situações reais (dia a dia).</li>
-              <li>Entender estrutura básica (ordem de palavras) e padrões recorrentes.</li>
-              <li><b>Padrões fonéticos do inglês</b> (sons e combinações mais comuns) para reconhecer palavras no listening e pronunciar com mais segurança.</li>
-              <li>Rotina leve e guiada para ganhar tração e consistência sem se sentir perdido(a).</li>
+              <li>Formar frases simples com segurança, sem travar logo no começo.</li>
+              <li>Construir vocabulário funcional para situações reais do dia a dia.</li>
+              <li>Entender ordem de palavras e padrões recorrentes com clareza.</li>
+              <li><b>Padrões fonéticos do inglês</b> para reconhecer melhor no listening e pronunciar com mais segurança.</li>
+              <li>Ganhar tração com uma rotina leve e guiada.</li>
             </ul>
-          </div>
-
-          <div class="trail">
+          </article>
+          <article class="trail shine">
             <span class="tag">Trilha 2 • Intermediário</span>
             <h3>Ganhar naturalidade e controle</h3>
             <ul>
-              <li>Organizar ideias e falar por mais tempo sem “quebrar no meio”.</li>
-              <li>Reduzir o “português mental” (tradução) e pensar com mais fluidez.</li>
-              <li>Refinar estruturas-chave para ficar mais claro(a) e menos travado(a).</li>
-              <li>Treinar listening com estratégia (captar sentido + detalhes úteis).</li>
-              <li>Rotina fora da aula focada em consistência e automatização gradual.</li>
+              <li>Organizar ideias e falar por mais tempo sem quebrar no meio.</li>
+              <li>Reduzir o português mental e depender menos de tradução.</li>
+              <li>Refinar estruturas-chave para soar mais claro(a) e menos travado(a).</li>
+              <li>Treinar listening com estratégia: sentido + detalhes úteis.</li>
+              <li>Automatizar o que precisa entrar na fala com mais naturalidade.</li>
             </ul>
-          </div>
-
-          <div class="trail">
+          </article>
+          <article class="trail shine">
             <span class="tag">Trilha 3 • Avançado</span>
             <h3>Precisão, presença e liberdade</h3>
             <ul>
-              <li>Opinar, discordar e se posicionar sem soar estranho(a) ou agressivo(a).</li>
-              <li>Falar com mais precisão (vocabulário + estrutura) e menos repetição.</li>
-              <li>Melhorar ritmo e clareza para situações profissionais e sociais exigentes.</li>
-              <li>Construir autonomia: você sabe “como se ajustar” quando faltar palavra.</li>
-              <li>Rotina de refinamento: consistência, nuances e correções de alto impacto.</li>
+              <li>Opinar, discordar e se posicionar com naturalidade e segurança.</li>
+              <li>Falar com mais precisão, menos repetição e mais repertório.</li>
+              <li>Melhorar ritmo, clareza e presença em contextos exigentes.</li>
+              <li>Construir autonomia para se ajustar quando faltar palavra.</li>
+              <li>Refinar nuances, correções de alto impacto e consistência.</li>
             </ul>
-          </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq">
+    <section class="section" id="faq">
       <div class="wrap">
-        <div class="titleRow">
+        <div class="section-head">
           <div>
-            <h2 class="h2">Dúvidas comuns</h2>
-            <p class="sub">Respostas diretas e objetivas — com direcionamento para o WhatsApp.</p>
+            <span class="eyebrow"><span class="signal"></span> Dúvidas comuns</span>
+            <h2>Respostas objetivas, sem rodeio e sem mistério.</h2>
+            <p>Se a sua dúvida não estiver aqui, o caminho mais simples é me chamar no WhatsApp. Eu te respondo pessoalmente.</p>
           </div>
         </div>
 
-        <details>
-          <summary>
-            Como recebo valores e opções de plano?
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="ans">
-            Os valores variam conforme formato (individual ou turma), duração e frequência.
-            <b>Me chama no WhatsApp</b> e eu te envio as opções disponíveis.
-          </div>
+        <details class="shine">
+          <summary>Como recebo valores e opções de plano?<span class="chev">⌄</span></summary>
+          <div class="ans">Os valores variam conforme formato (individual ou turma), duração e frequência. <b>Me chama no WhatsApp</b> e eu te envio as opções disponíveis.</div>
+        </details>
+        <details class="shine">
+          <summary>Qual a dinâmica nas aulas?<span class="chev">⌄</span></summary>
+          <div class="ans">Há uma modalidade mais teórica (sempre aplicada) e outra mais conversacional, quando você já tem base para isso. O objetivo final é <b>autonomia total</b> em fala, escuta, estrutura e confiança.</div>
+        </details>
+        <details class="shine">
+          <summary>Sou iniciante total ou já tenho experiência. Você adapta as aulas?<span class="chev">⌄</span></summary>
+          <div class="ans"><b>Sim.</b> Eu identifico seu nível real no início e ajusto o trabalho ao seu momento: estrutura, fala, escuta e confiança — <b>sem te colocar em um modelo pronto.</b></div>
+        </details>
+        <details class="shine">
+          <summary>O que muda quando eu tenho rotina fora da aula?<span class="chev">⌄</span></summary>
+          <div class="ans">A aula te dá direção e correção. A rotina transforma isso em habilidade. É aí que entram consistência, repetição inteligente e ajuste fino com tarefas curtas, guiadas e possíveis de manter.</div>
+        </details>
+        <details class="shine">
+          <summary>Em quanto tempo eu começo a sentir diferença?<span class="chev">⌄</span></summary>
+          <div class="ans">Depende do seu ponto de partida e do seu ritmo, mas normalmente a primeira diferença é: <b>mais clareza do que fazer</b> e menos “branco” na hora de falar. Se você quiser, eu te explico no WhatsApp o caminho mais realista para o seu caso.</div>
         </details>
 
-        <details>
-          <summary>
-            Qual a dinâmica nas aulas?
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="ans">
-            Há uma modalidade mais teórica (sempre aplicada) e uma modalidade mais conversacional (quando você já tem familiaridade).
-            As aulas são equilibradas e têm como objetivo final <b>autonomia total</b> em todas as habilidades.
-          </div>
-        </details>
-
-        <details>
-          <summary>
-            Sou iniciante total (ou já tenho alguma experiência). Você adapta as aulas ao meu nível?
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="ans">
-            <b>Sim.</b> Eu identifico seu nível real no início (mesmo que você esteja do zero ou já tenha fluência) e ajusto as aulas para o seu momento:
-            estrutura, fala, escuta e confiança — <b>sem te colocar em um “modelo pronto”.</b>
-          </div>
-        </details>
-
-        <details>
-          <summary>
-            O que muda quando eu tenho uma rotina fora da aula (e não só “uma aula por semana”)?
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="ans">
-            A aula te dá direção e correção. A rotina transforma isso em habilidade.
-            Você treina o que realmente destrava: <b>consistência + repetição inteligente + ajuste fino</b> — com tarefas curtas, guiadas e possíveis de manter.
-          </div>
-        </details>
-
-        <details>
-          <summary>
-            Em quanto tempo eu começo a sentir diferença?
-            <span class="chev">⌄</span>
-          </summary>
-          <div class="ans">
-            Depende do seu ponto de partida e do seu ritmo, mas normalmente a primeira diferença é:
-            <b>mais clareza do que fazer</b> e menos “branco” na hora de falar.
-            Se você quiser, me chama no WhatsApp e eu te explico o caminho mais realista para o seu caso.
-          </div>
-        </details>
-
-        <div style="margin-top:16px" class="cta">
+        <div style="margin-top:18px" class="cta shine">
           <div>
-            <h3>Pronto(a) para destravar com direção clara?</h3>
-            <p>Se você quiser, você pode me mandar o formulário (4 min) ou já abrir o WhatsApp com mensagem pronta. Eu te respondo pessoalmente.</p>
+            <h3>Se você quer direção, clareza e uma estrutura premium de acompanhamento, faz sentido conversar.</h3>
+            <p>Você pode preencher o formulário (4 min) ou abrir o WhatsApp com mensagem pronta. Eu te respondo pessoalmente e te mostro o caminho mais coerente para o seu caso.</p>
           </div>
           <div class="btn-row">
-            <a class="btn btn-primary" id="waBtnBottom" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
-            <a class="btn btn-ghost" id="formBtnBottom" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
+            <a class="btn btn-primary shine" id="waBtnBottom" href="#" target="_blank" rel="noopener">Quero ser aluna(o)</a>
+            <a class="btn btn-ghost shine" id="formBtnBottom" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" target="_blank" rel="noopener">Formulário (4 min)</a>
           </div>
         </div>
-
       </div>
     </section>
 
     <footer>
       <div class="wrap">
-        <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px;">
-          <div>Professor Marcos Vinicius — Inglês Online (General English)</div>
+        <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.08); padding-top:16px;">
+          <div>Professor Marcos Vinicius • English Mentoring</div>
           <div>© <span id="year"></span> • Todos os direitos reservados</div>
         </div>
       </div>
@@ -942,37 +1379,25 @@
   </main>
 
   <script>
-    // ============================
-    // 1) WHATSAPP (mensagem pronta)
-    // ============================
     const WHATSAPP_PHONE = "5592985273076";
     const WHATSAPP_MESSAGE = "Olá! Tenho interesse em me tornar aluno%0AGostaria de informações sobre o curso";
 
-    function buildWhatsAppLink() {
-      if (!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) {
-        return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
-      }
+    function buildWhatsAppLink(){
+      if(!WHATSAPP_PHONE || WHATSAPP_PHONE.includes("SEU_NUMERO")) return "https://wa.me/?text=" + WHATSAPP_MESSAGE;
       return "https://wa.me/" + WHATSAPP_PHONE + "?text=" + WHATSAPP_MESSAGE;
     }
 
     const waLink = buildWhatsAppLink();
-    const waBtns = ["waBtnTop","waBtnTopMobile","waBtnHero","waBtnMid","waBtnBottom"]
-      .map(id => document.getElementById(id));
-    waBtns.forEach(btn => { if (btn) btn.href = waLink; });
-
-    // ============================
-    // 2) PROFILE IMAGE (robusto)
-    // ============================
-    const profileImg = document.getElementById("profileImg");
-    profileImg.addEventListener("error", () => {
-      if (profileImg.src.includes(".webp.webp")) {
-        profileImg.src = profileImg.src.replace(".webp.webp", ".webp");
-      }
+    ["waBtnTop","waBtnTopMobile","waBtnHero","waBtnPortal","waBtnMid","waBtnBottom"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.href = waLink;
     });
 
-    // ============================
-    // 3) CAROUSEL (auto suave)
-    // ============================
+    const profileImg = document.getElementById("profileImg");
+    profileImg?.addEventListener("error", () => {
+      if(profileImg.src.includes('.webp.webp')) profileImg.src = profileImg.src.replace('.webp.webp', '.webp');
+    });
+
     const carouselImages = [
       "assets/carousel-01.webp.webp",
       "assets/carousel-02.webp.webp",
@@ -992,59 +1417,129 @@
     const dotsEl = document.getElementById("dots");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-
     let idx = 0;
     let timer = null;
     let hovering = false;
 
-    function createDots() {
+    function createDots(){
       dotsEl.innerHTML = "";
       carouselImages.forEach((_, i) => {
-        const b = document.createElement("button");
-        b.className = "dotBtn" + (i === idx ? " active" : "");
-        b.setAttribute("aria-label", "Ir para imagem " + (i+1));
-        b.addEventListener("click", () => { idx = i; render(); restart(); });
+        const b = document.createElement('button');
+        b.className = 'dotBtn' + (i === idx ? ' active' : '');
+        b.setAttribute('aria-label', 'Ir para imagem ' + (i + 1));
+        b.addEventListener('click', () => { idx = i; renderCarousel(); restartCarousel(); });
         dotsEl.appendChild(b);
       });
     }
 
-    function setActiveDot() {
-      const btns = dotsEl.querySelectorAll(".dotBtn");
-      btns.forEach((b, i) => b.classList.toggle("active", i === idx));
+    function setActiveDot(){
+      dotsEl.querySelectorAll('.dotBtn').forEach((b, i) => b.classList.toggle('active', i === idx));
     }
 
-    function render() {
-      imgEl.classList.remove("show");
+    function renderCarousel(){
+      imgEl.classList.remove('show');
       setTimeout(() => {
         imgEl.src = carouselImages[idx];
-        imgEl.alt = "Exemplo de atividade (" + (idx+1) + " de " + carouselImages.length + ")";
-        imgEl.onload = () => imgEl.classList.add("show");
+        imgEl.alt = 'Exemplo de atividade (' + (idx + 1) + ' de ' + carouselImages.length + ')';
+        imgEl.onload = () => imgEl.classList.add('show');
         imgEl.onerror = () => {
-          if (imgEl.src.includes(".webp.webp")) imgEl.src = imgEl.src.replace(".webp.webp", ".webp");
+          if(imgEl.src.includes('.webp.webp')) imgEl.src = imgEl.src.replace('.webp.webp', '.webp');
         };
         setActiveDot();
-      }, 80);
+      }, 90);
+    }
+    function next(){ idx = (idx + 1) % carouselImages.length; renderCarousel(); }
+    function prev(){ idx = (idx - 1 + carouselImages.length) % carouselImages.length; renderCarousel(); }
+    function startCarousel(){ if(timer) return; timer = setInterval(() => { if(!hovering) next(); }, 3200); }
+    function stopCarousel(){ if(!timer) return; clearInterval(timer); timer = null; }
+    function restartCarousel(){ stopCarousel(); startCarousel(); }
+
+    prevBtn?.addEventListener('click', () => { prev(); restartCarousel(); });
+    nextBtn?.addEventListener('click', () => { next(); restartCarousel(); });
+    const carouselBox = imgEl?.closest('.carousel');
+    carouselBox?.addEventListener('mouseenter', () => { hovering = true; });
+    carouselBox?.addEventListener('mouseleave', () => { hovering = false; });
+
+    createDots();
+    renderCarousel();
+    startCarousel();
+
+    const heroFrames = {
+      student: {
+        title: 'Visão do aluno organizada para ação',
+        text: 'Atividades, materiais e atalhos rápidos reunidos em uma tela que comunica clareza, prioridade e acompanhamento.'
+      },
+      materials: {
+        title: 'Biblioteca premium com leitura imediata',
+        text: 'A central de materiais mostra que o estudo continua entre as aulas em um ambiente que parece vivo, limpo e realmente pensado.'
+      },
+      teacher: {
+        title: 'Bastidor do professor como prova de seriedade',
+        text: 'Quando a experiência do professor também é forte, a percepção de método, organização e autoridade sobe junto.'
+      }
+    };
+
+    const heroTabs = Array.from(document.querySelectorAll('.portal-tab'));
+    const heroFramesEls = Array.from(document.querySelectorAll('[data-screen-frame]'));
+    const heroCaptionTitle = document.getElementById('heroCaptionTitle');
+    const heroCaptionText = document.getElementById('heroCaptionText');
+    let heroIndex = 0;
+    let heroTimer = null;
+
+    function activateHeroScreen(key){
+      heroTabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.screen === key));
+      heroFramesEls.forEach(frame => frame.classList.toggle('is-active', frame.dataset.screenFrame === key));
+      heroCaptionTitle.textContent = heroFrames[key].title;
+      heroCaptionText.textContent = heroFrames[key].text;
+      heroIndex = heroTabs.findIndex(tab => tab.dataset.screen === key);
     }
 
-    function next() { idx = (idx + 1) % carouselImages.length; render(); }
-    function prev() { idx = (idx - 1 + carouselImages.length) % carouselImages.length; render(); }
+    heroTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateHeroScreen(tab.dataset.screen);
+        restartHero();
+      });
+    });
 
-    function start() {
-      if (timer) return;
-      timer = setInterval(() => { if (!hovering) next(); }, 3200);
+    function startHero(){
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if(heroTimer) return;
+      heroTimer = setInterval(() => {
+        heroIndex = (heroIndex + 1) % heroTabs.length;
+        activateHeroScreen(heroTabs[heroIndex].dataset.screen);
+      }, 4600);
     }
-    function stop() { if (!timer) return; clearInterval(timer); timer = null; }
-    function restart() { stop(); start(); }
+    function stopHero(){ if(!heroTimer) return; clearInterval(heroTimer); heroTimer = null; }
+    function restartHero(){ stopHero(); startHero(); }
+    startHero();
 
-    prevBtn.addEventListener("click", () => { prev(); restart(); });
-    nextBtn.addEventListener("click", () => { next(); restart(); });
+    document.getElementById('heroMockup')?.addEventListener('mouseenter', stopHero);
+    document.getElementById('heroMockup')?.addEventListener('mouseleave', startHero);
 
-    const carouselBox = imgEl.closest(".carousel");
-    carouselBox.addEventListener("mouseenter", () => { hovering = true; });
-    carouselBox.addEventListener("mouseleave", () => { hovering = false; });
+    const shineEls = document.querySelectorAll('.shine');
+    function updateCoords(el, x, y){
+      const rect = el.getBoundingClientRect();
+      const px = ((x - rect.left) / rect.width) * 100;
+      const py = ((y - rect.top) / rect.height) * 100;
+      el.style.setProperty('--mx', px + '%');
+      el.style.setProperty('--my', py + '%');
+    }
+    shineEls.forEach(el => {
+      el.addEventListener('mousemove', (e) => updateCoords(el, e.clientX, e.clientY));
+      el.addEventListener('mouseleave', () => {
+        el.style.setProperty('--mx', '50%');
+        el.style.setProperty('--my', '50%');
+      });
+    });
 
-    createDots(); render(); start();
-    document.getElementById("year").textContent = new Date().getFullYear();
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      document.documentElement.style.setProperty('--mx', x + '%');
+      document.documentElement.style.setProperty('--my', y + '%');
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
