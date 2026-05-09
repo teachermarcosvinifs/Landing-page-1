@@ -89,16 +89,11 @@
     .page-noise,
     .page-grid,
     .page-spotlight{
-position:absolute;
-inset:0;
-pointer-events:none;
-background:
-radial-gradient(circle at 50% 0%, rgba(126,92,255,.11), transparent 48%),
-radial-gradient(circle at 80% 20%, rgba(67,104,255,.06), transparent 38%);
-opacity:.92;
-filter:blur(78px);
-animation:ambientGlow 14s ease-in-out infinite alternate;
-}
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-2;
+    }
     .page-grid{
       opacity:.12;
       background-image:
@@ -114,17 +109,7 @@ animation:ambientGlow 14s ease-in-out infinite alternate;
       background-size: 180px 180px;
       mix-blend-mode: soft-light;
     }
-    .page-spotlight{
-position:absolute;
-inset:0;
-pointer-events:none;
-background:
-radial-gradient(circle at 50% 0%, rgba(126,92,255,.11), transparent 48%),
-radial-gradient(circle at 80% 20%, rgba(67,104,255,.06), transparent 38%);
-opacity:.92;
-filter:blur(78px);
-animation:ambientGlow 14s ease-in-out infinite alternate;
-}
+    .page-spotlight{display:none}
 
     img{max-width:100%; display:block}
     a{color:inherit}
@@ -367,32 +352,15 @@ animation:ambientGlow 14s ease-in-out infinite alternate;
     .btn-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px}
     .mobileActions{display:none}
 
-    .hero{padding:52px 0 22px}
+    .hero{padding:32px 0 18px}
     .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0,980px);justify-content:center;
+      grid-template-columns: 1fr 1fr;
       gap:18px;
       align-items:stretch;
     }
-    .hero-copy{
-margin-inline:auto;
-max-width:980px;
-display:flex;
-flex-direction:column;
-gap:18px;
-}
-    .hero-copy h1{background:linear-gradient(135deg,#ffffff 0%,#efe7ff 36%,#b78cff 72%,#8f63ff 100%);
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;
-      margin:18px 0 12px;
-      font-family:'Outfit', 'Inter', sans-serif;
-      font-size: clamp(38px, 4.8vw, 76px);
-      line-height: .98;
-      letter-spacing:-.045em;
-      max-width: 18ch;
-      text-wrap: initial;
-    }
+    
+    .hero-copy 
     .hero-copy h1 .accent-word{
       background: linear-gradient(135deg, #ffffff, #d6c6ff 42%, #9a74ff 88%);
       -webkit-background-clip:text;
@@ -490,10 +458,7 @@ color:transparent;
     .feature-pill{
       padding:10px 12px;
       border-radius:999px;
-      background:
-linear-gradient(180deg,
-rgba(6,6,10,.92),
-rgba(3,3,7,.98));
+      background: rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.08);
       color:rgba(243,238,255,.88);
       font-size:12px;
@@ -514,7 +479,7 @@ rgba(3,3,7,.98));
     .mockup-topbar{
       display:grid;
       grid-template-columns:auto 1fr auto;
-      align-items:center;
+      align-items:start;
       gap:12px;
       padding:0 4px 12px;
     }
@@ -597,7 +562,7 @@ rgba(3,3,7,.98));
       height:100%;
       object-fit:cover;
       border-radius:16px;
-      border:1px solid rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.06);
       box-shadow: 0 14px 44px rgba(0,0,0,.38);
     }
     .mockup-overlay{
@@ -679,10 +644,7 @@ rgba(3,3,7,.98));
     }
     .portal-copy{padding:24px}
     .portal-copy .list{margin-top:16px}
-    .portal-copy .li{background:
-linear-gradient(180deg,
-rgba(6,6,10,.92),
-rgba(3,3,7,.98)); padding:14px 14px}
+    .portal-copy .li{background: rgba(255,255,255,.03); padding:14px 14px}
     .portal-copy .li b{display:block; font-size:14px; margin-bottom:4px}
     .portal-copy .li span{display:block; font-size:13px; color:var(--muted); line-height:1.55}
     .bullet{
@@ -727,10 +689,7 @@ rgba(3,3,7,.98)); padding:14px 14px}
       padding:16px;
       border-radius:20px;
       min-height:126px;
-      background:
-linear-gradient(180deg,
-rgba(6,6,10,.92),
-rgba(3,3,7,.98));
+      background: rgba(255,255,255,.03);
       border:1px solid rgba(255,255,255,.08);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
     }
@@ -847,10 +806,7 @@ rgba(3,3,7,.98));
       width:100%; height:100%; object-fit:contain;
       border-radius:18px;
       border:1px solid rgba(255,255,255,.08);
-      background:
-linear-gradient(180deg,
-rgba(6,6,10,.92),
-rgba(3,3,7,.98));
+      background: rgba(255,255,255,.03);
       opacity:0;
       transform: scale(1.012);
       transition: opacity .55s ease, transform .7s ease;
@@ -864,10 +820,7 @@ rgba(3,3,7,.98));
       gap:10px;
       padding: 14px 16px;
       border-top:1px solid rgba(255,255,255,.08);
-      background:
-linear-gradient(180deg,
-rgba(6,6,10,.92),
-rgba(3,3,7,.98));
+      background: rgba(255,255,255,.03);
     }
     .dots{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
     .dotBtn{
@@ -977,10 +930,7 @@ rgba(3,3,7,.98));
       .trailGrid{grid-template-columns:1fr}
       .portal-highlights{grid-template-columns:1fr}
       .portal-note{grid-column: span 1; grid-template-columns:1fr}
-      .hero-copy h1{background:linear-gradient(135deg,#ffffff 0%,#efe7ff 36%,#b78cff 72%,#8f63ff 100%);
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;max-width:12ch}
+      .hero-copy 
       .mockup-caption{flex-direction:column}
       .caption-badges{justify-content:start}
     }
@@ -1000,10 +950,7 @@ color:transparent;max-width:12ch}
       .cta{padding:18px}
       .section{padding:34px 0}
       .section-lg{padding:44px 0}
-      .hero-copy h1{background:linear-gradient(135deg,#ffffff 0%,#efe7ff 36%,#b78cff 72%,#8f63ff 100%);
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;font-size: clamp(34px, 10vw, 56px)}
+      .hero-copy 
     }
 
     @media (max-width: 620px){
@@ -1017,10 +964,7 @@ color:transparent;font-size: clamp(34px, 10vw, 56px)}
       .caption-badges{grid-template-columns:repeat(2, max-content)}
       .section-head h2{font-size: clamp(26px, 9vw, 36px); max-width:none}
       .section-head p{max-width:none}
-      .hero-copy h1{background:linear-gradient(135deg,#ffffff 0%,#efe7ff 36%,#b78cff 72%,#8f63ff 100%);
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;max-width:none}
+      .hero-copy 
       .support{grid-template-columns:1fr}
       .stat{min-height:auto}
       .mockup-window{padding:12px}
@@ -1036,17 +980,7 @@ color:transparent;max-width:none}
       }
       body::before,
       body::after,
-      .page-spotlight{
-position:absolute;
-inset:0;
-pointer-events:none;
-background:
-radial-gradient(circle at 50% 0%, rgba(126,92,255,.11), transparent 48%),
-radial-gradient(circle at 80% 20%, rgba(67,104,255,.06), transparent 38%);
-opacity:.92;
-filter:blur(78px);
-animation:ambientGlow 14s ease-in-out infinite alternate;
-}
+      .page-spotlight{display:none}
     }
   
 .hero-mentoring{
@@ -1060,12 +994,168 @@ opacity:.95;
 }
 
 
-@keyframes ambientGlow{
-0%{transform:translateY(0px) scale(1);}
-100%{transform:translateY(-10px) scale(1.03);}
+.hero{
+padding:58px 0 26px;
 }
-</style>
 
+
+.hero-shell{
+max-width:1320px;
+margin:0 auto;
+padding:64px 72px 42px;
+border-radius:34px;
+position:relative;
+overflow:hidden;
+
+background:
+linear-gradient(180deg,
+rgba(4,4,8,.985),
+rgba(7,7,12,.965));
+
+border:1px solid rgba(255,255,255,.07);
+
+box-shadow:
+0 40px 120px rgba(0,0,0,.62),
+inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+
+.hero-shell::before{
+content:"";
+position:absolute;
+inset:0;
+pointer-events:none;
+
+background:
+radial-gradient(circle at 50% -10%,
+rgba(143,99,255,.16),
+transparent 48%),
+
+radial-gradient(circle at 85% 18%,
+rgba(67,104,255,.06),
+transparent 34%);
+}
+
+.hero-copy{
+position:relative;
+z-index:2;
+max-width:860px;
+margin:0 auto;
+}
+
+
+.hero-copy h1{
+font-family:Outfit,sans-serif;
+font-size:clamp(34px,4vw,58px);
+line-height:1.04;
+letter-spacing:-.055em;
+
+max-width:18ch;
+margin:0 auto 24px;
+
+text-align:center;
+
+background:linear-gradient(
+135deg,
+#ffffff 0%,
+#f3eaff 30%,
+#caa0ff 68%,
+#8f63ff 100%
+);
+
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+
+
+
+.hero-copy p{
+max-width:62ch;
+margin:0 auto;
+font-size:17px;
+line-height:1.85;
+color:rgba(236,231,255,.74);
+text-align:left;
+}
+
+
+.hero-actions{
+margin-top:28px;
+display:flex;
+gap:14px;
+justify-content:flex-start;
+flex-wrap:wrap;
+}
+
+@media(max-width:860px){
+
+
+.hero-shell{
+max-width:1320px;
+margin:0 auto;
+padding:64px 72px 42px;
+border-radius:34px;
+position:relative;
+overflow:hidden;
+
+background:
+linear-gradient(180deg,
+rgba(4,4,8,.985),
+rgba(7,7,12,.965));
+
+border:1px solid rgba(255,255,255,.07);
+
+box-shadow:
+0 40px 120px rgba(0,0,0,.62),
+inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+
+
+.hero-copy h1{
+font-family:Outfit,sans-serif;
+font-size:clamp(34px,4vw,58px);
+line-height:1.04;
+letter-spacing:-.055em;
+
+max-width:18ch;
+margin:0 auto 24px;
+
+text-align:center;
+
+background:linear-gradient(
+135deg,
+#ffffff 0%,
+#f3eaff 30%,
+#caa0ff 68%,
+#8f63ff 100%
+);
+
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+
+
+
+.hero-copy p{
+max-width:62ch;
+margin:0 auto;
+font-size:17px;
+line-height:1.85;
+color:rgba(236,231,255,.74);
+text-align:left;
+}
+
+
+.hero-actions{
+justify-content:center;
+}
+
+}
+
+</style>
 </head>
 <body>
 <div class="page-grid"></div>
@@ -1077,7 +1167,7 @@ opacity:.95;
 <div class="brand">
 <div class="brandText">
 <strong>Professor Marcos Vinicius</strong>
-<span>English Mentoring • estrutura organizada de acompanhamento</span>
+<span>English Mentoring • acompanhamento premium</span>
 </div>
 <div class="avatar" title="Professor Marcos Vinicius">
 <img alt="Foto do professor" id="profileImg" loading="eager" src="assets/profile.webp.webp"/>
@@ -1091,7 +1181,7 @@ opacity:.95;
 <a class="shine" href="#faq">Dúvidas</a>
 <a class="shine" href="portal-dos-alunos.html">Portal</a>
 <a class="shine" href="ingles-para-devs.html">Inglês para Devs</a>
-
+<a class="shine" href="ingles-para-compliance.html">Compliance</a>
 <a class="btn btn-sm btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnTop" rel="noopener" target="_blank">Formulário (4 min)</a>
 <a class="btn btn-sm btn-primary shine" href="#" id="waBtnTop" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 </nav>
@@ -1108,7 +1198,7 @@ opacity:.95;
 <div class="hero-grid">
 <article class="glass hero-copy shine">
 <span class="eyebrow"><span class="signal"></span> Professor Marcos Vinicius</span><div class="hero-mentoring">English Mentoring</div>
-<h1>Aulas particulares com estratégia e acompanhamento até a fluência</span></h1>
+<h1>Aulas particulares com estratégia e acompanhamento até a fluência</h1>
 <p class="lead">Modalidade regular para construção da base do idioma e modalidade conversacional para prática, speaking, adaptação e desenvolvimento da comunicação em inglês</p>
 <div class="btn-row" style="margin-top:18px">
 <a class="btn btn-primary shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero conhecer as aulas</a>
@@ -1491,7 +1581,43 @@ opacity:.95;
 
     createDots();
     renderCarousel();
-    startCarousel();});
+    startCarousel();
+
+    const heroFrames = {
+      student: {
+        title: 'Visão do aluno com leitura imediata',
+        text: 'Atividades, ranking e atalhos aparecem com clareza desde a primeira leitura'
+      },
+      materials: {
+        title: 'Central de materiais com leitura simples',
+        text: 'PDFs, fotos, vídeos e links ficam no mesmo ambiente e podem ser consultados com rapidez'
+      },
+      teacher: {
+        title: 'Visão do professor com leitura rápida da rotina',
+        text: 'O professor acompanha materiais, histórico e progresso no mesmo sistema'
+      }
+    };
+
+    const heroTabs = Array.from(document.querySelectorAll('.portal-tab'));
+    const heroFramesEls = Array.from(document.querySelectorAll('[data-screen-frame]'));
+    const heroCaptionTitle = document.getElementById('heroCaptionTitle');
+    const heroCaptionText = document.getElementById('heroCaptionText');
+    let heroIndex = 0;
+    let heroTimer = null;
+
+    function activateHeroScreen(key){
+      heroTabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.screen === key));
+      heroFramesEls.forEach(frame => frame.classList.toggle('is-active', frame.dataset.screenFrame === key));
+      heroCaptionTitle.textContent = heroFrames[key].title;
+      heroCaptionText.textContent = heroFrames[key].text;
+      heroIndex = heroTabs.findIndex(tab => tab.dataset.screen === key);
+    }
+
+    heroTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateHeroScreen(tab.dataset.screen);
+        restartHero();
+      });
     });
 
     function startHero(){
@@ -1504,7 +1630,12 @@ opacity:.95;
     }
     function stopHero(){ if(!heroTimer) return; clearInterval(heroTimer); heroTimer = null; }
     function restartHero(){ stopHero(); startHero(); }
-    startHero();const shineEls = document.querySelectorAll('.shine');
+    startHero();
+
+    document.getElementById('heroMockup')?.addEventListener('mouseenter', stopHero);
+    document.getElementById('heroMockup')?.addEventListener('mouseleave', startHero);
+
+    const shineEls = document.querySelectorAll('.shine');
     function updateCoords(el, x, y){
       const rect = el.getBoundingClientRect();
       const px = ((x - rect.left) / rect.width) * 100;
