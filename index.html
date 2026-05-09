@@ -4,10 +4,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="Professor Marcos Vinicius | English Mentoring com Portal dos Alunos, materiais organizados, atividades, acompanhamento real e uma experiência premium além da aula." name="description"/>
+<meta content="Professor Marcos Vinicius | English Mentoring com Portal dos Alunos, materiais organizados, atividades, acompanhamento organizado e uma experiência premium além da aula." name="description"/>
 <meta content="#06040d" name="theme-color"/>
 <meta content="Professor Marcos Vinicius | English Mentoring" property="og:title"/>
-<meta content="English Mentoring com Portal dos Alunos, materiais, atividades e acompanhamento real em uma experiência premium." property="og:description"/>
+<meta content="English Mentoring com Portal dos Alunos, materiais, atividades e acompanhamento organizado em uma experiência premium." property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="https://teachermarcosvinifs.github.io/Landing-page-1/" property="og:url"/>
 <meta content="https://teachermarcosvinifs.github.io/Landing-page-1/assets/og-cover.jpg" property="og:image"/>
@@ -89,11 +89,15 @@
     .page-noise,
     .page-grid,
     .page-spotlight{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:-2;
-    }
+position:absolute;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(circle at 50% 0%, rgba(126,92,255,.12), transparent 48%);
+opacity:.9;
+filter:blur(80px);
+animation:ambientGlow 12s ease-in-out infinite alternate;
+}
     .page-grid{
       opacity:.12;
       background-image:
@@ -109,7 +113,16 @@
       background-size: 180px 180px;
       mix-blend-mode: soft-light;
     }
-    .page-spotlight{display:none}
+    .page-spotlight{
+position:absolute;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(circle at 50% 0%, rgba(126,92,255,.12), transparent 48%);
+opacity:.9;
+filter:blur(80px);
+animation:ambientGlow 12s ease-in-out infinite alternate;
+}
 
     img{max-width:100%; display:block}
     a{color:inherit}
@@ -352,10 +365,10 @@
     .btn-row{display:flex; flex-wrap:wrap; align-items:center; gap:12px}
     .mobileActions{display:none}
 
-    .hero{padding:32px 0 18px}
+    .hero{padding:56px 0 26px}
     .hero-grid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns:minmax(0,980px);justify-content:center;
       gap:18px;
       align-items:stretch;
     }
@@ -366,7 +379,7 @@
       font-size: clamp(38px, 4.8vw, 76px);
       line-height: .98;
       letter-spacing:-.045em;
-      max-width: 13ch;
+      max-width: 11ch;
       text-wrap: initial;
     }
     .hero-copy h1 .accent-word{
@@ -988,20 +1001,35 @@
       }
       body::before,
       body::after,
-      .page-spotlight{display:none}
+      .page-spotlight{
+position:absolute;
+inset:0;
+pointer-events:none;
+background:
+radial-gradient(circle at 50% 0%, rgba(126,92,255,.12), transparent 48%);
+opacity:.9;
+filter:blur(80px);
+animation:ambientGlow 12s ease-in-out infinite alternate;
+}
     }
   
-.hero-signature{
-display:inline-block;
-margin-bottom:14px;
-font-size:.9rem;
-letter-spacing:.12em;
+.hero-mentoring{
+margin-top:12px;
+font-size:.86rem;
+letter-spacing:.16em;
 text-transform:uppercase;
-color:#9f7aea;
-font-weight:600;
+color:#b794f4;
+font-weight:700;
+opacity:.95;
 }
 
+
+@keyframes ambientGlow{
+0%{transform:translateY(0px) scale(1);}
+100%{transform:translateY(-12px) scale(1.04);}
+}
 </style>
+
 </head>
 <body>
 <div class="page-grid"></div>
@@ -1013,7 +1041,7 @@ font-weight:600;
 <div class="brand">
 <div class="brandText">
 <strong>Professor Marcos Vinicius</strong>
-<span>English Mentoring • acompanhamento premium</span>
+<span>English Mentoring • estrutura organizada de acompanhamento</span>
 </div>
 <div class="avatar" title="Professor Marcos Vinicius">
 <img alt="Foto do professor" id="profileImg" loading="eager" src="assets/profile.webp.webp"/>
@@ -1025,12 +1053,15 @@ font-weight:600;
 <a class="shine" href="#atividades">Atividades</a>
 <a class="shine" href="#trilhas">Trilhas</a>
 <a class="shine" href="#faq">Dúvidas</a>
+<a class="shine" href="portal-dos-alunos.html">Portal</a>
+<a class="shine" href="ingles-para-devs.html">Inglês para Devs</a>
+<a class="shine" href="ingles-para-compliance.html">Compliance</a>
 <a class="btn btn-sm btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnTop" rel="noopener" target="_blank">Formulário (4 min)</a>
-<a class="btn btn-sm btn-primary shine" href="#" id="waBtnTop" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-sm btn-primary shine" href="#" id="waBtnTop" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 </nav>
 <div aria-label="Ações rápidas (mobile)" class="mobileActions">
 <a class="btn btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnTopMobile" rel="noopener" target="_blank">Formulário</a>
-<a class="btn btn-primary shine" href="#" id="waBtnTopMobile" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-primary shine" href="#" id="waBtnTopMobile" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 </div>
 </div>
 </div>
@@ -1040,11 +1071,11 @@ font-weight:600;
 <div class="wrap">
 <div class="hero-grid">
 <article class="glass hero-copy shine">
-<span class="eyebrow"><span class="signal"></span> Professor Marcos Vinicius</span>
-<h1>Aulas de inglês com <span class="accent-word">direção clara e acompanhamento real</span></h1>
-<p class="lead">English Mentoring com Portal dos Alunos, materiais organizados, atividades, histórico e continuidade fora da aula</p>
+<span class="eyebrow"><span class="signal"></span> Professor Marcos Vinicius</span><div class="hero-mentoring">English Mentoring</div>
+<h1>Aulas particulares com <span class="accent-word">estratégia, organização e acompanhamento até a fluência</span></h1>
+<p class="lead">Modalidade regular para construção da base do idioma e modalidade conversacional para prática, speaking, adaptação e desenvolvimento da comunicação em inglês</p>
 <div class="btn-row" style="margin-top:18px">
-<a class="btn btn-primary shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-primary shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnHero" rel="noopener" target="_blank">Formulário (4 min)</a>
 </div>
 <p class="micro">Formulário para contexto inicial • WhatsApp para contato direto</p>
@@ -1071,50 +1102,7 @@ font-weight:600;
 </div>
 </div>
 </article>
-<aside class="hero-stage shine">
-<div class="stage-top">
-<div class="stage-copy">
-<span class="eyebrow"><span class="signal"></span> Portal dos Alunos</span>
-<h2>Portal organizado para acompanhar aulas, materiais, atividades e evolução no inglês</h2>
-<p>Materiais, atividades, relatórios e histórico em um ambiente organizado</p>
-</div>
-</div>
-<div class="mockup-window shine" id="heroMockup">
-<div class="mockup-topbar">
-<div aria-hidden="true" class="mockup-dots"><span></span><span></span><span></span></div>
-<div aria-label="Visões do portal" class="portal-tabs" role="tablist">
-<button class="portal-tab is-active" data-screen="student" type="button">Visão do aluno</button>
-<button class="portal-tab" data-screen="materials" type="button">Central de materiais</button>
-<button class="portal-tab" data-screen="teacher" type="button">Visão do professor</button>
-</div>
-<span class="mockup-label">Portal dos Alunos</span>
-</div>
-<div class="mockup-viewport">
-<div class="screen-frame is-active" data-screen-frame="student">
-<img alt="Dashboard do aluno no Portal dos Alunos" loading="eager" src="assets/portal-student-dashboard.webp"/>
-</div>
-<div class="screen-frame" data-screen-frame="materials">
-<img alt="Central de materiais do aluno" loading="lazy" src="assets/portal-student-materials.webp"/>
-</div>
-<div class="screen-frame" data-screen-frame="teacher">
-<img alt="Visão do professor no English Mentoring" loading="lazy" src="assets/portal-teacher-dashboard.webp"/>
-</div>
-<div class="mockup-overlay"></div>
-</div>
-<div class="mockup-caption">
-<div>
-<strong id="heroCaptionTitle">Visão do aluno com leitura imediata</strong>
-<p id="heroCaptionText">Atividades, ranking e atalhos aparecem com clareza desde a primeira leitura</p>
-</div>
-<div class="caption-badges">
-<span>Materiais</span>
-<span>Atividades</span>
-<span>Ranking</span>
-<span>Histórico</span>
-</div>
-</div>
-</div>
-</aside>
+
 </div>
 </div>
 </section>
@@ -1160,7 +1148,7 @@ font-weight:600;
 </li>
 </ul>
 <div class="btn-row" style="margin-top:16px">
-<a class="btn btn-primary shine" href="#" id="waBtnPortal" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-primary shine" href="#" id="waBtnPortal" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-dark shine" href="#como-funciona">Como funciona</a>
 </div>
 </article>
@@ -1280,7 +1268,7 @@ font-weight:600;
 </li>
 </ul>
 <div class="btn-row" style="margin-top:16px">
-<a class="btn btn-primary shine" href="#" id="waBtnMid" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-primary shine" href="#" id="waBtnMid" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-ghost shine" href="#faq">Ver dúvidas comuns</a>
 </div>
 </article>
@@ -1368,7 +1356,7 @@ font-weight:600;
 <p>Você pode preencher o formulário ou abrir o WhatsApp e eu te respondo pessoalmente</p>
 </div>
 <div class="btn-row">
-<a class="btn btn-primary shine" href="#" id="waBtnBottom" rel="noopener" target="_blank">Quero ser aluna(o)</a>
+<a class="btn btn-primary shine" href="#" id="waBtnBottom" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-ghost shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=publish-editor" id="formBtnBottom" rel="noopener" target="_blank">Formulário (4 min)</a>
 </div>
 </div>
@@ -1467,43 +1455,7 @@ font-weight:600;
 
     createDots();
     renderCarousel();
-    startCarousel();
-
-    const heroFrames = {
-      student: {
-        title: 'Visão do aluno com leitura imediata',
-        text: 'Atividades, ranking e atalhos aparecem com clareza desde a primeira leitura'
-      },
-      materials: {
-        title: 'Central de materiais com leitura simples',
-        text: 'PDFs, fotos, vídeos e links ficam no mesmo ambiente e podem ser consultados com rapidez'
-      },
-      teacher: {
-        title: 'Visão do professor com leitura rápida da rotina',
-        text: 'O professor acompanha materiais, histórico e progresso no mesmo sistema'
-      }
-    };
-
-    const heroTabs = Array.from(document.querySelectorAll('.portal-tab'));
-    const heroFramesEls = Array.from(document.querySelectorAll('[data-screen-frame]'));
-    const heroCaptionTitle = document.getElementById('heroCaptionTitle');
-    const heroCaptionText = document.getElementById('heroCaptionText');
-    let heroIndex = 0;
-    let heroTimer = null;
-
-    function activateHeroScreen(key){
-      heroTabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.screen === key));
-      heroFramesEls.forEach(frame => frame.classList.toggle('is-active', frame.dataset.screenFrame === key));
-      heroCaptionTitle.textContent = heroFrames[key].title;
-      heroCaptionText.textContent = heroFrames[key].text;
-      heroIndex = heroTabs.findIndex(tab => tab.dataset.screen === key);
-    }
-
-    heroTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        activateHeroScreen(tab.dataset.screen);
-        restartHero();
-      });
+    startCarousel();});
     });
 
     function startHero(){
@@ -1516,12 +1468,7 @@ font-weight:600;
     }
     function stopHero(){ if(!heroTimer) return; clearInterval(heroTimer); heroTimer = null; }
     function restartHero(){ stopHero(); startHero(); }
-    startHero();
-
-    document.getElementById('heroMockup')?.addEventListener('mouseenter', stopHero);
-    document.getElementById('heroMockup')?.addEventListener('mouseleave', startHero);
-
-    const shineEls = document.querySelectorAll('.shine');
+    startHero();const shineEls = document.querySelectorAll('.shine');
     function updateCoords(el, x, y){
       const rect = el.getBoundingClientRect();
       const px = ((x - rect.left) / rect.width) * 100;
