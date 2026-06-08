@@ -2190,6 +2190,203 @@ justify-content:center;
       .portal-screen small::after{display:none;}
     }
 
+
+
+    /* Refino Premium V5 — direção editorial, nav padronizada e hero menos pesado */
+    .nav{
+      background:linear-gradient(180deg, rgba(8,6,16,.86), rgba(8,6,16,.66));
+      border-bottom:1px solid rgba(198,167,255,.12);
+      box-shadow:0 16px 44px rgba(0,0,0,.32), 0 0 46px rgba(139,92,255,.055);
+    }
+    .navin{padding:11px 0; gap:20px;}
+    .brand{min-width:310px;}
+    .brandText strong{font-size:17px; letter-spacing:-.015em;}
+    .brandText span{color:rgba(231,222,255,.60);}
+    .avatar{width:46px;height:46px;border-radius:15px;box-shadow:0 14px 34px rgba(0,0,0,.36),0 0 0 1px rgba(155,108,255,.17),0 0 30px rgba(139,92,255,.10)}
+    .navlinks{gap:9px;flex-wrap:nowrap;align-items:center;}
+    .navlinks a:not(.btn){
+      min-height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.028);
+      color:rgba(235,229,255,.74);
+      font-weight:760;
+      font-size:14px;
+      letter-spacing:-.005em;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+    }
+    .navlinks a.navlink-soft{color:rgba(235,229,255,.74);}
+    .navlinks a:not(.btn):hover{
+      color:#fff;
+      background:rgba(139,92,255,.105);
+      border-color:rgba(198,167,255,.24);
+      box-shadow:0 0 26px rgba(139,92,255,.13), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .navlinks .btn-sm{
+      min-height:40px;
+      padding:10px 17px;
+      border-radius:999px;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .navlinks .btn-ghost{
+      background:rgba(255,255,255,.05);
+      border-color:rgba(255,255,255,.10);
+      color:rgba(245,240,255,.88);
+    }
+    .navlinks .btn-primary{
+      background:radial-gradient(120px 60px at 25% 0%, rgba(255,255,255,.20), transparent 65%), linear-gradient(180deg, rgba(111,73,205,.98), rgba(67,42,130,.98));
+      border-color:rgba(198,167,255,.34);
+      box-shadow:0 16px 46px rgba(107,64,215,.32), inset 0 1px 0 rgba(255,255,255,.15);
+    }
+    .hero{padding:42px 0 26px;}
+    .hero-cinematic-shell{
+      max-width:1320px;
+      margin:0 auto;
+      padding:0;
+      background:transparent;
+      border:0;
+      box-shadow:none;
+      overflow:visible;
+    }
+    .hero-cinematic-shell::before,.hero-cinematic-shell::after{display:none;}
+    .premium-hero-grid{
+      display:block;
+      max-width:1080px;
+      margin:0 auto;
+    }
+    .hero-copy-premium{
+      position:relative;
+      min-height:auto;
+      padding:clamp(44px, 4.8vw, 68px) clamp(32px, 5vw, 76px) clamp(36px, 4vw, 54px);
+      text-align:center;
+      background:
+        radial-gradient(680px 360px at 50% 0%, rgba(155,108,255,.18), transparent 70%),
+        radial-gradient(560px 300px at 12% 18%, rgba(255,255,255,.055), transparent 72%),
+        linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)),
+        rgba(11,10,20,.78);
+      border:1px solid rgba(198,167,255,.16);
+      border-radius:34px;
+      box-shadow:0 30px 96px rgba(0,0,0,.54), 0 0 80px rgba(139,92,255,.105), inset 0 1px 0 rgba(255,255,255,.07);
+    }
+    .hero-copy-premium::before{
+      opacity:.92;
+      background:linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.035) 24%, rgba(155,108,255,.42) 48%, rgba(99,59,210,.16) 76%, rgba(255,255,255,.10));
+    }
+    .hero-copy-premium .eyebrow{align-self:center; margin:0 auto 18px;}
+    .hero-copy-premium .hero-mentoring{margin:0 0 16px;text-align:center;letter-spacing:.16em;}
+    .hero-copy-premium h1{
+      max-width:940px;
+      margin:0 auto 20px;
+      text-align:center;
+      font-size:clamp(42px, 3.25vw, 64px);
+      line-height:1.03;
+      letter-spacing:-.058em;
+      text-wrap:balance;
+    }
+    .hero-copy-premium .lead{
+      max-width:780px;
+      margin:0 auto;
+      text-align:center;
+      font-size:clamp(16px,1.25vw,19px);
+      line-height:1.78;
+      color:rgba(238,232,255,.82);
+      text-wrap:pretty;
+    }
+    .hero-micro{
+      max-width:720px;
+      margin:18px auto 0;
+      text-align:center;
+      color:rgba(235,229,255,.62);
+      line-height:1.68;
+    }
+    .hero-actions{justify-content:center;margin-top:28px;}
+    .btn-hero-main,.btn-hero-form{min-width:218px;}
+    .hero-proof-strip{
+      max-width:790px;
+      margin:28px auto 0;
+      gap:12px;
+    }
+    .proof-mini{
+      min-height:auto;
+      text-align:left;
+      padding:15px 16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.026));
+      border-color:rgba(198,167,255,.12);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 12px 36px rgba(0,0,0,.18);
+    }
+    .hero-credibility-dock{
+      max-width:1120px;
+      margin:18px auto 0;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+    .hero-credibility-dock article{
+      position:relative;
+      overflow:hidden;
+      min-height:132px;
+      padding:18px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018)), rgba(9,8,18,.62);
+      border:1px solid rgba(198,167,255,.11);
+      box-shadow:0 20px 56px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.055);
+      backdrop-filter:blur(16px) saturate(130%);
+    }
+    .hero-credibility-dock article::after{
+      content:"";
+      position:absolute;
+      inset:auto -10% -35% 35%;
+      height:90px;
+      background:radial-gradient(circle, rgba(155,108,255,.18), transparent 70%);
+      pointer-events:none;
+    }
+    .hero-credibility-dock span{
+      display:inline-flex;
+      margin-bottom:12px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      color:rgba(198,167,255,.82);
+    }
+    .hero-credibility-dock b{
+      display:block;
+      font-family:'Outfit','Inter',sans-serif;
+      font-size:18px;
+      letter-spacing:-.025em;
+      color:#fff;
+      margin-bottom:7px;
+    }
+    .hero-credibility-dock p{margin:0;color:rgba(235,229,255,.66);font-size:13px;line-height:1.55;}
+    .section-head h2,.premium-section-head h2{
+      max-width:1080px;
+      font-size:clamp(34px,3.35vw,52px);
+      line-height:1.04;
+      letter-spacing:-.05em;
+      text-wrap:balance;
+    }
+    .portal-premium-section .section-head,
+    .premium-section-head{align-items:flex-start;}
+    .portal-premium-section .section-head p,
+    .premium-section-head p{max-width:860px;}
+    @media (max-width:1180px){
+      .brand{min-width:270px;}
+      .navlinks a:not(.btn){padding:10px 13px;font-size:13.5px;}
+      .navlinks .btn-sm{padding:10px 14px;font-size:13.5px;}
+      .hero-credibility-dock{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media (max-width:760px){
+      .hero{padding:28px 0 18px;}
+      .hero-copy-premium{padding:34px 20px 28px;border-radius:28px;}
+      .hero-copy-premium h1{font-size:clamp(34px,9.5vw,50px);letter-spacing:-.05em;}
+      .hero-proof-strip,.hero-credibility-dock{grid-template-columns:1fr;}
+      .hero-credibility-dock article{min-height:auto;}
+    }
+
 </style>
 </head>
 <body>
@@ -2234,18 +2431,24 @@ justify-content:center;
 <span class="eyebrow"><span class="signal"></span> Professor Marcos Vinicius</span>
 <div class="hero-mentoring">English Mentoring</div>
 <h1>Aulas particulares de inglês com método, acompanhamento e estudo organizado</h1>
-<p class="lead">Para quem quer evoluir com direção clara: aula ao vivo bem conduzida, prática guiada, correção inteligente e uma rotina de estudo que continua organizada depois do encontro.</p>
+<p class="lead">Para alunos que querem evoluir sem improviso: cada encontro combina explicação clara, prática guiada, correção inteligente e continuidade fora da aula.</p>
 <div class="hero-actions">
 <a class="btn btn-primary btn-hero-main shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-ghost btn-hero-form shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=header" id="formBtnHero" rel="noopener" target="_blank">Formulário</a>
 </div>
-<p class="micro hero-micro">Modalidade regular para construir base com segurança e modalidade conversacional para transformar vocabulário, listening e speaking em comunicação mais natural.</p>
+<p class="micro hero-micro">Curso regular para construir base com segurança. Modalidade conversacional para transformar vocabulário, listening e speaking em comunicação mais natural.</p>
 <div class="hero-proof-strip" aria-label="Diferenciais principais">
 <div class="proof-mini shine"><b>Método</b><span>explicação, prática e correção com direção real</span></div>
-<div class="proof-mini shine"><b>Rotina</b><span>tarefas possíveis, organizadas e conectadas à aula</span></div>
-<div class="proof-mini shine"><b>Acompanhamento</b><span>leitura do aluno além do encontro ao vivo</span></div>
+<div class="proof-mini shine"><b>Rotina</b><span>atividades possíveis, organizadas e conectadas à aula</span></div>
+<div class="proof-mini shine"><b>Acompanhamento</b><span>continuidade entre um encontro e outro</span></div>
 </div>
 </article>
+</div>
+<div class="hero-credibility-dock" aria-label="Pilares da experiência de estudo">
+<article class="shine"><span>01</span><b>Aula ao vivo bem conduzida</b><p>explicação, prática e correção com direção clara</p></article>
+<article class="shine"><span>02</span><b>Estudo entre aulas</b><p>materiais e atividades conectados ao que foi trabalhado</p></article>
+<article class="shine"><span>03</span><b>Portal dos Alunos</b><p>ambiente organizado para manter continuidade e leitura clara</p></article>
+<article class="shine"><span>04</span><b>Olhar do professor</b><p>acompanhamento do progresso, materiais e rotina do aluno</p></article>
 </div>
 </div>
 </div>
