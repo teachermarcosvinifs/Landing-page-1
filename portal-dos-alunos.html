@@ -232,7 +232,44 @@
     @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 
     .navlinks a.is-current{color:var(--text);background:rgba(139,92,255,.09);border-color:rgba(139,92,255,.22)}
-  </style>
+  
+
+    /* Refino Premium V4 — distribuição de hero mais controlada */
+    .hero-shell{
+      grid-template-columns:minmax(0,.96fr) minmax(420px,1.04fr);
+      gap:34px;
+      padding:clamp(28px, 3.2vw, 42px);
+    }
+    h1{
+      font-size:clamp(38px,4.45vw,68px);
+      line-height:.98;
+      letter-spacing:-.052em;
+      max-width:700px;
+    }
+    .lead{font-size:clamp(17px,1.55vw,20px); line-height:1.72; max-width:700px;}
+    .visual-stack{min-height:470px;}
+    .mockup{max-width:590px; transform:rotate(.35deg);}
+    .floating-note{max-width:280px;}
+    .section-head h2{max-width:900px; text-wrap:balance;}
+    .section-head p{max-width:780px;}
+    @media (max-width:980px){
+      .hero-shell{grid-template-columns:1fr;}
+      h1{font-size:clamp(38px,11vw,62px);}
+      .visual-stack{min-height:auto;}
+    }
+
+    .visual-card img{cursor:zoom-in; transition:transform .35s ease, filter .35s ease;}
+    .visual-card:hover img{transform:scale(1.012); filter:saturate(1.12) contrast(1.05) brightness(1.04);}
+    .image-modal{position:fixed;inset:0;z-index:999;display:none;align-items:center;justify-content:center;padding:26px}
+    .image-modal.is-open{display:flex}
+    .image-modal__backdrop{position:absolute;inset:0;background:rgba(3,3,8,.82);backdrop-filter:blur(18px) saturate(135%)}
+    .image-modal__panel{position:relative;width:min(1420px,96vw);max-height:92vh;border-radius:30px;border:1px solid rgba(198,167,255,.22);background:radial-gradient(640px 320px at 50% 0%,rgba(139,92,255,.18),transparent 72%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),rgba(8,7,16,.94);box-shadow:0 44px 140px rgba(0,0,0,.72),0 0 90px rgba(139,92,255,.18);overflow:hidden}
+    .image-modal__topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);color:rgba(244,241,255,.82);font-size:13px;font-weight:800;letter-spacing:.03em}
+    .image-modal__close{appearance:none;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.055);color:#fff;border-radius:14px;width:42px;height:38px;cursor:pointer;font-size:22px;line-height:1}
+    .image-modal__image{width:100%;max-height:calc(92vh - 74px);object-fit:contain;background:#020205}
+    body.modal-open{overflow:hidden}
+
+</style>
 </head>
 <body>
   <div class="page-grid"></div>
@@ -283,11 +320,11 @@
 
     <section class="section">
       <div class="wrap">
-        <div class="section-head"><div><div class="kicker">Experiência do aluno</div><h2>Um ambiente único para continuar estudando com clareza</h2></div><p>Depois da aula, o aluno precisa saber onde encontrar materiais, o que revisar e como retomar o estudo. O Portal resolve essa parte com organização visual, sem transformar a rotina em algo pesado.</p></div>
+        <div class="section-head"><div><div class="kicker">Experiência do aluno</div><h2>Um ambiente único para continuar estudando com clareza</h2></div><p>Depois da aula, o aluno precisa encontrar materiais, revisar com direção e retomar o estudo com clareza. O Portal organiza essa continuidade em uma experiência visual própria, sem depender de links espalhados ou mensagens perdidas.</p></div>
         <div class="grid-3">
-          <div class="card shine"><h3>Central de materiais</h3><p>PDFs, fotos, vídeos e links ficam agrupados para consulta rápida.</p><ul><li>Menos perda de arquivos</li><li>Mais leitura do que foi enviado</li><li>Rotina visual mais organizada</li></ul></div>
+          <div class="card shine"><h3>Central de materiais</h3><p>PDFs, fotos, vídeos e links ficam agrupados para consulta rápida.</p><ul><li>Materiais centralizados</li><li>Consulta mais rápida</li><li>Rotina visual mais organizada</li></ul></div>
           <div class="card shine"><h3>Atividades e trilhas</h3><p>O aluno visualiza o que precisa fazer, revisar ou continuar sem depender de memória.</p><ul><li>Atividades em destaque</li><li>Histórico mais claro</li><li>Continuidade entre aulas</li></ul></div>
-          <div class="card shine"><h3>Progresso visível</h3><p>Ranking, relatórios e acompanhamento ajudam a tornar a evolução mais concreta.</p><ul><li>Leitura do desempenho</li><li>Mais contexto para ajustes</li><li>Menos sensação de estudo solto</li></ul></div>
+          <div class="card shine"><h3>Progresso visível</h3><p>Ranking, relatórios e acompanhamento ajudam a tornar a evolução mais concreta.</p><ul><li>Leitura do desempenho</li><li>Mais contexto para ajustes</li><li>Mais continuidade entre encontros</li></ul></div>
         </div>
       </div>
     </section>
@@ -299,7 +336,7 @@
     </section>
     <section class="section">
       <div class="wrap">
-        <div class="section-head"><div><div class="kicker">Bastidor do professor</div><h2>O professor também ganha uma visão mais estratégica</h2></div><p>A visão do professor permite acompanhar alunos, turmas, relatórios, materiais, comunicados e indicadores. Comercialmente, isso prova algo importante: existe bastidor, organização e acompanhamento real.</p></div>
+        <div class="section-head"><div><div class="kicker">Bastidor do professor</div><h2>O professor também ganha uma visão mais estratégica</h2></div><p>A visão do professor permite acompanhar alunos, turmas, relatórios, materiais, comunicados e indicadores. Para o aluno, isso mostra que existe bastidor: as aulas não ficam isoladas, e o acompanhamento tem mais contexto.</p></div>
         <div class="feature-row">
           <div class="visual-card shine"><img src="assets/lp-teacher-panorama.webp" alt="Panorama do professor" loading="lazy"/><div class="visual-caption"><strong>Panorama do professor.</strong> Uma visão geral ajuda a perceber rotina, pendências e evolução com mais rapidez.</div></div>
           <div class="visual-card shine"><img src="assets/lp-teacher-detail.webp" alt="Detalhe de acompanhamento do aluno" loading="lazy"/><div class="visual-caption"><strong>Detalhe por aluno.</strong> O acompanhamento individual ajuda a ajustar aula, material e orientação.</div></div>
@@ -308,7 +345,7 @@
     </section>
     <section class="section">
       <div class="wrap split">
-        <div class="quote shine"><p>A diferença está na continuidade: o aluno encontra o caminho com mais facilidade, e o professor acompanha com mais contexto.</p><span>O Portal deixa a experiência mais profissional porque materiais, atividades e registros não ficam espalhados. A aula continua sendo o centro; o ambiente organiza o que precisa acontecer entre um encontro e outro.</span></div>
+        <div class="quote shine"><p>A força do Portal está em tornar a continuidade mais visível: o aluno encontra o caminho, e o professor acompanha com mais contexto.</p><span>A experiência fica mais profissional porque materiais, atividades e registros ganham um lugar próprio. A aula continua sendo o centro; o Portal organiza o que precisa permanecer vivo entre um encontro e outro.</span></div>
         <div class="grid-2">
           <div class="card shine"><h3>Para o aluno</h3><p>Mais clareza sobre o que recebeu, o que precisa revisar e como continuar.</p><ul><li>Ambiente único</li><li>Materiais organizados</li><li>Atividades visíveis</li></ul></div>
           <div class="card shine"><h3>Para o professor</h3><p>Mais contexto para orientar, corrigir rota e preparar uma aula melhor.</p><ul><li>Histórico de materiais</li><li>Leitura de progresso</li><li>Bastidor pedagógico</li></ul></div>
@@ -332,6 +369,15 @@
     </section>
   </main>
 
+
+<div class="image-modal" id="imageModal" aria-hidden="true" role="dialog" aria-label="Imagem ampliada do Portal dos Alunos">
+  <div class="image-modal__backdrop" data-modal-close></div>
+  <div class="image-modal__panel" role="document">
+    <div class="image-modal__topbar"><span id="imageModalTitle">Visual ampliado</span><button class="image-modal__close" type="button" aria-label="Fechar imagem ampliada" data-modal-close>×</button></div>
+    <img class="image-modal__image" id="imageModalImg" alt=""/>
+  </div>
+</div>
+
   <footer>
     <div class="wrap footer-inner">
       <div>© <span id="year"></span> • Professor Marcos Vinicius</div>
@@ -339,6 +385,36 @@
     </div>
   </footer>
   <script>
+
+
+    const imageModal = document.getElementById('imageModal');
+    const imageModalImg = document.getElementById('imageModalImg');
+    const imageModalTitle = document.getElementById('imageModalTitle');
+    function openImageModal(img){
+      if(!imageModal || !imageModalImg || !img) return;
+      imageModalImg.src = img.currentSrc || img.src;
+      imageModalImg.alt = img.alt || 'Imagem ampliada';
+      if(imageModalTitle) imageModalTitle.textContent = img.alt || 'Visual ampliado';
+      imageModal.classList.add('is-open');
+      imageModal.setAttribute('aria-hidden','false');
+      document.body.classList.add('modal-open');
+    }
+    function closeImageModal(){
+      if(!imageModal || !imageModalImg) return;
+      imageModal.classList.remove('is-open');
+      imageModal.setAttribute('aria-hidden','true');
+      document.body.classList.remove('modal-open');
+      imageModalImg.removeAttribute('src');
+    }
+    document.querySelectorAll('.visual-card img, .mockup img').forEach(img => {
+      img.setAttribute('tabindex','0');
+      img.setAttribute('role','button');
+      img.setAttribute('aria-label', (img.alt || 'Imagem') + ' — clique para ampliar');
+      img.addEventListener('click', () => openImageModal(img));
+      img.addEventListener('keydown', event => { if(event.key === 'Enter' || event.key === ' '){ event.preventDefault(); openImageModal(img); }});
+    });
+    document.querySelectorAll('[data-modal-close]').forEach(el => el.addEventListener('click', closeImageModal));
+    document.addEventListener('keydown', event => { if(event.key === 'Escape' && imageModal?.classList.contains('is-open')) closeImageModal(); });
 
     const year = document.getElementById('year');
     if(year) year.textContent = new Date().getFullYear();
