@@ -1,0 +1,66 @@
+[
+  {
+    "key": "lp-student-dashboard",
+    "label": "Vis\u00e3o inicial do aluno",
+    "sec": 3.0,
+    "jpg": 59809,
+    "webp": 33960,
+    "svg": 80304
+  },
+  {
+    "key": "lp-student-materials",
+    "label": "Central de materiais",
+    "sec": 24.0,
+    "jpg": 42031,
+    "webp": 20476,
+    "svg": 56597
+  },
+  {
+    "key": "lp-student-progress",
+    "label": "Acompanhamento e evolu\u00e7\u00e3o",
+    "sec": 39.0,
+    "jpg": 46475,
+    "webp": 24310,
+    "svg": 62528
+  },
+  {
+    "key": "lp-student-ranking",
+    "label": "Ranking e leitura de progresso",
+    "sec": 54.0,
+    "jpg": 42112,
+    "webp": 22302,
+    "svg": 56715
+  },
+  {
+    "key": "lp-teacher-dashboard",
+    "label": "Dashboard do professor",
+    "sec": 0.7,
+    "jpg": 43014,
+    "webp": 24604,
+    "svg": 57907
+  },
+  {
+    "key": "lp-teacher-panorama",
+    "label": "Panorama do professor",
+    "sec": 28.0,
+    "jpg": 55450,
+    "webp": 31414,
+    "svg": 74490
+  },
+  {
+    "key": "lp-teacher-detail",
+    "label": "Detalhe individual do aluno",
+    "sec": 48.0,
+    "jpg": 52464,
+    "webp": 25638,
+    "svg": 70512
+  },
+  {
+    "key": "lp-teacher-group",
+    "label": "Acompanhamento por turma",
+    "sec": 88.0,
+    "jpg": 46408,
+    "webp": 21694,
+    "svg": 62437
+  }
+]
