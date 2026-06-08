@@ -1973,6 +1973,96 @@ justify-content:center;
       }
     }
 
+
+
+    /* Refino Premium V3 — hero menos congestionado e mais persuasivo */
+    .premium-hero-grid{
+      grid-template-columns:1fr !important;
+      max-width:1120px;
+      margin:0 auto;
+      gap:18px;
+    }
+
+    .hero-copy-premium{
+      min-height:clamp(560px, 68vh, 680px);
+      padding:clamp(34px, 5vw, 64px) clamp(24px, 6vw, 74px);
+      align-items:center;
+      text-align:center;
+      justify-content:center;
+      background:
+        radial-gradient(680px 340px at 50% 8%, rgba(155,108,255,.18), transparent 68%),
+        radial-gradient(520px 300px at 8% 88%, rgba(82,108,255,.09), transparent 72%),
+        linear-gradient(180deg, rgba(255,255,255,.058), rgba(255,255,255,.02)),
+        rgba(11,10,20,.78);
+    }
+
+    .hero-copy-premium .eyebrow{align-self:center;}
+    .hero-copy-premium .hero-mentoring{text-align:center;}
+
+    .hero-copy-premium h1{
+      max-width:13.4ch;
+      text-align:center;
+      font-size:clamp(44px, 6.1vw, 86px);
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .hero-copy-premium .lead,
+    .hero-micro{
+      text-align:center;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .hero-copy-premium .lead{
+      max-width:760px;
+      font-size:clamp(16px, 1.35vw, 20px);
+    }
+
+    .hero-actions{justify-content:center;}
+
+    .hero-proof-strip{
+      max-width:850px;
+      width:100%;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .hero-portal-stage{
+      min-height:auto;
+      padding:clamp(18px, 3vw, 30px);
+      overflow:hidden;
+    }
+
+    .hero-portal-stage .stage-top{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) auto;
+      align-items:end;
+      gap:18px;
+      margin-bottom:14px;
+    }
+
+    .stage-copy h2{
+      max-width:760px;
+      font-size:clamp(28px, 3.5vw, 48px);
+      letter-spacing:-.055em;
+    }
+
+    .stage-copy p{max-width:760px;}
+    .hero-mockup-window{margin-top:0;}
+    .hero-viewport{aspect-ratio:16/7.8;}
+
+    .floating-card-one{top:auto; bottom:108px; right:26px; transform:none;}
+    .floating-card-two{bottom:26px; left:26px; transform:none;}
+
+    @media (max-width:860px){
+      .hero-copy-premium{min-height:auto; padding:34px 20px;}
+      .hero-copy-premium h1{max-width:12ch;}
+      .hero-portal-stage .stage-top{grid-template-columns:1fr;}
+      .hero-viewport{aspect-ratio:16/10.5;}
+      .hero-proof-strip{grid-template-columns:1fr;}
+    }
+
 </style>
 </head>
 <body>
@@ -2019,25 +2109,25 @@ justify-content:center;
 <article class="glass hero-copy hero-copy-premium shine">
 <span class="eyebrow"><span class="signal"></span> Professor Marcos Vinicius</span>
 <div class="hero-mentoring">English Mentoring</div>
-<h1>Aulas particulares de inglês com método, acompanhamento e estudo organizado fora da aula</h1>
-<p class="lead">Para alunos que não querem apenas “fazer aula”, mas ter direção, prática guiada, materiais centralizados e um acompanhamento que mantém o estudo vivo entre uma aula e outra</p>
+<h1>Aulas particulares de inglês com método, acompanhamento e estudo organizado</h1>
+<p class="lead">Para quem quer evoluir com direção clara: aula ao vivo bem conduzida, prática guiada, correção inteligente e uma rotina de estudo que continua organizada depois do encontro.</p>
 <div class="hero-actions">
 <a class="btn btn-primary btn-hero-main shine" href="#" id="waBtnHero" rel="noopener" target="_blank">Quero conhecer as aulas</a>
 <a class="btn btn-ghost btn-hero-form shine" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=header" id="formBtnHero" rel="noopener" target="_blank">Formulário</a>
 </div>
-<p class="micro hero-micro">Modalidade regular para construção da base do idioma e modalidade conversacional para prática, speaking, adaptação e desenvolvimento da comunicação em inglês</p>
+<p class="micro hero-micro">Modalidade regular para construir base com segurança e modalidade conversacional para transformar vocabulário, listening e speaking em comunicação mais natural.</p>
 <div class="hero-proof-strip" aria-label="Diferenciais principais">
-<div class="proof-mini shine"><b>Método</b><span>explicação, prática e correção com direção</span></div>
-<div class="proof-mini shine"><b>Portal</b><span>materiais, tarefas e progresso em um só lugar</span></div>
-<div class="proof-mini shine"><b>Acompanhamento</b><span>leitura do aluno além da aula ao vivo</span></div>
+<div class="proof-mini shine"><b>Método</b><span>explicação, prática e correção com direção real</span></div>
+<div class="proof-mini shine"><b>Rotina</b><span>tarefas possíveis, organizadas e conectadas à aula</span></div>
+<div class="proof-mini shine"><b>Acompanhamento</b><span>leitura do aluno além do encontro ao vivo</span></div>
 </div>
 </article>
 <aside class="hero-stage hero-portal-stage shine" id="heroMockup" aria-label="Demonstração visual do Portal dos Alunos">
 <div class="stage-top">
 <div class="stage-copy">
 <span class="feature-pill">Portal dos Alunos</span>
-<h2>Uma experiência de estudo com cara de sistema premium</h2>
-<p>O aluno enxerga materiais, atividades e evolução. O professor acompanha o bastidor para manter direção e continuidade</p>
+<h2>O Portal entra depois da aula para manter continuidade</h2>
+<p>A aula continua sendo o centro. O Portal organiza materiais, atividades e registros para que o estudo não dependa de links soltos ou memória.</p>
 </div>
 </div>
 <div class="mockup-window hero-mockup-window">
@@ -2076,12 +2166,12 @@ justify-content:center;
 </div>
 </div>
 <div class="floating-card floating-card-one shine">
-<small>fora da aula</small>
-<strong>continuidade visível</strong>
+<small>entre aulas</small>
+<strong>continuidade organizada</strong>
 </div>
 <div class="floating-card floating-card-two shine">
-<small>bastidor</small>
-<strong>professor acompanha</strong>
+<small>acompanhamento</small>
+<strong>mais contexto para orientar</strong>
 </div>
 </aside>
 </div>
@@ -2112,11 +2202,11 @@ justify-content:center;
 <article class="modality-card modality-main shine">
 <span class="tag">Fala e autonomia</span>
 <h3>Conversacional</h3>
-<p>Para quem já tem alguma base, mas trava, fala pouco, perde clareza ou precisa ganhar presença na comunicação oral</p>
+<p>Para quem já tem alguma base, mas precisa destravar a fala com vocabulário ativo, escuta melhor e raciocínio mais rápido em inglês</p>
 <ul>
-<li>speaking com direção real</li>
-<li>correção sem interromper o raciocínio</li>
-<li>produção guiada e adaptação</li>
+<li>aquisição de vocabulário com uso oral</li>
+<li>dinâmicas para reasoning, listening e speaking</li>
+<li>homework conversacional, com preparação para falar melhor</li>
 </ul>
 </article>
 <article class="modality-card shine">
