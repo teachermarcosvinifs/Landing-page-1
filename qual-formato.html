@@ -13,19 +13,20 @@
 <meta property="og:url" content="https://teachermarcosvinifs.github.io/Landing-page-1/qual-formato.html">
 <meta property="og:image" content="https://teachermarcosvinifs.github.io/Landing-page-1/assets/og-cover.jpg">
 <meta property="og:locale" content="pt_BR">
-<meta name="theme-color" content="#f7f7f5">
-<link rel="stylesheet" href="assets/site-v3.css">
+<meta name="theme-color" content="#030405">
+<link rel="stylesheet" href="assets/site-v3-black.css">
+<script src="assets/site-v3-motion.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 <header class="site-header"><div class="wrap"><nav class="site-nav" aria-label="Navegação principal"><a class="brand" href="./"><strong>Marcos Vinicius</strong><span>Professor de inglês · aulas online</span></a><div class="nav-links"><a href="./">Voltar ao site</a><a class="nav-contact" href="https://wa.me/5592985273076?text=Ol%C3%A1%21%20Vi%20a%20ferramenta%20de%20formatos%20e%20tenho%20interesse%20em%20estudar%20ingl%C3%AAs." target="_blank" rel="noopener">Entrar em contato</a></div></nav></div></header>
 
 <main id="conteudo" class="tool-main">
-<section class="tool-hero"><p class="kicker">Formatos das aulas</p><h1>Individual, dupla, trio ou grupo?</h1><p class="lead">Você pode comparar primeiro as opções e, se quiser, responder quatro perguntas. A ferramenta organiza a escolha; isso não é teste de nível.</p></section>
+<section class="tool-hero"><p class="kicker">Formatos das aulas</p><h1>Individual, dupla, trio ou grupo?</h1><p class="lead">Você pode comparar primeiro as opções e, se quiser, responder quatro perguntas. A ferramenta organiza a escolha; isso não é teste de nível</p></section>
 
-<section class="tool-formats" aria-labelledby="formatos"><h2 id="formatos">Como os formatos se diferenciam</h2><div class="format-table"><div class="format-row"><strong>Individual</strong><p>Um aluno por aula.</p></div><div class="format-row"><strong>Dupla</strong><p>Duas pessoas estudando juntas.</p></div><div class="format-row"><strong>Trio</strong><p>Três alunos na mesma aula.</p></div><div class="format-row"><strong>Grupo</strong><p>Turmas pequenas de 4 a 6 pessoas.</p></div></div><p class="small">Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos.</p></section>
+<section class="tool-formats" aria-labelledby="formatos"><h2 id="formatos">Formatos disponíveis</h2><div class="format-strip" aria-label="Formatos disponíveis"><span>Individual</span><span>Dupla</span><span>Trio</span><span>Grupo <small>4 a 6</small></span></div><p class="format-note">Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p></section>
 
-<section class="tool-hero"><p class="kicker">Se quiser comparar melhor</p><h2>Quatro perguntas sobre o que você procura</h2><p class="lead">A resposta combina nível informado, modalidade, formato e carga semanal. Você continua podendo falar comigo antes de decidir qualquer coisa.</p></section>
+<section class="tool-hero"><p class="kicker">Se quiser comparar melhor</p><h2>Quatro perguntas sobre o que você procura</h2><p class="lead">A resposta combina nível informado, modalidade, formato e carga semanal. Você continua podendo falar comigo antes de decidir qualquer coisa</p></section>
 
 <form id="fitForm">
 <section class="question"><h2>1. Como está seu inglês hoje?</h2><div class="options"><div class="option"><input required type="radio" name="level" value="beginner" id="l1"><label for="l1">Estou começando / ainda tenho pouca base</label></div><div class="option"><input type="radio" name="level" value="basic" id="l2"><label for="l2">Já estudei, mas minha base ainda é limitada</label></div><div class="option"><input type="radio" name="level" value="b1plus" id="l3"><label for="l3">Já consigo me comunicar e acredito estar no B1 ou acima</label></div><div class="option"><input type="radio" name="level" value="unknown" id="l4"><label for="l4">Não sei dizer</label></div></div></section>
@@ -35,7 +36,7 @@
 <section class="tool-actions"><button class="btn btn-primary" type="submit">Ver opção</button><button class="btn" type="reset" id="resetBtn">Limpar respostas</button></section>
 </form>
 
-<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><button class="btn" type="button" id="revealPrice">Ver mensalidade desta opção</button><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" id="emailResult">Prefiro e-mail</a></div><div id="priceReveal" class="notice" hidden></div><p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos.</p></section>
+<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><button class="btn" type="button" id="revealPrice">Ver mensalidade desta opção</button><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" id="emailResult">Prefiro e-mail</a></div><div id="priceReveal" class="notice" hidden></div><p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p></section>
 </main>
 
 <footer class="site-footer"><div class="tool-main footer-row"><span>Professor Marcos Vinicius · aulas de inglês online</span><a href="mailto:marcosvinifs@gmail.com?subject=Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20ferramenta%20de%20formatos">marcosvinifs@gmail.com</a></div></footer>
@@ -58,11 +59,11 @@ const result=document.getElementById('result');
 const priceReveal=document.getElementById('priceReveal');
 const revealPrice=document.getElementById('revealPrice');
 let currentSelection=null;
-form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');let mode='Ensino regular';let copy='O ensino regular trabalha o inglês de forma ampla e atende desde o nível iniciante.';
-if(goal==='conversation'&&level==='b1plus'){mode='Aulas conversacionais (B1+)';copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. A modalidade conversacional pode ser uma opção.'}
-else if(goal==='conversation'&&level!=='b1plus'){mode='Ensino regular';copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Para níveis anteriores, trabalho com ensino regular.'}
-else if(goal==='professional'){mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';copy='O formato principal depende do seu nível. Vocabulário e situações da sua área podem entrar nas aulas quando forem relevantes.'}
-else if(goal==='unsure'){mode='Ensino regular como referência inicial';copy='Se você ainda não sabe qual modalidade escolher, o ensino regular é a referência inicial. Formato e carga semanal podem ser definidos separadamente.'}
+form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');let mode='Ensino regular';let copy='O ensino regular trabalha o inglês de forma ampla e atende desde o nível iniciante';
+if(goal==='conversation'&&level==='b1plus'){mode='Aulas conversacionais (B1+)';copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. A modalidade conversacional pode ser uma opção'}
+else if(goal==='conversation'&&level!=='b1plus'){mode='Ensino regular';copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Para níveis anteriores, trabalho com ensino regular'}
+else if(goal==='professional'){mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';copy='O formato principal depende do seu nível. Vocabulário e situações da sua área podem entrar nas aulas quando forem relevantes'}
+else if(goal==='unsure'){mode='Ensino regular como referência inicial';copy='Se você ainda não sabe qual modalidade escolher, o ensino regular é a referência inicial. Formato e carga semanal podem ser definidos separadamente'}
 document.getElementById('resultTitle').textContent=mode+' · '+labels[format];document.getElementById('resultCopy').textContent=copy;
 let rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b></div><div class="result-fact"><span>Carga semanal</span><b>${minutes==='unknown'?'Ainda não definida':minutes+' minutos'}</b></div>`;
 document.getElementById('facts').innerHTML=rows;
@@ -72,9 +73,9 @@ const sourceSentence=sourceLabel?` Vi a página a partir de ${sourceLabel}.`:'';
 const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}.${sourceSentence}`;
 document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
 document.getElementById('emailResult').href='mailto:marcosvinifs@gmail.com?subject='+encodeURIComponent('Interesse em aulas de inglês - ferramenta de formatos')+'&body='+encodeURIComponent(text);
-result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+result.classList.add('show');result.classList.add('is-visible');result.scrollIntoView({behavior:'smooth',block:'start'});
 });
-revealPrice.addEventListener('click',()=>{if(!currentSelection)return;const {format,minutes}=currentSelection;priceReveal.hidden=false;if(minutes==='unknown'){priceReveal.textContent='A mensalidade depende da carga semanal. Escolha 60, 90 ou 120 minutos por semana para ver o valor exato.';return;}priceReveal.textContent=`Mensalidade desta opção: R$ ${prices[format][minutes]}/mês.`;});
+revealPrice.addEventListener('click',()=>{if(!currentSelection)return;const {format,minutes}=currentSelection;priceReveal.hidden=false;if(minutes==='unknown'){priceReveal.textContent='A mensalidade depende da carga semanal. Escolha 60, 90 ou 120 minutos por semana para ver o valor exato';return;}priceReveal.textContent=`Mensalidade desta opção: R$ ${prices[format][minutes]}/mês`;});
 document.getElementById('resetBtn').addEventListener('click',()=>{result.classList.remove('show');priceReveal.hidden=true;priceReveal.textContent='';currentSelection=null;});
 </script>
 </body>
