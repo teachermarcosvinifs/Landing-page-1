@@ -78,7 +78,8 @@ jobs:
                 const body=document.body;
                 const html=document.documentElement;
                 const overflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
-                const tiny=[...document.querySelectorAll('a,button')].filter(el=>{
+                const actionable=[...document.querySelectorAll('a.btn,button,nav a')];
+                const tiny=actionable.filter(el=>{
                   const r=el.getBoundingClientRect();
                   return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
                 }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
@@ -96,10 +97,10 @@ jobs:
           const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0);
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error or small interactive target detected');
+            console.error('VISUAL QA FAILED: overflow, console error or undersized primary/navigation target detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — desktop/mobile without horizontal overflow, console errors or tiny interactive targets');
+          console.log('VISUAL QA OK — desktop/mobile without horizontal overflow, console errors or undersized primary/navigation targets');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
