@@ -94,10 +94,21 @@
   }
 
   const setupProfessionalMediaMotion=()=>{
-    if(reduceMotion)return
     const elements=[...document.querySelectorAll('.professional-visual,.specialty-visual')]
     if(!elements.length)return
 
+    elements.forEach(el=>{
+      const img=el.querySelector('img')
+      if(!img){el.classList.add('media-ready');return}
+      const ready=()=>el.classList.add('media-ready')
+      if(img.complete&&img.naturalWidth>0)ready()
+      else{
+        img.addEventListener('load',ready,{once:true})
+        img.addEventListener('error',ready,{once:true})
+      }
+    })
+
+    if(reduceMotion)return
     const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)').matches
     const clamp=(value,min,max)=>Math.max(min,Math.min(max,value))
     const states=elements.map(el=>({
@@ -107,7 +118,7 @@
     }))
     let frame=0
 
-    const write=(state)=>{
+    const write=state=>{
       state.el.style.setProperty('--tilt-x',`${state.tiltX.toFixed(3)}deg`)
       state.el.style.setProperty('--tilt-y',`${state.tiltY.toFixed(3)}deg`)
       state.el.style.setProperty('--media-x',`${state.mediaX.toFixed(2)}px`)
@@ -119,20 +130,18 @@
       let moving=false
       states.forEach(state=>{
         const values=[
-          ['tiltX','targetTiltX',.11,.004],
-          ['tiltY','targetTiltY',.11,.004],
-          ['mediaX','targetMediaX',.105,.025],
-          ['mediaY','targetMediaY',.105,.025],
-          ['scrollY','targetScrollY',.085,.025]
+          ['tiltX','targetTiltX',.115,.004],
+          ['tiltY','targetTiltY',.115,.004],
+          ['mediaX','targetMediaX',.11,.025],
+          ['mediaY','targetMediaY',.11,.025],
+          ['scrollY','targetScrollY',.09,.025]
         ]
         values.forEach(([current,target,ease,threshold])=>{
           const delta=state[target]-state[current]
           if(Math.abs(delta)>threshold){
             state[current]+=delta*ease
             moving=true
-          }else{
-            state[current]=state[target]
-          }
+          }else state[current]=state[target]
         })
         write(state)
       })
@@ -149,7 +158,7 @@
         const center=rect.top+rect.height/2
         const range=(viewport+rect.height)/2
         const normalized=clamp((viewport/2-center)/range,-1,1)
-        state.targetScrollY=normalized*12
+        state.targetScrollY=normalized*13
       })
       wake()
     }
@@ -161,10 +170,10 @@
           if(!rect.width||!rect.height)return
           const nx=clamp(((event.clientX-rect.left)/rect.width)*2-1,-1,1)
           const ny=clamp(((event.clientY-rect.top)/rect.height)*2-1,-1,1)
-          state.targetTiltX=nx*1.55
-          state.targetTiltY=-ny*1.15
-          state.targetMediaX=-nx*9
-          state.targetMediaY=-ny*6.5
+          state.targetTiltX=nx*1.9
+          state.targetTiltY=-ny*1.35
+          state.targetMediaX=-nx*11
+          state.targetMediaY=-ny*7.5
           wake()
         }
         state.el.addEventListener('pointerenter',event=>{
