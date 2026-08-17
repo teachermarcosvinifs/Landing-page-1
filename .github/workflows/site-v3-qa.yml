@@ -2,7 +2,7 @@ name: Site V3 QA
 
 on:
   push:
-    branches: [site-v3-redesign]
+    branches: [main, site-v3-redesign]
   pull_request:
     paths:
       - 'index.html'
@@ -12,6 +12,7 @@ on:
       - 'ingles-para-devs.html'
       - 'ingles-para-compliance.html'
       - 'assets/site-v3-black.css'
+      - 'assets/home-v3.css'
       - 'assets/site-v3-motion.js'
       - 'sitemap.xml'
       - 'robots.txt'
@@ -93,11 +94,19 @@ jobs:
           if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
 
-          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','tecnologia','compliance','adolescentes','adultos']
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','desenvolvedores','programadores','compliance','adolescentes','adultos']
           low=home.lower()
           for term in required_home:
             if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
           if '<h1>Professor de Inglês para adolescentes e adultos</h1>' not in home: errors.append('index.html: H1 aprovado pelo professor foi alterado')
+          promise='Adquira fluência com acompanhamento profissional e estrutura completa'
+          if promise not in home: errors.append('index.html: promessa principal aprovada pelo professor foi alterada')
+          if '<h1>Inglês para desenvolvedores e programadores</h1>' not in pages['ingles-para-devs.html']:
+            errors.append('ingles-para-devs.html: H1 precisa manter desenvolvedores e programadores explícitos')
+          if '<h1>Inglês para profissionais de Compliance</h1>' not in pages['ingles-para-compliance.html']:
+            errors.append('ingles-para-compliance.html: H1 específico de Compliance foi alterado')
+          if 'Outras áreas profissionais também podem entrar' in home:
+            errors.append('index.html: homepage deve manter somente Dev/Programadores e Compliance como áreas específicas')
           hero=home.split('<section class="hero">',1)[-1].split('</section>',1)[0]
           if 'Falar pelo WhatsApp' not in hero or 'Preencher formulário' not in hero: errors.append('index.html: hero precisa manter WhatsApp + formulário')
           if 'Comparar formatos' in hero: errors.append('index.html: comparar formatos não deve competir no hero')
@@ -138,7 +147,8 @@ jobs:
           if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('preços dupla divergentes')
           if "trio:{60:190,90:240,120:280}" not in tool: errors.append('preços trio divergentes')
           if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('preços grupo divergentes')
-          if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: aviso de que não é teste de nível ausente')
+          if 'informe seu nível, objetivo, formato e carga semanal' not in tool.lower(): errors.append('qual-formato.html: explicação direta da ferramenta ausente')
+          if 'isso não é teste de nível' in tool.lower(): errors.append('qual-formato.html: formulação negativa antiga voltou')
 
           if "new URLSearchParams(window.location.search).get('src')" not in tool: errors.append('qual-formato.html: leitura de origem src ausente')
           for src in ['ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','ig-portal','x-portal']:
@@ -160,4 +170,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — V3 preserves audience, offer, SEO, B1+, delayed pricing, attribution, privacy, contact paths and editorial punctuation rules')
+          print('QA OK — V3 preserves approved promise, audience, Dev/Compliance specialization, SEO, B1+, delayed pricing, attribution, privacy and editorial rules')

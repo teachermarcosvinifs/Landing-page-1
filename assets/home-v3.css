@@ -3,6 +3,16 @@
 .hero-portrait::before{content:'';position:absolute;inset:-8px;border:1px solid var(--line-strong);border-radius:50%;z-index:0}
 .hero-portrait::after{content:'';position:absolute;right:-17px;bottom:21px;width:44px;height:1px;background:var(--accent);opacity:.72}
 .hero-portrait img{position:relative;z-index:1;width:100%;height:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 24%;background:#090b0d}
+.hero-promise{font-family:'Source Serif 4',Georgia,serif;font-size:clamp(25px,2.7vw,34px);font-weight:600;line-height:1.16;letter-spacing:-.025em;color:var(--ink);max-width:26ch;margin:0 0 20px}
+.hero-proof{font-size:16px;line-height:1.5;color:var(--ink-soft);max-width:680px;margin:0 0 8px}
+
+.professional-focus{background:#040506}
+.specialty-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.specialty-feature{padding:28px 0 8px;border-top:1px solid var(--line-strong)}
+.specialty-label{margin:0 0 14px;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.085em;text-transform:uppercase}
+.specialty-feature h3{font-size:clamp(27px,3vw,36px);line-height:1.08;max-width:16ch;margin-bottom:17px}
+.specialty-feature>p:not(.specialty-label):not(.specialty-topics){color:var(--muted);font-size:18px;max-width:590px;margin:0 0 18px}
+.specialty-topics{color:var(--ink-soft);font-size:14px;line-height:1.6;margin:0 0 22px}
 
 .portal-frame .carousel-head{justify-content:flex-start}
 .portal-frame .carousel-head span{font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#a9b1b6}
@@ -25,12 +35,15 @@
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:30px}
   .hero-portrait{width:166px;height:166px;justify-self:start}
+  .specialty-grid{grid-template-columns:1fr;gap:34px}
   .contact-choice{justify-content:flex-start}
 }
 
 @media(max-width:640px){
   .hero-portrait{width:138px;height:138px}
   .hero-portrait::after{right:-13px;bottom:16px;width:34px}
+  .hero-promise{font-size:26px;max-width:21ch;margin-bottom:17px}
+  .specialty-feature h3{font-size:29px}
   .activity-frame{padding:9px;border-radius:17px}
   .activity-frame .carousel-stage{border-radius:11px}
   .activity-section .activity-heading{margin-bottom:24px}
