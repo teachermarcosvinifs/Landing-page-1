@@ -49,6 +49,7 @@ jobs:
           const browser = await chromium.launch({headless:true});
           const page = await browser.newPage({viewport:{width:1280,height:900}});
           const choose = async id => page.locator(`label[for="${id}"]`).click();
+          const whatsAppText = href => new URL(href).searchParams.get('text') || '';
 
           await page.goto('http://127.0.0.1:8000/qual-formato.html?src=ig-formatos',{waitUntil:'networkidle'});
           assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must start hidden');
@@ -58,7 +59,7 @@ jobs:
           assert.equal(await page.locator('#resultTitle').textContent(), 'Aulas conversacionais (B1+) · Individual');
           assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must remain hidden after result');
           const waHref = await page.locator('#waResult').getAttribute('href');
-          assert.ok(decodeURIComponent(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'Format result WhatsApp must preserve ?src attribution');
+          assert.ok(whatsAppText(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'Format result WhatsApp must preserve ?src attribution');
           await page.locator('#revealPrice').click();
           assert.equal(await page.locator('#priceReveal').isVisible(), true);
           assert.equal((await page.locator('#priceReveal').textContent()).trim(), 'Mensalidade desta opção: R$ 280/mês');
@@ -81,30 +82,23 @@ jobs:
           assert.ok(!/R\$\s*\d/.test(unknownPrice), 'Unknown load must not show an invented price');
 
           await page.goto('http://127.0.0.1:8000/index.html?src=ig-portal',{waitUntil:'networkidle'});
-          const debug = await page.evaluate(()=>({
-            search:location.search,
-            direct:[...document.querySelectorAll('.hero a')].map(a=>a.href),
-            script:[...document.scripts].map(s=>s.src).filter(Boolean)
-          }));
-          console.log('ATTRIBUTION_DEBUG',JSON.stringify(debug));
           const directWa = await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href');
-          console.log('DIRECT_WA',directWa);
-          assert.ok(decodeURIComponent(directWa).includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Direct homepage WhatsApp must preserve ?src attribution');
+          assert.ok(whatsAppText(directWa).includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Direct homepage WhatsApp must preserve ?src attribution');
           assert.equal(await page.locator('a[href^="mailto:"]').count(), 0, 'Homepage must not expose email');
           assert.ok(await page.locator('.hero a[href*="docs.google.com/forms"]').count() >= 1, 'Homepage must expose the form alongside WhatsApp');
 
           const formatsHref = await page.locator('a[href*="qual-formato.html"]').first().getAttribute('href');
-          assert.ok(new URL(formatsHref).searchParams.get('src')==='ig-portal', 'Internal Formats link must preserve source');
+          assert.equal(new URL(formatsHref).searchParams.get('src'),'ig-portal','Internal Formats link must preserve source');
           await page.goto(formatsHref,{waitUntil:'networkidle'});
           await choose('l3'); await choose('g1'); await choose('f1'); await choose('m1');
           await page.locator('#fitForm').evaluate(form => form.requestSubmit());
           await page.locator('#result.show').waitFor();
-          const navigatedWa = decodeURIComponent(await page.locator('#waResult').getAttribute('href'));
-          assert.ok(navigatedWa.includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Source must survive home → formats → result WhatsApp');
+          const navigatedWa = await page.locator('#waResult').getAttribute('href');
+          assert.ok(whatsAppText(navigatedWa).includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Source must survive home → formats → result WhatsApp');
 
           await page.goto('http://127.0.0.1:8000/index.html?src=unknown-source',{waitUntil:'networkidle'});
-          const unknownWa = decodeURIComponent(await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href'));
-          assert.ok(!unknownWa.includes('Vi esta página a partir de'), 'Unknown source must not create invented attribution');
+          const unknownWa = await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href');
+          assert.ok(!whatsAppText(unknownWa).includes('Vi esta página a partir de'), 'Unknown source must not create invented attribution');
           const unknownFormats = await page.locator('a[href*="qual-formato.html"]').first().getAttribute('href');
           assert.ok(!new URL(unknownFormats).searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
