@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate positioning, offer and search basics
+      - name: Validate positioning, offer, attribution and search basics
         shell: python
         run: |
           from pathlib import Path
@@ -45,6 +45,8 @@ jobs:
             if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
             if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
             if 'assets/site-v2.css' not in text: errors.append(f'{name}: stylesheet V2 ausente')
+            if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
+            if 'marcosvinifs@gmail.com' not in text: errors.append(f'{name}: fallback de e-mail/atribuição ausente')
           if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
           if not Path('assets/portal-v2.css').exists(): errors.append('assets/portal-v2.css: ausente')
@@ -68,11 +70,20 @@ jobs:
           if "trio:{60:190,90:240,120:280}" not in tool: errors.append('qual-formato.html: preços trio divergentes')
           if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('qual-formato.html: preços grupo divergentes')
           if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: precisa deixar claro que não é teste de nível')
-          for name,text in pages.items():
-            if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
+
+          attribution_markers={
+            'index.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20site%20V2',
+            'como-funciona.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20como%20funcionam%20as%20aulas',
+            'portal-dos-alunos.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20Portal%20dos%20Alunos',
+            'ingles-para-devs.html':'Interesse%20em%20ingl%C3%AAs%20para%20tecnologia%20-%20site%20V2',
+            'ingles-para-compliance.html':'Interesse%20em%20ingl%C3%AAs%20para%20compliance%20-%20site%20V2',
+            'qual-formato.html':'Interesse em aulas de inglês - ferramenta de formatos'
+          }
+          for name,marker in attribution_markers.items():
+            if marker not in pages[name]: errors.append(f'{name}: fingerprint de origem por e-mail ausente')
 
           if errors:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — site V2 coerente com oferta, B1+, mensalidades, SEO e anti-AI copy')
+          print('QA OK — oferta, B1+, mensalidades, atribuição, SEO e anti-AI copy coerentes')
