@@ -2,6 +2,7 @@
 .professional-hero-grid{display:grid;grid-template-columns:minmax(0,760px) minmax(360px,430px);gap:56px;justify-content:space-between;align-items:center}
 .professional-hero-copy{min-width:0}
 .professional-hero-copy h1{max-width:12ch}
+.dev-page-hero .professional-hero-copy h1{max-width:15ch}
 .professional-hero-copy .lead{max-width:680px}
 
 .professional-visual,.specialty-visual{position:relative;overflow:hidden;margin:0;border:1px solid var(--line-strong);background:#080a0c;box-shadow:0 28px 70px rgba(0,0,0,.38)}
@@ -31,6 +32,7 @@
   .professional-context-hero{padding:54px 0 62px}
   .professional-hero-grid{grid-template-columns:1fr;gap:36px}
   .professional-hero-copy h1{max-width:14ch}
+  .dev-page-hero .professional-hero-copy h1{max-width:16ch}
   .professional-visual{width:min(560px,100%);justify-self:start;aspect-ratio:16/10}
 }
 
