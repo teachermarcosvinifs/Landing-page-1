@@ -76,6 +76,17 @@ jobs:
               page.on('console',m=>{ if(m.type()==='error') consoleErrors.push(m.text()); });
               page.on('pageerror',e=>consoleErrors.push(String(e)));
               await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
+
+              // Exercise the real scroll-reveal behavior before taking the full-page evidence
+              const metrics=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:window.innerHeight}));
+              const step=Math.max(260,Math.floor(metrics.viewport*.72));
+              for(let y=0;y<metrics.height;y+=step){
+                await page.evaluate(pos=>window.scrollTo(0,pos),y);
+                await page.waitForTimeout(45);
+              }
+              await page.evaluate(()=>window.scrollTo(0,0));
+              await page.waitForTimeout(140);
+
               await page.screenshot({path:`visual-artifacts/${name}-${profile}.png`,fullPage:true});
               const data=await page.evaluate(()=>{
                 const body=document.body;
@@ -88,7 +99,8 @@ jobs:
                 }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
                 const h1=document.querySelector('h1')?.getBoundingClientRect();
                 const nav=document.querySelector('nav')?.getBoundingClientRect();
-                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,h1:h1?{w:Math.round(h1.width),h:Math.round(h1.height)}:null,nav:nav?{w:Math.round(nav.width),h:Math.round(nav.height)}:null,documentHeight:Math.round(html.scrollHeight)};
+                const hiddenReveal=[...document.querySelectorAll('.reveal-target:not(.is-visible)')].length;
+                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,h1:h1?{w:Math.round(h1.width),h:Math.round(h1.height)}:null,nav:nav?{w:Math.round(nav.width),h:Math.round(nav.height)}:null,documentHeight:Math.round(html.scrollHeight)};
               });
               report.push({name,profile,...data,consoleErrors});
               await page.close();
@@ -97,13 +109,13 @@ jobs:
           }
           await browser.close();
           fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
-          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0);
+          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0);
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error or undersized target detected');
+            console.error('VISUAL QA FAILED: overflow, console error, undersized target or unrevealed content detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 7 pages checked on desktop/mobile');
+          console.log('VISUAL QA OK — all 7 pages checked on desktop/mobile after exercising transitions');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
