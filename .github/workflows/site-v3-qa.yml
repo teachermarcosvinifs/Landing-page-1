@@ -1,0 +1,163 @@
+name: Site V3 QA
+
+on:
+  push:
+    branches: [site-v3-redesign]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'qual-formato.html'
+      - 'como-funciona.html'
+      - 'portal-dos-alunos.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'assets/site-v3-black.css'
+      - 'assets/site-v3-motion.js'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/site-v3-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate offer, SEO, copy, privacy and V3 visual guardrails
+        shell: python
+        run: |
+          from pathlib import Path
+          from urllib.parse import unquote, urlsplit
+          from html import unescape
+          import re, sys
+
+          errors=[]
+          names=[
+            'index.html','qual-formato.html','como-funciona.html',
+            'portal-dos-alunos.html','ingles-para-devs.html',
+            'ingles-para-compliance.html'
+          ]
+          pages={name:Path(name).read_text(encoding='utf-8') for name in names}
+          home=pages['index.html']; tool=pages['qual-formato.html']; portal=pages['portal-dos-alunos.html']
+          css=Path('assets/site-v3-black.css').read_text(encoding='utf-8')
+          motion=Path('assets/site-v3-motion.js').read_text(encoding='utf-8')
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          robots=Path('robots.txt').read_text(encoding='utf-8')
+          base='https://teachermarcosvinifs.github.io/Landing-page-1/'
+          canonicals={name:(base if name=='index.html' else base+name) for name in names}
+          form_marker='docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+          email_pattern=re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I)
+
+          for name,text in pages.items():
+            url=canonicals[name]
+            if '<title>' not in text: errors.append(f'{name}: title ausente')
+            if 'name="description"' not in text: errors.append(f'{name}: meta description ausente')
+            if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
+            if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
+            if 'assets/site-v3-black.css' not in text: errors.append(f'{name}: novo sistema visual preto ausente')
+            if 'assets/site-v3-motion.js' not in text: errors.append(f'{name}: camada de movimento V3 ausente')
+            if 'assets/site-v3.css' in text or 'assets/site-v2.css' in text or 'assets/portal-v2.css' in text:
+              errors.append(f'{name}: stylesheet visual anterior ainda referenciado')
+            if 'name="theme-color" content="#030405"' not in text: errors.append(f'{name}: theme-color não acompanha o novo fundo')
+            if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
+            if form_marker not in text: errors.append(f'{name}: caminho pelo formulário ausente')
+            if email_pattern.search(text) or 'mailto:' in text.lower(): errors.append(f'{name}: endereço de e-mail não deve ser exposto na V3')
+            if 'property="og:title"' not in text or 'property="og:description"' not in text: errors.append(f'{name}: Open Graph básico ausente')
+            if len(re.findall(r'<h1\b',text,re.I)) != 1: errors.append(f'{name}: precisa ter exatamente um H1')
+
+            for attr,target in re.findall(r'\b(href|src)="([^"]+)"', text, re.I):
+              if target.startswith(('http://','https://','mailto:','tel:','#','javascript:')):
+                continue
+              clean=urlsplit(target).path
+              if not clean or clean in ('./','../'):
+                continue
+              clean=unquote(clean).lstrip('/')
+              if not Path(clean).exists(): errors.append(f'{name}: {attr} interno quebrado -> {target}')
+
+            for img in re.findall(r'<img\b[^>]*>', text, re.I):
+              if not re.search(r'\balt="[^"]+"', img, re.I): errors.append(f'{name}: imagem sem alt descritivo')
+
+            for tag in re.findall(r'<a\b[^>]*target="_blank"[^>]*>', text, re.I):
+              if 'rel="noopener"' not in tag: errors.append(f'{name}: target=_blank sem rel=noopener')
+
+            body=text.split('<body',1)[-1]
+            body=re.sub(r'<script\b.*?</script>','',body,flags=re.I|re.S)
+            body=re.sub(r'<style\b.*?</style>','',body,flags=re.I|re.S)
+            for tag,inner in re.findall(r'<(h[1-6]|p|figcaption|summary|span|small)\b[^>]*>(.*?)</\1>',body,flags=re.I|re.S):
+              visible=unescape(re.sub(r'<[^>]+>','',inner)).strip()
+              if visible.endswith('.') and not visible.endswith('...'):
+                errors.append(f'{name}: {tag} termina com ponto final -> {visible[-80:]}')
+
+          if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
+          if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
+
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','tecnologia','compliance','adolescentes','adultos']
+          low=home.lower()
+          for term in required_home:
+            if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
+          if '<h1>Professor de Inglês para adolescentes e adultos</h1>' not in home: errors.append('index.html: H1 aprovado pelo professor foi alterado')
+          hero=home.split('<section class="hero">',1)[-1].split('</section>',1)[0]
+          if 'Falar pelo WhatsApp' not in hero or 'Preencher formulário' not in hero: errors.append('index.html: hero precisa manter WhatsApp + formulário')
+          if 'Comparar formatos' in hero: errors.append('index.html: comparar formatos não deve competir no hero')
+
+          forbidden=[
+            r'english mentoring',r'premium',r'destravar',r'transforma[cç][aã]o',
+            r'm[eé]todo exclusivo',r'dire[cç][aã]o clara',r'potencializar',r'elevar seu ingl[eê]s',
+            r'solu[cç][oõ]es personalizadas',r'jornada',r'coaching',r'mentoria',
+            r'prepara[cç][aã]o (especial )?para entrevista',r'roteiro de respostas',
+            r'flu[eê]ncia r[aá]pida',r'produto de prateleira',r'sem improviso'
+          ]
+          for name,text in pages.items():
+            for pattern in forbidden:
+              if re.search(pattern,text,re.I): errors.append(f'{name}: linguagem proibida/AI-like ou serviço não oferecido: {pattern}')
+
+          visual_forbidden=['radial-gradient(','linear-gradient(','backdrop-filter:','filter:blur(','mix-blend-mode:']
+          compact=css.replace(' ','').lower()
+          for marker in visual_forbidden:
+            if marker in compact: errors.append(f'assets/site-v3-black.css: padrão visual rejeitado retornou: {marker}')
+          if '--bg:#030405' not in compact: errors.append('assets/site-v3-black.css: fundo preto profundo esperado não encontrado')
+          if '#6d28d9' in compact or '#7c3aed' in compact or '#8b5cf6' in compact:
+            errors.append('assets/site-v3-black.css: roxo/lilás antigo retornou')
+          if 'prefers-reduced-motion:reduce' not in compact: errors.append('assets/site-v3-black.css: fallback reduced-motion ausente')
+          if 'intersectionobserver' not in motion.lower(): errors.append('assets/site-v3-motion.js: transição progressiva sem IntersectionObserver')
+
+          if 'modalidade conversacional começa a partir do b1' not in low: errors.append('index.html: regra B1+ não está explícita')
+          for name in ['como-funciona.html','ingles-para-devs.html','ingles-para-compliance.html']:
+            page_low=pages[name].lower()
+            if 'b1' not in page_low or 'conversacional' not in page_low: errors.append(f'{name}: regra B1+ não está explícita')
+
+          if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir brasileiros no exterior')
+
+          if '<table class="price-table">' in tool: errors.append('qual-formato.html: tabela pública de preços voltou')
+          if 'id="revealPrice"' not in tool or 'Ver mensalidade desta opção' not in tool: errors.append('qual-formato.html: controle de revelação ausente')
+          if 'id="priceReveal"' not in tool or 'hidden' not in tool: errors.append('qual-formato.html: área de preço precisa iniciar oculta')
+          if 'Mensalidade desta opção: R$ ${prices[format][minutes]}/mês`' not in tool: errors.append('qual-formato.html: revelação contextual de mensalidade ausente')
+          if "individual:{60:280,90:360,120:430}" not in tool: errors.append('preços individuais divergentes')
+          if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('preços dupla divergentes')
+          if "trio:{60:190,90:240,120:280}" not in tool: errors.append('preços trio divergentes')
+          if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('preços grupo divergentes')
+          if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: aviso de que não é teste de nível ausente')
+
+          if "new URLSearchParams(window.location.search).get('src')" not in tool: errors.append('qual-formato.html: leitura de origem src ausente')
+          for src in ['ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','ig-portal','x-portal']:
+            if src not in tool: errors.append(f'qual-formato.html: origem estática ausente: {src}')
+
+          if 'lp-dev-communication.webp' in pages['ingles-para-devs.html']: errors.append('tecnologia: hero sintético antigo voltou')
+          if 'lp-compliance-communication.webp' in pages['ingles-para-compliance.html']: errors.append('compliance: hero sintético antigo voltou')
+
+          private_portal_assets=['lp-student-ranking.webp','lp-teacher-panorama.webp','lp-teacher-detail.webp','lp-teacher-group.webp']
+          for asset in private_portal_assets:
+            if asset in portal: errors.append(f'portal-dos-alunos.html: captura não deve ser pública -> {asset}')
+
+          redundant=[r'Um aluno por aula',r'Duas pessoas estudando juntas',r'Tr[eê]s (alunos|pessoas) na mesma aula']
+          for name,text in pages.items():
+            for pattern in redundant:
+              if re.search(pattern,text,re.I): errors.append(f'{name}: explicação redundante de formato retornou -> {pattern}')
+
+          if errors:
+            print('QA FAILED')
+            for e in errors: print('-',e)
+            sys.exit(1)
+          print('QA OK — V3 preserves audience, offer, SEO, B1+, delayed pricing, attribution, privacy, contact paths and editorial punctuation rules')
