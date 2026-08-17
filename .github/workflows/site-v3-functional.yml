@@ -1,0 +1,89 @@
+name: Site V3 Functional QA
+
+on:
+  push:
+    branches: [site-v3-redesign]
+    paths:
+      - 'qual-formato.html'
+      - '.github/workflows/site-v3-functional.yml'
+  pull_request:
+    paths:
+      - 'qual-formato.html'
+      - '.github/workflows/site-v3-functional.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  format-finder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python3 -m http.server 8000 >/tmp/site-v3-functional-http.log 2>&1 &
+          sleep 2
+      - name: Test real format-finder interactions
+        run: |
+          cat > functional-check.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+
+          const browser = await chromium.launch({headless:true});
+          const page = await browser.newPage({viewport:{width:1280,height:900}});
+
+          // Case 1: B1+ + conversation + individual + 60 min + attributed source.
+          await page.goto('http://127.0.0.1:8000/qual-formato.html?src=ig-formatos',{waitUntil:'networkidle'});
+          assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must start hidden');
+          await page.locator('#l3').check();
+          await page.locator('#g2').check();
+          await page.locator('#f1').check();
+          await page.locator('#m1').check();
+          await page.locator('#fitForm').evaluate(form => form.requestSubmit());
+          await page.locator('#result.show').waitFor();
+          assert.equal(await page.locator('#resultTitle').textContent(), 'Aulas conversacionais (B1+) · Individual');
+          assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must remain hidden after result');
+          const waHref = await page.locator('#waResult').getAttribute('href');
+          assert.ok(decodeURIComponent(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'WhatsApp must preserve ?src attribution');
+          await page.locator('#revealPrice').click();
+          assert.equal(await page.locator('#priceReveal').isVisible(), true);
+          assert.equal((await page.locator('#priceReveal').textContent()).trim(), 'Mensalidade desta opção: R$ 280/mês.');
+
+          // Case 2: beginner asking for conversation must not be presented as conversation class.
+          await page.goto('http://127.0.0.1:8000/qual-formato.html',{waitUntil:'networkidle'});
+          await page.locator('#l1').check();
+          await page.locator('#g2').check();
+          await page.locator('#f1').check();
+          await page.locator('#m1').check();
+          await page.locator('#fitForm').evaluate(form => form.requestSubmit());
+          await page.locator('#result.show').waitFor();
+          assert.equal(await page.locator('#resultTitle').textContent(), 'Ensino regular · Individual');
+          const copy = (await page.locator('#resultCopy').textContent()).toLowerCase();
+          assert.ok(copy.includes('modalidade conversacional começa a partir do b1'));
+
+          // Case 3: unknown weekly load must never invent a price.
+          await page.goto('http://127.0.0.1:8000/qual-formato.html',{waitUntil:'networkidle'});
+          await page.locator('#l4').check();
+          await page.locator('#g4').check();
+          await page.locator('#f4').check();
+          await page.locator('#m4').check();
+          await page.locator('#fitForm').evaluate(form => form.requestSubmit());
+          await page.locator('#result.show').waitFor();
+          await page.locator('#revealPrice').click();
+          const unknownPrice = (await page.locator('#priceReveal').textContent()).trim();
+          assert.ok(unknownPrice.includes('A mensalidade depende da carga semanal'));
+          assert.ok(!/R\$\s*\d/.test(unknownPrice), 'Unknown load must not show an invented price');
+
+          await browser.close();
+          console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price and ?src attribution verified by interaction');
+          EOF
+          node functional-check.mjs
