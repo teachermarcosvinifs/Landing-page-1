@@ -88,8 +88,9 @@ jobs:
           assert.ok(await page.locator('.hero a[href*="docs.google.com/forms"]').count() >= 1, 'Homepage must expose the form alongside WhatsApp');
 
           const formatsHref = await page.locator('a[href*="qual-formato.html"]').first().getAttribute('href');
-          assert.equal(new URL(formatsHref).searchParams.get('src'),'ig-portal','Internal Formats link must preserve source');
-          await page.goto(formatsHref,{waitUntil:'networkidle'});
+          const formatsUrl = new URL(formatsHref,page.url());
+          assert.equal(formatsUrl.searchParams.get('src'),'ig-portal','Internal Formats link must preserve source');
+          await page.goto(formatsUrl.href,{waitUntil:'networkidle'});
           await choose('l3'); await choose('g1'); await choose('f1'); await choose('m1');
           await page.locator('#fitForm').evaluate(form => form.requestSubmit());
           await page.locator('#result.show').waitFor();
@@ -100,7 +101,8 @@ jobs:
           const unknownWa = await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href');
           assert.ok(!whatsAppText(unknownWa).includes('Vi esta página a partir de'), 'Unknown source must not create invented attribution');
           const unknownFormats = await page.locator('a[href*="qual-formato.html"]').first().getAttribute('href');
-          assert.ok(!new URL(unknownFormats).searchParams.has('src'), 'Unknown source must not propagate through internal links');
+          const unknownFormatsUrl = new URL(unknownFormats,page.url());
+          assert.ok(!unknownFormatsUrl.searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
           await browser.close();
           console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price, direct/form contact and end-to-end source attribution verified');
