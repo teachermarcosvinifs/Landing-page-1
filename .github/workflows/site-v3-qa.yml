@@ -11,7 +11,6 @@ on:
       - 'portal-dos-alunos.html'
       - 'ingles-para-devs.html'
       - 'ingles-para-compliance.html'
-      - 'professor-de-ingles-manaus.html'
       - 'assets/site-v3-black.css'
       - 'assets/site-v3-motion.js'
       - 'sitemap.xml'
@@ -38,7 +37,7 @@ jobs:
           names=[
             'index.html','qual-formato.html','como-funciona.html',
             'portal-dos-alunos.html','ingles-para-devs.html',
-            'ingles-para-compliance.html','professor-de-ingles-manaus.html'
+            'ingles-para-compliance.html'
           ]
           pages={name:Path(name).read_text(encoding='utf-8') for name in names}
           home=pages['index.html']; tool=pages['qual-formato.html']; portal=pages['portal-dos-alunos.html']
@@ -80,7 +79,6 @@ jobs:
             for tag in re.findall(r'<a\b[^>]*target="_blank"[^>]*>', text, re.I):
               if 'rel="noopener"' not in tag: errors.append(f'{name}: target=_blank sem rel=noopener')
 
-            # Regra editorial: blocos visíveis não terminam em ponto final simples
             body=text.split('<body',1)[-1]
             body=re.sub(r'<script\b.*?</script>','',body,flags=re.I|re.S)
             body=re.sub(r'<style\b.*?</style>','',body,flags=re.I|re.S)
@@ -92,7 +90,7 @@ jobs:
           if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
 
-          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior']
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','tecnologia','compliance']
           low=home.lower()
           for term in required_home:
             if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
@@ -108,7 +106,6 @@ jobs:
             for pattern in forbidden:
               if re.search(pattern,text,re.I): errors.append(f'{name}: linguagem proibida/AI-like ou serviço não oferecido: {pattern}')
 
-          # O preto é neutro: sem retorno de lilás, glow ou glassmorphism
           visual_forbidden=['radial-gradient(','linear-gradient(','backdrop-filter:','filter:blur(','mix-blend-mode:']
           compact=css.replace(' ','').lower()
           for marker in visual_forbidden:
@@ -120,13 +117,9 @@ jobs:
           if 'intersectionobserver' not in motion.lower(): errors.append('assets/site-v3-motion.js: transição progressiva sem IntersectionObserver')
 
           if 'modalidade conversacional começa a partir do b1' not in low: errors.append('index.html: regra B1+ não está explícita')
-          for name in ['como-funciona.html','ingles-para-devs.html','ingles-para-compliance.html','professor-de-ingles-manaus.html']:
+          for name in ['como-funciona.html','ingles-para-devs.html','ingles-para-compliance.html']:
             if 'modalidade conversacional é oferecida a partir do b1' not in pages[name].lower(): errors.append(f'{name}: regra B1+ não está explícita')
 
-          manaus=pages['professor-de-ingles-manaus.html'].lower()
-          if '100% online' not in manaus: errors.append('Manaus: precisa deixar explícito que o atendimento é online')
-          if 'não. meu atendimento é 100% online' not in manaus: errors.append('Manaus: não pode sugerir atendimento presencial')
-          if 'brasileiros que vivem no exterior' not in manaus: errors.append('Manaus: alcance geográfico incompleto')
           if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir brasileiros no exterior')
 
           if '<table class="price-table">' in tool: errors.append('qual-formato.html: tabela pública de preços voltou')
@@ -150,7 +143,6 @@ jobs:
           for asset in private_portal_assets:
             if asset in portal: errors.append(f'portal-dos-alunos.html: captura não deve ser pública -> {asset}')
 
-          # Evitar voltar às quatro explicações óbvias de Individual/Dupla/Trio/Grupo
           redundant=[r'Um aluno por aula',r'Duas pessoas estudando juntas',r'Tr[eê]s (alunos|pessoas) na mesma aula']
           for name,text in pages.items():
             for pattern in redundant:
@@ -160,4 +152,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — black V3 preserves offer, SEO, B1+, delayed pricing, attribution, privacy and editorial punctuation rules')
+          print('QA OK — professional-satellite V3 preserves offer, SEO, B1+, delayed pricing, attribution, privacy and editorial punctuation rules')
