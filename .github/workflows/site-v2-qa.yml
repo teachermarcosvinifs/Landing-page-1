@@ -57,7 +57,6 @@ jobs:
             if 'marcosvinifs@gmail.com' not in text: errors.append(f'{name}: fallback de e-mail/atribuição ausente')
             if 'property="og:title"' not in text or 'property="og:description"' not in text: errors.append(f'{name}: Open Graph básico ausente')
 
-            # Evita links/arquivos internos quebrados no draft.
             for attr,target in re.findall(r'\b(href|src)="([^"]+)"', text, re.I):
               if target.startswith(('http://','https://','mailto:','tel:','#','javascript:')):
                 continue
@@ -68,12 +67,10 @@ jobs:
               if not Path(clean).exists():
                 errors.append(f'{name}: {attr} interno quebrado -> {target}')
 
-            # Imagem sem alt é uma regressão de acessibilidade/SEO.
             for img in re.findall(r'<img\b[^>]*>', text, re.I):
               if not re.search(r'\balt="[^"]+"', img, re.I):
                 errors.append(f'{name}: imagem sem alt descritivo')
 
-            # target blank precisa rel noopener.
             for tag in re.findall(r'<a\b[^>]*target="_blank"[^>]*>', text, re.I):
               if 'rel="noopener"' not in tag:
                 errors.append(f'{name}: target=_blank sem rel=noopener')
@@ -82,10 +79,10 @@ jobs:
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
           if not Path('assets/portal-v2.css').exists(): errors.append('assets/portal-v2.css: ausente')
 
-          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos']
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior']
           low=home.lower()
           for term in required_home:
-            if term not in low: errors.append(f'index.html: oferta real ausente: {term}')
+            if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
 
           forbidden=[
             r'english mentoring',r'acompanhamento premium',r'experi[eê]ncia premium',
@@ -104,8 +101,11 @@ jobs:
           for name in ['ingles-para-devs.html','ingles-para-compliance.html','professor-de-ingles-manaus.html']:
             if 'modalidade conversacional é oferecida a partir do b1' not in pages[name].lower(): errors.append(f'{name}: regra B1+ não está explícita')
 
-          if '100% online' not in pages['professor-de-ingles-manaus.html'].lower(): errors.append('Manaus: precisa deixar explícito que o atendimento é online')
-          if 'não. meu atendimento é 100% online.' not in pages['professor-de-ingles-manaus.html'].lower(): errors.append('Manaus: não pode sugerir atendimento presencial')
+          manaus=pages['professor-de-ingles-manaus.html'].lower()
+          if '100% online' not in manaus: errors.append('Manaus: precisa deixar explícito que o atendimento é online')
+          if 'não. meu atendimento é 100% online.' not in manaus: errors.append('Manaus: não pode sugerir atendimento presencial')
+          if 'brasileiros que vivem no exterior' not in manaus: errors.append('Manaus: página não pode limitar o alcance geográfico real')
+          if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir alcance online além do Brasil')
 
           if "individual:{60:280,90:360,120:430}" not in tool: errors.append('qual-formato.html: preços individuais divergentes')
           if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('qual-formato.html: preços dupla divergentes')
@@ -129,4 +129,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — oferta, B1+, mensalidades, atribuição, links, assets, SEO e anti-AI copy coerentes')
+          print('QA OK — oferta, alcance online, B1+, mensalidades, atribuição, links, assets, SEO e anti-AI copy coerentes')
