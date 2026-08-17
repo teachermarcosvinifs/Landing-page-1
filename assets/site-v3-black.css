@@ -56,10 +56,11 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:56px;align-items:center}
 .hero-portrait,.page-hero-photo{margin:0;position:relative;justify-self:end}
 .hero-portrait{width:190px}
-.page-hero-photo{width:150px}
-.hero-portrait::before,.page-hero-photo::before{content:'';position:absolute;inset:-7px 7px 7px -7px;border:1px solid var(--line);z-index:0}
-.hero-portrait img,.page-hero-photo img{position:relative;z-index:1;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center;background:#090b0d}
-.page-hero-photo img{object-position:35% center}
+.page-hero-photo{width:190px;height:190px;border-radius:50%}
+.hero-portrait::before{content:'';position:absolute;inset:-7px 7px 7px -7px;border:1px solid var(--line);z-index:0}
+.page-hero-photo::before{content:'';position:absolute;inset:-8px;border:1px solid var(--line-strong);border-radius:50%;z-index:0}
+.hero-portrait img{position:relative;z-index:1;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center;background:#090b0d}
+.page-hero-photo img{position:relative;z-index:1;width:100%;height:100%;aspect-ratio:1;object-fit:cover;object-position:center 24%;border-radius:50%;background:#090b0d}
 .hero-portrait figcaption,.figure-caption{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.4}
 
 .actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:30px}
@@ -151,7 +152,7 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
 .footer-row a{text-underline-offset:4px}
 
 .page-hero{padding:66px 0 58px;border-bottom:1px solid var(--line)}
-.page-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:56px;align-items:center}
+.page-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:56px;align-items:center}
 .page-hero h1{font-size:clamp(44px,5.3vw,63px);max-width:14ch}
 .page-hero .lead{max-width:720px}
 .article-grid{display:grid;grid-template-columns:210px minmax(0,780px);gap:60px;align-items:start}
@@ -216,7 +217,7 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
   .hero-grid,.page-hero-grid,.section-intro,.split,.portal-layout,.article-grid,.final-grid{grid-template-columns:1fr}
   .hero-grid{gap:34px}
   .hero-portrait{width:160px;justify-self:start}
-  .page-hero-photo{width:130px;justify-self:start}
+  .page-hero-photo{width:150px;height:150px;justify-self:start}
   .section-intro,.split,.article-grid{gap:28px}
   .offer-line{grid-template-columns:54px 210px 1fr}
   .final-grid{align-items:start}
@@ -239,7 +240,7 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
   .hero{padding:46px 0 54px}
   .hero-grid{gap:28px}
   .hero-portrait{width:138px}
-  .page-hero-photo{width:112px}
+  .page-hero-photo{width:132px;height:132px}
   h1{font-size:clamp(42px,12.8vw,56px);line-height:1.01}
   h2{font-size:clamp(31px,9.5vw,42px)}
   .lead{font-size:19px}
