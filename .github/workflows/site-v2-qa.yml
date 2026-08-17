@@ -107,17 +107,14 @@ jobs:
           if 'brasileiros que vivem no exterior' not in manaus: errors.append('Manaus: página não pode limitar o alcance geográfico real')
           if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir alcance online além do Brasil')
 
-          # A pessoa deve ver os valores antes do questionário; preço não pode virar isca/funil.
-          if '<table class="price-table">' not in tool: errors.append('qual-formato.html: tabela pública de mensalidades ausente')
-          visible_rows=[
-            ('Individual',['R$ 280/mês','R$ 360/mês','R$ 430/mês']),
-            ('Dupla',['R$ 220/mês','R$ 280/mês','R$ 330/mês']),
-            ('Trio',['R$ 190/mês','R$ 240/mês','R$ 280/mês']),
-            ('Grupo de 4 a 6',['R$ 160/mês','R$ 210/mês','R$ 250/mês'])
-          ]
-          for label,prices in visible_rows:
-            pattern=r'<tr><th[^>]*>'+re.escape(label)+r'</th>'+''.join(r'<td>'+re.escape(price)+r'</td>' for price in prices)+r'</tr>'
-            if not re.search(pattern,tool): errors.append(f'qual-formato.html: linha visível de preço divergente: {label}')
+          # Preferência comercial: preços só aparecem em um segundo/terceiro momento.
+          if '<table class="price-table">' in tool: errors.append('qual-formato.html: tabela pública de preços voltou ao primeiro momento')
+          if 'id="revealPrice"' not in tool or 'Ver mensalidade desta opção' not in tool: errors.append('qual-formato.html: controle explícito de revelação de mensalidade ausente')
+          if 'id="priceReveal"' not in tool or 'hidden' not in tool: errors.append('qual-formato.html: área de preço precisa iniciar oculta')
+          if 'Mensalidade desta opção: R$ ${prices[format][minutes]}/mês.' not in tool: errors.append('qual-formato.html: revelação contextual de mensalidade ausente')
+          for name,text in pages.items():
+            if 'Ver formatos e valores' in text: errors.append(f'{name}: CTA expõe preço cedo demais')
+            if name!='qual-formato.html' and re.search(r'formatos e mensalidades',text,re.I): errors.append(f'{name}: preço está sendo destacado no primeiro momento')
 
           if "individual:{60:280,90:360,120:430}" not in tool: errors.append('qual-formato.html: preços individuais divergentes')
           if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('qual-formato.html: preços dupla divergentes')
@@ -145,4 +142,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — oferta, alcance online, preços visíveis, B1+, atribuição, links, assets, SEO e anti-AI copy coerentes')
+          print('QA OK — oferta, alcance online, preço em segundo momento, B1+, atribuição, links, assets, SEO e anti-AI copy coerentes')
