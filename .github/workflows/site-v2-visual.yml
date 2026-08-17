@@ -50,7 +50,7 @@ jobs:
       - name: Render screenshots and inspect layout
         run: |
           mkdir -p visual-artifacts
-          cat > /tmp/visual-check.mjs <<'EOF'
+          cat > visual-check.mjs <<'EOF'
           import { chromium, devices } from 'playwright';
           import fs from 'fs';
 
@@ -101,7 +101,7 @@ jobs:
           }
           console.log('VISUAL QA OK — desktop/mobile without horizontal overflow, console errors or tiny interactive targets');
           EOF
-          node /tmp/visual-check.mjs
+          node visual-check.mjs
       - name: Upload visual evidence
         if: always()
         uses: actions/upload-artifact@v4
