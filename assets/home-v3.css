@@ -4,6 +4,10 @@
 .hero-portrait::after{content:'';position:absolute;right:-17px;bottom:21px;width:44px;height:1px;background:var(--accent);opacity:.72}
 .hero-portrait img{position:relative;z-index:1;width:100%;height:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 24%;background:#090b0d}
 
+.portal-proof{display:none}
+.portal-frame .carousel-head{justify-content:flex-start}
+.portal-frame .carousel-head span:last-child{display:none}
+
 .activity-section{background:#040506}
 .activity-section .activity-heading{max-width:760px;margin-bottom:34px}
 .activity-section .activity-heading h2{max-width:16ch;margin-bottom:0}
