@@ -5,7 +5,6 @@ on:
     paths:
       - 'aulas-de-ingles-online-adultos/**'
       - 'ingles-para-trabalho/**'
-      - 'ingles-para-entrevista/**'
       - 'conversacao-ingles-adultos/**'
       - 'sitemap.xml'
       - 'robots.txt'
@@ -16,7 +15,6 @@ on:
     paths:
       - 'aulas-de-ingles-online-adultos/**'
       - 'ingles-para-trabalho/**'
-      - 'ingles-para-entrevista/**'
       - 'conversacao-ingles-adultos/**'
       - 'sitemap.xml'
       - 'robots.txt'
@@ -41,7 +39,6 @@ jobs:
           pages = {
               'aulas-de-ingles-online-adultos/index.html': 'aulas-de-ingles-online-adultos/',
               'ingles-para-trabalho/index.html': 'ingles-para-trabalho/',
-              'ingles-para-entrevista/index.html': 'ingles-para-entrevista/',
               'conversacao-ingles-adultos/index.html': 'conversacao-ingles-adultos/',
           }
           base = 'https://teachermarcosvinifs.github.io/Landing-page-1/'
@@ -97,6 +94,22 @@ jobs:
                   errors.append(f'{filename}: structured data ausente')
               if re.search(r'garant(?:ia|imos)|flu[eê]ncia r[aá]pida|aprova[cç][aã]o garantida', text, re.I):
                   errors.append(f'{filename}: possível promessa comercial indevida')
+              if re.search(r'prepara[cç][aã]o (?:em ingl[eê]s )?para entrevista|roteiro de respostas|respostas-modelo|perguntas prov[aá]veis', text, re.I):
+                  errors.append(f'{filename}: oferta de entrevista/coaching não faz parte do serviço real')
+
+          adult = Path('aulas-de-ingles-online-adultos/index.html').read_text(encoding='utf-8').lower()
+          for term in ('individual', 'dupla', 'trio', 'grupo'):
+              if term not in adult:
+                  errors.append(f'aulas-de-ingles-online-adultos: modalidade ausente: {term}')
+
+          conversation = Path('conversacao-ingles-adultos/index.html').read_text(encoding='utf-8').lower()
+          if 'b1' not in conversation:
+              errors.append('conversacao-ingles-adultos: regra B1+ ausente')
+          if re.search(r'serve para iniciante\?</summary><p>(?!n[aã]o)', conversation, re.I):
+              errors.append('conversacao-ingles-adultos: conversação não pode ser ofertada para iniciante')
+
+          if 'ingles-para-entrevista/' in sitemap:
+              errors.append('sitemap: página de preparação para entrevista não deve ser publicada')
 
           if errors:
               print('QA FAILED')
@@ -104,4 +117,4 @@ jobs:
                   print('-', error)
               sys.exit(1)
 
-          print('QA OK — 4 páginas, sitemap, robots, CTAs e metadados essenciais validados')
+          print('QA OK — 3 páginas alinhadas à oferta real, sitemap, robots, CTAs e metadados validados')
