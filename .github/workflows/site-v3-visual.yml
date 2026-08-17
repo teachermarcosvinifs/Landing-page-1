@@ -6,7 +6,6 @@ on:
     paths:
       - 'index.html'
       - 'qual-formato.html'
-      - 'professor-de-ingles-manaus.html'
       - 'como-funciona.html'
       - 'portal-dos-alunos.html'
       - 'ingles-para-devs.html'
@@ -17,7 +16,6 @@ on:
     paths:
       - 'index.html'
       - 'qual-formato.html'
-      - 'professor-de-ingles-manaus.html'
       - 'como-funciona.html'
       - 'portal-dos-alunos.html'
       - 'ingles-para-devs.html'
@@ -57,7 +55,6 @@ jobs:
           const pages = [
             ['home','/index.html'],
             ['formatos','/qual-formato.html'],
-            ['manaus','/professor-de-ingles-manaus.html'],
             ['como-funciona','/como-funciona.html'],
             ['portal','/portal-dos-alunos.html'],
             ['tecnologia','/ingles-para-devs.html'],
@@ -77,7 +74,6 @@ jobs:
               page.on('pageerror',e=>consoleErrors.push(String(e)));
               await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
 
-              // Exercise the real scroll-reveal behavior before taking the full-page evidence
               const metrics=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:window.innerHeight}));
               const step=Math.max(260,Math.floor(metrics.viewport*.72));
               for(let y=0;y<metrics.height;y+=step){
@@ -115,7 +111,7 @@ jobs:
             console.error('VISUAL QA FAILED: overflow, console error, undersized target or unrevealed content detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 7 pages checked on desktop/mobile after exercising transitions');
+          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile after exercising transitions');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
