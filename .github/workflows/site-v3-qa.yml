@@ -1,0 +1,135 @@
+name: Site V3 QA
+
+on:
+  push:
+    branches: [site-v3-redesign]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'qual-formato.html'
+      - 'como-funciona.html'
+      - 'portal-dos-alunos.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'professor-de-ingles-manaus.html'
+      - 'assets/site-v3.css'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/site-v3-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate offer, SEO, attribution, delayed pricing and V3 design guardrails
+        shell: python
+        run: |
+          from pathlib import Path
+          from urllib.parse import unquote, urlsplit
+          import re, sys
+
+          errors=[]
+          names=[
+            'index.html','qual-formato.html','como-funciona.html',
+            'portal-dos-alunos.html','ingles-para-devs.html',
+            'ingles-para-compliance.html','professor-de-ingles-manaus.html'
+          ]
+          pages={name:Path(name).read_text(encoding='utf-8') for name in names}
+          home=pages['index.html']; tool=pages['qual-formato.html']
+          css=Path('assets/site-v3.css').read_text(encoding='utf-8')
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          robots=Path('robots.txt').read_text(encoding='utf-8')
+          base='https://teachermarcosvinifs.github.io/Landing-page-1/'
+          canonicals={name:(base if name=='index.html' else base+name) for name in names}
+
+          for name,text in pages.items():
+            url=canonicals[name]
+            if '<title>' not in text: errors.append(f'{name}: title ausente')
+            if 'name="description"' not in text: errors.append(f'{name}: meta description ausente')
+            if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
+            if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
+            if 'assets/site-v3.css' not in text: errors.append(f'{name}: stylesheet V3 ausente')
+            if 'assets/site-v2.css' in text or 'assets/portal-v2.css' in text: errors.append(f'{name}: CSS rejeitado da V2 ainda referenciado')
+            if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
+            if 'marcosvinifs@gmail.com' not in text: errors.append(f'{name}: fallback de e-mail ausente')
+            if 'property="og:title"' not in text or 'property="og:description"' not in text: errors.append(f'{name}: Open Graph básico ausente')
+            if len(re.findall(r'<h1\b',text,re.I)) != 1: errors.append(f'{name}: precisa ter exatamente um H1')
+
+            for attr,target in re.findall(r'\b(href|src)="([^"]+)"', text, re.I):
+              if target.startswith(('http://','https://','mailto:','tel:','#','javascript:')):
+                continue
+              clean=urlsplit(target).path
+              if not clean or clean in ('./','../'):
+                continue
+              clean=unquote(clean).lstrip('/')
+              if not Path(clean).exists(): errors.append(f'{name}: {attr} interno quebrado -> {target}')
+
+            for img in re.findall(r'<img\b[^>]*>', text, re.I):
+              if not re.search(r'\balt="[^"]+"', img, re.I): errors.append(f'{name}: imagem sem alt descritivo')
+
+            for tag in re.findall(r'<a\b[^>]*target="_blank"[^>]*>', text, re.I):
+              if 'rel="noopener"' not in tag: errors.append(f'{name}: target=_blank sem rel=noopener')
+
+          if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
+          if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
+
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior']
+          low=home.lower()
+          for term in required_home:
+            if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
+
+          forbidden=[
+            r'english mentoring',r'premium',r'destravar',r'transforma[cç][aã]o',
+            r'm[eé]todo exclusivo',r'dire[cç][aã]o clara',r'potencializar',r'elevar seu ingl[eê]s',
+            r'solu[cç][oõ]es personalizadas',r'jornada',r'coaching',r'mentoria',
+            r'prepara[cç][aã]o (especial )?para entrevista',r'roteiro de respostas',
+            r'flu[eê]ncia r[aá]pida',r'produto de prateleira',r'sem improviso'
+          ]
+          for name,text in pages.items():
+            for pattern in forbidden:
+              if re.search(pattern,text,re.I): errors.append(f'{name}: linguagem proibida/AI-like ou serviço não oferecido: {pattern}')
+
+          # Guardrails visuais: impedir retorno do visual SaaS/glow/glass da produção antiga.
+          visual_forbidden=['radial-gradient(','linear-gradient(','backdrop-filter:','filter:blur(','mix-blend-mode:']
+          for marker in visual_forbidden:
+            if marker in css.replace(' ','').lower(): errors.append(f'assets/site-v3.css: padrão visual rejeitado retornou: {marker}')
+
+          if 'modalidade conversacional começa a partir do b1' not in low: errors.append('index.html: regra B1+ não está explícita')
+          for name in ['como-funciona.html','ingles-para-devs.html','ingles-para-compliance.html','professor-de-ingles-manaus.html']:
+            if 'modalidade conversacional é oferecida a partir do b1' not in pages[name].lower(): errors.append(f'{name}: regra B1+ não está explícita')
+
+          manaus=pages['professor-de-ingles-manaus.html'].lower()
+          if '100% online' not in manaus: errors.append('Manaus: precisa deixar explícito que o atendimento é online')
+          if 'não. meu atendimento é 100% online.' not in manaus: errors.append('Manaus: não pode sugerir atendimento presencial')
+          if 'brasileiros que vivem no exterior' not in manaus: errors.append('Manaus: alcance geográfico incompleto')
+          if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir brasileiros no exterior')
+
+          # Preço apenas no segundo/terceiro momento.
+          if '<table class="price-table">' in tool: errors.append('qual-formato.html: tabela pública de preços voltou')
+          if 'id="revealPrice"' not in tool or 'Ver mensalidade desta opção' not in tool: errors.append('qual-formato.html: controle de revelação ausente')
+          if 'id="priceReveal"' not in tool or 'hidden' not in tool: errors.append('qual-formato.html: área de preço precisa iniciar oculta')
+          if 'Mensalidade desta opção: R$ ${prices[format][minutes]}/mês.' not in tool: errors.append('qual-formato.html: revelação contextual de mensalidade ausente')
+          if "individual:{60:280,90:360,120:430}" not in tool: errors.append('preços individuais divergentes')
+          if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('preços dupla divergentes')
+          if "trio:{60:190,90:240,120:280}" not in tool: errors.append('preços trio divergentes')
+          if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('preços grupo divergentes')
+          if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: aviso de que não é teste de nível ausente')
+
+          # Atribuição por origem para peças estáticas.
+          if "new URLSearchParams(window.location.search).get('src')" not in tool: errors.append('qual-formato.html: leitura de origem src ausente')
+          for src in ['ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','ig-portal','x-portal']:
+            if src not in tool: errors.append(f'qual-formato.html: origem estática ausente: {src}')
+
+          # Não voltar a usar artes sintéticas antigas nas páginas profissionais.
+          if 'lp-dev-communication.webp' in pages['ingles-para-devs.html']: errors.append('tecnologia: hero sintético antigo voltou')
+          if 'lp-compliance-communication.webp' in pages['ingles-para-compliance.html']: errors.append('compliance: hero sintético antigo voltou')
+
+          if errors:
+            print('QA FAILED')
+            for e in errors: print('-',e)
+            sys.exit(1)
+          print('QA OK — V3 preserva oferta real, SEO, B1+, preço tardio, atribuição e guardrails anti-template/anti-SaaS')
