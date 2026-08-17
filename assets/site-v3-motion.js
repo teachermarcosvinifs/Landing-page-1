@@ -56,7 +56,35 @@
     })
   }
 
+  const applySourceAttribution=()=>{
+    const sourceKey=new URLSearchParams(window.location.search).get('src')
+    if(!sourceKey)return
+    const sourceLabels={
+      'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
+      'x-formatos':'uma publicação no X sobre os formatos das aulas',
+      'wa-formatos':'um Status do WhatsApp sobre os formatos das aulas',
+      'ig-conversacao':'uma publicação no Instagram sobre aulas conversacionais',
+      'x-conversacao':'uma publicação no X sobre aulas conversacionais',
+      'ig-portal':'uma publicação no Instagram sobre o Portal dos Alunos',
+      'x-portal':'uma publicação no X sobre o Portal dos Alunos'
+    }
+    const sourceLabel=sourceLabels[sourceKey]
+    if(!sourceLabel)return
+
+    document.querySelectorAll('a[href^="https://wa.me/5592985273076"]').forEach(link=>{
+      try{
+        const url=new URL(link.href)
+        const current=url.searchParams.get('text')||''
+        const addition=`Vi esta página a partir de ${sourceLabel}`
+        if(current.includes(addition))return
+        url.searchParams.set('text',`${current}${current.trim()?' ':''}${addition}`)
+        link.href=url.toString()
+      }catch{}
+    })
+  }
+
   setupMobileMenu()
+  applySourceAttribution()
 
   const revealSelectors=[
     '.section-intro','.offer-line','.split-copy','.fact-list','.context-link',
