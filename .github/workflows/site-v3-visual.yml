@@ -87,6 +87,22 @@ jobs:
               });
               await page.screenshot({path:`visual-artifacts/${name}-${profile}-top.png`,fullPage:false});
 
+              let mobileMenu={required:profile==='mobile',present:true,panelVisible:true,linkCount:null};
+              if(profile==='mobile'){
+                const menu=page.locator('.mobile-menu');
+                mobileMenu.present=await menu.count()===1;
+                mobileMenu.panelVisible=false;
+                mobileMenu.linkCount=0;
+                if(mobileMenu.present){
+                  await menu.locator('summary').click();
+                  await page.waitForTimeout(70);
+                  mobileMenu.panelVisible=await menu.locator('.mobile-menu-panel').isVisible();
+                  mobileMenu.linkCount=await menu.locator('.mobile-menu-panel a').count();
+                  await page.screenshot({path:`visual-artifacts/${name}-${profile}-menu.png`,fullPage:false});
+                  await menu.locator('summary').click();
+                }
+              }
+
               const metrics=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:window.innerHeight}));
               const step=Math.max(260,Math.floor(metrics.viewport*.72));
               for(let y=0;y<metrics.height;y+=step){
@@ -101,7 +117,7 @@ jobs:
                 const body=document.body;
                 const html=document.documentElement;
                 const overflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
-                const actionable=[...document.querySelectorAll('a.btn,button,nav a')];
+                const actionable=[...document.querySelectorAll('a.btn,button,nav a,nav summary')];
                 const tiny=actionable.filter(el=>{
                   const r=el.getBoundingClientRect();
                   return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
@@ -109,20 +125,20 @@ jobs:
                 const hiddenReveal=[...document.querySelectorAll('.reveal-target:not(.is-visible)')].length;
                 return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
               });
-              report.push({name,profile,...data,initialLayout,consoleErrors});
+              report.push({name,profile,...data,initialLayout,mobileMenu,consoleErrors});
               await page.close();
             }
             await context.close();
           }
           await browser.close();
           fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
-          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap);
+          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap || (x.mobileMenu.required && (!x.mobileMenu.present || !x.mobileMenu.panelVisible || x.mobileMenu.linkCount<2)));
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error, undersized target, unrevealed content or header/H1 collision detected');
+            console.error('VISUAL QA FAILED: overflow, console error, undersized target, unrevealed content, header/H1 collision or mobile navigation failure detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including above-fold header/H1 spacing');
+          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including above-fold spacing and interactive mobile navigation');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
