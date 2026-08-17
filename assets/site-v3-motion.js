@@ -77,7 +77,7 @@
         const url=new URL(raw,window.location.href)
         if(url.origin!==window.location.origin)return
         url.searchParams.set('src',sourceKey)
-        link.href=url.toString()
+        link.setAttribute('href',`${url.pathname}${url.search}${url.hash}`)
       }catch{}
     })
 
