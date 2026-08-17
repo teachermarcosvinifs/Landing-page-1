@@ -10,6 +10,8 @@ on:
       - 'ingles-para-compliance.html'
       - 'assets/site-v3-motion.js'
       - 'assets/professional-visuals.css'
+      - 'assets/professional-motion-v3.js'
+      - 'assets/professional-motion-v3.css'
       - '.github/workflows/site-v3-functional.yml'
   pull_request:
     paths:
@@ -19,6 +21,8 @@ on:
       - 'ingles-para-compliance.html'
       - 'assets/site-v3-motion.js'
       - 'assets/professional-visuals.css'
+      - 'assets/professional-motion-v3.js'
+      - 'assets/professional-motion-v3.css'
       - '.github/workflows/site-v3-functional.yml'
 
 permissions:
@@ -42,7 +46,7 @@ jobs:
         run: |
           python3 -m http.server 8000 >/tmp/site-v3-functional-http.log 2>&1 &
           sleep 2
-      - name: Test format finder, contact flows and responsive professional motion
+      - name: Test format finder, contact flows and cinematic professional motion
         run: |
           cat > functional-check.mjs <<'EOF'
           import { chromium } from 'playwright';
@@ -108,42 +112,57 @@ jobs:
           const unknownFormatsUrl = new URL(unknownFormats,page.url());
           assert.ok(!unknownFormatsUrl.searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
-          // Professional photography must respond to the user; no passive Ken Burns loop.
+          // V3 cinematic professional media: 3 depth planes + WebGL light + user-driven motion.
           await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'networkidle'});
           const media = page.locator('.professional-visual');
           await media.waitFor();
+          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('cinematic-v3'));
+          assert.equal(await media.locator('.depth-layer').count(),2,'Cinematic visual must create mid and near depth planes');
+          assert.equal(await media.locator('canvas.motion-gl').count(),1,'Cinematic visual must create WebGL light plane');
+          const glReady = await media.locator('canvas.motion-gl').evaluate(canvas=>({
+            width:canvas.width,
+            height:canvas.height,
+            webgl:!!canvas.getContext('webgl')
+          }));
+          assert.ok(glReady.width>100 && glReady.height>100,'WebGL canvas must be sized to the photograph');
+          assert.ok(glReady.webgl,'WebGL context must initialize in Chromium');
+
           const box = await media.boundingBox();
           assert.ok(box && box.width > 300, 'Professional hero visual must be present');
-          await page.mouse.move(box.x + box.width * .82, box.y + box.height * .22);
-          await page.waitForTimeout(420);
+          await page.mouse.move(box.x + box.width * .84, box.y + box.height * .18);
+          await page.waitForTimeout(620);
           const pointerMotion = await media.evaluate(el => ({
-            tiltX: parseFloat(el.style.getPropertyValue('--tilt-x')) || 0,
-            tiltY: parseFloat(el.style.getPropertyValue('--tilt-y')) || 0,
-            mediaX: parseFloat(el.style.getPropertyValue('--media-x')) || 0,
-            mediaY: parseFloat(el.style.getPropertyValue('--media-y')) || 0,
-            active: el.classList.contains('is-motion-active')
+            rx:parseFloat(el.style.getPropertyValue('--v3-rx'))||0,
+            ry:parseFloat(el.style.getPropertyValue('--v3-ry'))||0,
+            baseX:parseFloat(el.style.getPropertyValue('--v3-base-x'))||0,
+            midX:parseFloat(el.style.getPropertyValue('--v3-mid-x'))||0,
+            nearX:parseFloat(el.style.getPropertyValue('--v3-near-x'))||0,
+            energy:parseFloat(el.style.getPropertyValue('--v3-energy'))||0,
+            active:el.classList.contains('is-cinematic-active')
           }));
-          assert.ok(pointerMotion.active, 'Professional image must enter interactive depth state on pointer hover');
-          assert.ok(Math.abs(pointerMotion.tiltX) > .35 || Math.abs(pointerMotion.tiltY) > .35, 'Pointer must create measurable perspective movement');
-          assert.ok(Math.abs(pointerMotion.mediaX) > 2 || Math.abs(pointerMotion.mediaY) > 2, 'Image crop must move independently from its frame');
+          assert.ok(pointerMotion.active,'Cinematic depth must activate on pointer hover');
+          assert.ok(Math.abs(pointerMotion.rx)>.35 || Math.abs(pointerMotion.ry)>.45,'Pointer must create measurable scene perspective');
+          assert.ok(Math.abs(pointerMotion.midX)>Math.abs(pointerMotion.baseX)+1.2,'Mid plane must move independently from base');
+          assert.ok(Math.abs(pointerMotion.nearX)>Math.abs(pointerMotion.midX)+2,'Near plane must move farther than mid plane');
+          assert.ok(pointerMotion.energy>.45,'Responsive light must become active with pointer interaction');
 
-          const beforeScroll = parseFloat(await media.evaluate(el => el.style.getPropertyValue('--scroll-y'))) || 0;
+          const beforeScroll=parseFloat(await media.evaluate(el=>el.style.getPropertyValue('--v3-scroll')))||0;
           await page.evaluate(()=>window.scrollTo(0,Math.min(420,document.documentElement.scrollHeight-window.innerHeight)));
-          await page.waitForTimeout(360);
-          const afterScroll = parseFloat(await media.evaluate(el => el.style.getPropertyValue('--scroll-y'))) || 0;
-          assert.ok(Math.abs(afterScroll-beforeScroll) > 1.5, 'Scroll must create measurable parallax inside the professional image');
+          await page.waitForTimeout(420);
+          const afterScroll=parseFloat(await media.evaluate(el=>el.style.getPropertyValue('--v3-scroll')))||0;
+          assert.ok(Math.abs(afterScroll-beforeScroll)>1.5,'Scroll must create measurable layered parallax');
 
           await page.mouse.move(4,4);
-          await page.waitForTimeout(650);
-          const resetMotion = await media.evaluate(el => ({
-            tiltX: parseFloat(el.style.getPropertyValue('--tilt-x')) || 0,
-            tiltY: parseFloat(el.style.getPropertyValue('--tilt-y')) || 0,
-            active: el.classList.contains('is-motion-active')
+          await page.waitForTimeout(850);
+          const reset=await media.evaluate(el=>({
+            rx:parseFloat(el.style.getPropertyValue('--v3-rx'))||0,
+            ry:parseFloat(el.style.getPropertyValue('--v3-ry'))||0,
+            active:el.classList.contains('is-cinematic-active')
           }));
-          assert.ok(!resetMotion.active, 'Interactive depth state must end when pointer leaves');
-          assert.ok(Math.abs(resetMotion.tiltX) < .35 && Math.abs(resetMotion.tiltY) < .35, 'Perspective must return smoothly near neutral after pointer leaves');
+          assert.ok(!reset.active,'Cinematic active state must end when pointer leaves');
+          assert.ok(Math.abs(reset.rx)<.35 && Math.abs(reset.ry)<.35,'Perspective must return near neutral with inertia');
 
           await browser.close();
-          console.log('FUNCTIONAL QA OK — commercial rules, contact flows, attribution and responsive professional image depth/parallax verified');
+          console.log('FUNCTIONAL QA OK — commercial rules, attribution and V3 layered WebGL cinematic motion verified');
           EOF
           node functional-check.mjs
