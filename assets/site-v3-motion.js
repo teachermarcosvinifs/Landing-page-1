@@ -3,7 +3,7 @@
 
   const revealSelectors=[
     '.section-intro','.offer-line','.split-copy','.fact-list','.context-link',
-    '.article-body','.portal-frame','.portal-shot','.gallery figure','.situation',
+    '.article-body','.portal-frame','.activity-frame','.portal-shot','.gallery figure','.situation',
     '.faq details','.final-grid','.question','.result'
   ]
 
@@ -13,7 +13,6 @@
       entries.forEach(entry=>{
         if(entry.isIntersecting){
           const el=entry.target
-          // Progressive enhancement: content stays visible unless it is actively animating
           el.classList.add('reveal-target')
           requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('is-visible')))
           observer.unobserve(el)
@@ -31,6 +30,13 @@
     const count=carousel.querySelector('[data-count]')
     if(slides.length<2)return
 
+    const hydrate=slide=>{
+      slide?.querySelectorAll('img[data-src]').forEach(img=>{
+        img.src=img.dataset.src
+        img.removeAttribute('data-src')
+      })
+    }
+
     dots.forEach(dot=>{
       dot.style.width='36px'
       dot.style.height='36px'
@@ -44,6 +50,8 @@
 
     const render=nextIndex=>{
       index=(nextIndex+slides.length)%slides.length
+      hydrate(slides[index])
+      hydrate(slides[(index+1)%slides.length])
       slides.forEach((slide,i)=>{
         const active=i===index
         slide.classList.toggle('is-active',active)
