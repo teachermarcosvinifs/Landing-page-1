@@ -86,6 +86,7 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
 .portal-layout .actions .btn:hover{background:#f6f7f6;color:var(--deep)}
 .portal-shot{margin:0}
 .portal-shot img{border:1px solid #4d5a5d;background:#111719;width:100%}
+.portal-shot img,.portal-hero-media img,.gallery-dark img{clip-path:inset(6% 0 0 0)}
 .portal-proof{margin-top:25px;padding-top:20px;border-top:1px solid #465255;color:var(--deep-muted);font-size:14px}
 
 .format-table{border-top:2px solid var(--ink)}
@@ -122,7 +123,7 @@ h3{font-size:25px;line-height:1.15;margin:0 0 9px}
 .page-hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:68px;align-items:center}
 .page-hero h1{font-size:clamp(43px,5.3vw,62px);max-width:14ch}
 .page-hero .lead{max-width:720px}
-.page-hero-photo img{aspect-ratio:4/5;object-fit:cover;object-position:center}
+.page-hero-photo img{aspect-ratio:4/5;object-fit:cover;object-position:35% center}
 .article-section{padding:62px 0;border-bottom:1px solid var(--line)}
 .article-grid{display:grid;grid-template-columns:210px minmax(0,760px);gap:58px;align-items:start}
 .article-label{font-size:13px;color:var(--accent-dark);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding-top:7px}
