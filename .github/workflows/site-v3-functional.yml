@@ -85,7 +85,9 @@ jobs:
           assert.ok(whatsAppText(directWa).includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Direct homepage WhatsApp must preserve ?src attribution');
           assert.equal(await page.locator('a[href^="mailto:"]').count(), 0, 'Homepage must not expose email');
           assert.ok(await page.locator('.hero a[href*="docs.google.com/forms"]').count() >= 1, 'Homepage must expose the form alongside WhatsApp');
-          assert.ok((await page.locator('.faq').innerText()).includes('Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp'),'Homepage FAQ must direct pricing to WhatsApp');
+          const pricingFaq = page.locator('.faq details').filter({hasText:'Como consulto os valores?'});
+          await pricingFaq.locator('summary').click();
+          assert.ok((await pricingFaq.innerText()).includes('Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp'),'Homepage FAQ must direct pricing to WhatsApp after opening the answer');
 
           const formatsHref = await page.locator('a[href*="qual-formato.html"]').first().getAttribute('href');
           const formatsUrl = new URL(formatsHref,page.url());
@@ -105,6 +107,6 @@ jobs:
           assert.ok(!unknownFormatsUrl.searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
           await browser.close();
-          console.log('FUNCTIONAL QA OK — B1+ rule, no public prices, direct WhatsApp consultation, contact flows and end-to-end source attribution verified');
+          console.log('FUNCTIONAL QA OK — B1+ rule, no public prices, direct WhatsApp consultation, FAQ interaction, contact flows and end-to-end source attribution verified');
           EOF
           node functional-check.mjs
