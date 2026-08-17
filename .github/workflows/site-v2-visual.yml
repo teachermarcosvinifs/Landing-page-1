@@ -58,7 +58,11 @@ jobs:
           const pages = [
             ['home','/index.html'],
             ['formatos','/qual-formato.html'],
-            ['manaus','/professor-de-ingles-manaus.html']
+            ['manaus','/professor-de-ingles-manaus.html'],
+            ['como-funciona','/como-funciona.html'],
+            ['portal','/portal-dos-alunos.html'],
+            ['tecnologia','/ingles-para-devs.html'],
+            ['compliance','/ingles-para-compliance.html']
           ];
           const profiles = [
             ['desktop',{viewport:{width:1440,height:900}}],
@@ -100,7 +104,7 @@ jobs:
             console.error('VISUAL QA FAILED: overflow, console error or undersized primary/navigation target detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — desktop/mobile without horizontal overflow, console errors or undersized primary/navigation targets');
+          console.log('VISUAL QA OK — all 7 pages checked on desktop/mobile without horizontal overflow, console errors or undersized primary/navigation targets');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
