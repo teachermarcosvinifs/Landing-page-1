@@ -107,11 +107,27 @@ jobs:
           if 'brasileiros que vivem no exterior' not in manaus: errors.append('Manaus: página não pode limitar o alcance geográfico real')
           if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir alcance online além do Brasil')
 
+          # A pessoa deve ver os valores antes do questionário; preço não pode virar isca/funil.
+          if '<table class="price-table">' not in tool: errors.append('qual-formato.html: tabela pública de mensalidades ausente')
+          visible_rows=[
+            ('Individual',['R$ 280/mês','R$ 360/mês','R$ 430/mês']),
+            ('Dupla',['R$ 220/mês','R$ 280/mês','R$ 330/mês']),
+            ('Trio',['R$ 190/mês','R$ 240/mês','R$ 280/mês']),
+            ('Grupo de 4 a 6',['R$ 160/mês','R$ 210/mês','R$ 250/mês'])
+          ]
+          for label,prices in visible_rows:
+            pattern=r'<tr><th[^>]*>'+re.escape(label)+r'</th>'+''.join(r'<td>'+re.escape(price)+r'</td>' for price in prices)+r'</tr>'
+            if not re.search(pattern,tool): errors.append(f'qual-formato.html: linha visível de preço divergente: {label}')
+
           if "individual:{60:280,90:360,120:430}" not in tool: errors.append('qual-formato.html: preços individuais divergentes')
           if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('qual-formato.html: preços dupla divergentes')
           if "trio:{60:190,90:240,120:280}" not in tool: errors.append('qual-formato.html: preços trio divergentes')
           if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('qual-formato.html: preços grupo divergentes')
           if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: precisa deixar claro que não é teste de nível')
+
+          # As antigas artes-dashboard sintéticas davam aparência de site gerado por IA.
+          if 'lp-dev-communication.webp' in pages['ingles-para-devs.html']: errors.append('tecnologia: hero sintético antigo voltou a ser usado')
+          if 'lp-compliance-communication.webp' in pages['ingles-para-compliance.html']: errors.append('compliance: hero sintético antigo voltou a ser usado')
 
           attribution_markers={
             'index.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20site%20V2',
@@ -129,4 +145,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — oferta, alcance online, B1+, mensalidades, atribuição, links, assets, SEO e anti-AI copy coerentes')
+          print('QA OK — oferta, alcance online, preços visíveis, B1+, atribuição, links, assets, SEO e anti-AI copy coerentes')
