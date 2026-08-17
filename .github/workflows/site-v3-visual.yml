@@ -74,6 +74,19 @@ jobs:
               page.on('pageerror',e=>consoleErrors.push(String(e)));
               await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
 
+              const initialLayout=await page.evaluate(()=>{
+                const header=document.querySelector('.site-header')?.getBoundingClientRect();
+                const h1=document.querySelector('h1')?.getBoundingClientRect();
+                const gap=(header&&h1)?Math.round(h1.top-header.bottom):null;
+                return {
+                  headerGap:gap,
+                  headerOverlap:gap!==null && gap<8,
+                  header:header?{top:Math.round(header.top),bottom:Math.round(header.bottom),h:Math.round(header.height)}:null,
+                  h1:h1?{top:Math.round(h1.top),bottom:Math.round(h1.bottom),w:Math.round(h1.width),h:Math.round(h1.height)}:null
+                };
+              });
+              await page.screenshot({path:`visual-artifacts/${name}-${profile}-top.png`,fullPage:false});
+
               const metrics=await page.evaluate(()=>({height:document.documentElement.scrollHeight,viewport:window.innerHeight}));
               const step=Math.max(260,Math.floor(metrics.viewport*.72));
               for(let y=0;y<metrics.height;y+=step){
@@ -93,25 +106,23 @@ jobs:
                   const r=el.getBoundingClientRect();
                   return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
                 }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
-                const h1=document.querySelector('h1')?.getBoundingClientRect();
-                const nav=document.querySelector('nav')?.getBoundingClientRect();
                 const hiddenReveal=[...document.querySelectorAll('.reveal-target:not(.is-visible)')].length;
-                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,h1:h1?{w:Math.round(h1.width),h:Math.round(h1.height)}:null,nav:nav?{w:Math.round(nav.width),h:Math.round(nav.height)}:null,documentHeight:Math.round(html.scrollHeight)};
+                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
               });
-              report.push({name,profile,...data,consoleErrors});
+              report.push({name,profile,...data,initialLayout,consoleErrors});
               await page.close();
             }
             await context.close();
           }
           await browser.close();
           fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
-          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0);
+          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap);
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error, undersized target or unrevealed content detected');
+            console.error('VISUAL QA FAILED: overflow, console error, undersized target, unrevealed content or header/H1 collision detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile after exercising transitions');
+          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including above-fold header/H1 spacing');
           EOF
           node visual-check.mjs
       - name: Upload visual evidence
