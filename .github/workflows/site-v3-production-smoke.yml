@@ -1,0 +1,105 @@
+name: Site V3 Production Smoke
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-v3-production-smoke
+  cancel-in-progress: true
+
+jobs:
+  verify-live-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Wait for GitHub Pages to publish this release
+        shell: python
+        run: |
+          import time
+          import urllib.request
+          import sys
+
+          base = 'https://teachermarcosvinifs.github.io/Landing-page-1/'
+          expected_home = [
+              '<h1>Professor de Inglês para adolescentes e adultos</h1>',
+              'assets/site-v3-black.css',
+              'Falar pelo WhatsApp',
+              'Preencher formulário',
+          ]
+
+          def fetch(url):
+              req = urllib.request.Request(
+                  url,
+                  headers={
+                      'User-Agent': 'Landing-page-1-production-smoke/1.0',
+                      'Cache-Control': 'no-cache',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=15) as response:
+                  return response.status, response.read().decode('utf-8', errors='replace')
+
+          last_error = None
+          for attempt in range(1, 19):
+              try:
+                  status, html = fetch(base + '?smoke=' + str(int(time.time())))
+                  missing = [marker for marker in expected_home if marker not in html]
+                  if status == 200 and not missing:
+                      print(f'Production V3 detected on attempt {attempt}')
+                      break
+                  last_error = f'HTTP {status}; missing markers: {missing}'
+              except Exception as exc:
+                  last_error = repr(exc)
+              print(f'Attempt {attempt}/18: production not ready yet — {last_error}')
+              time.sleep(10)
+          else:
+              print('PRODUCTION SMOKE FAILED: GitHub Pages did not expose the expected V3 within 3 minutes')
+              print('Last observation:', last_error)
+              sys.exit(1)
+
+      - name: Verify all public V3 routes
+        shell: python
+        run: |
+          import urllib.request
+          import sys
+
+          base = 'https://teachermarcosvinifs.github.io/Landing-page-1/'
+          routes = {
+              '': ['Professor de Inglês para adolescentes e adultos', 'assets/site-v3-black.css'],
+              'como-funciona.html': ['Como funcionam as aulas', 'assets/site-v3-black.css'],
+              'portal-dos-alunos.html': ['Portal dos Alunos', 'Materiais e atividades em um só lugar'],
+              'ingles-para-devs.html': ['Inglês para quem trabalha com tecnologia', 'desenvolvedores'],
+              'ingles-para-compliance.html': ['Inglês para quem trabalha com compliance', 'políticas'],
+              'qual-formato.html': ['Individual, dupla, trio ou grupo?', 'isso não é teste de nível'],
+              'sitemap.xml': ['ingles-para-devs.html', 'ingles-para-compliance.html'],
+              'robots.txt': ['Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml'],
+          }
+
+          errors = []
+          for path, markers in routes.items():
+              url = base + path
+              try:
+                  req = urllib.request.Request(url, headers={'User-Agent': 'Landing-page-1-production-smoke/1.0', 'Cache-Control': 'no-cache'})
+                  with urllib.request.urlopen(req, timeout=15) as response:
+                      status = response.status
+                      body = response.read().decode('utf-8', errors='replace')
+                  if status != 200:
+                      errors.append(f'{path or "home"}: HTTP {status}')
+                      continue
+                  for marker in markers:
+                      if marker not in body:
+                          errors.append(f'{path or "home"}: marker ausente -> {marker}')
+              except Exception as exc:
+                  errors.append(f'{path or "home"}: {exc!r}')
+
+          if errors:
+              print('PRODUCTION ROUTE CHECK FAILED')
+              for error in errors:
+                  print('-', error)
+              sys.exit(1)
+
+          print('PRODUCTION SMOKE OK — V3 is live and all public routes respond with the expected release')
