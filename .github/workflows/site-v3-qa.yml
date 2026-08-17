@@ -39,7 +39,7 @@ jobs:
             'ingles-para-compliance.html','professor-de-ingles-manaus.html'
           ]
           pages={name:Path(name).read_text(encoding='utf-8') for name in names}
-          home=pages['index.html']; tool=pages['qual-formato.html']
+          home=pages['index.html']; tool=pages['qual-formato.html']; portal=pages['portal-dos-alunos.html']
           css=Path('assets/site-v3.css').read_text(encoding='utf-8')
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           robots=Path('robots.txt').read_text(encoding='utf-8')
@@ -128,8 +128,16 @@ jobs:
           if 'lp-dev-communication.webp' in pages['ingles-para-devs.html']: errors.append('tecnologia: hero sintético antigo voltou')
           if 'lp-compliance-communication.webp' in pages['ingles-para-compliance.html']: errors.append('compliance: hero sintético antigo voltou')
 
+          # Privacidade da página pública do Portal: não expor ranking nem telas internas do professor.
+          private_portal_assets=[
+            'lp-student-ranking.webp','lp-teacher-panorama.webp',
+            'lp-teacher-detail.webp','lp-teacher-group.webp'
+          ]
+          for asset in private_portal_assets:
+            if asset in portal: errors.append(f'portal-dos-alunos.html: captura não deve ser pública -> {asset}')
+
           if errors:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — V3 preserva oferta real, SEO, B1+, preço tardio, atribuição e guardrails anti-template/anti-SaaS')
+          print('QA OK — V3 preserva oferta real, SEO, B1+, preço tardio, atribuição, privacidade e guardrails anti-template/anti-SaaS')
