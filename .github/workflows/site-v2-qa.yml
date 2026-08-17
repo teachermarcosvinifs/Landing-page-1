@@ -7,6 +7,7 @@ on:
     paths:
       - 'index.html'
       - 'qual-formato.html'
+      - 'assets/site-v2.css'
       - 'sitemap.xml'
       - 'robots.txt'
       - '.github/workflows/site-v2-qa.yml'
@@ -19,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate human-first positioning and search basics
+      - name: Validate positioning, offer and search basics
         shell: python
         run: |
           from pathlib import Path
@@ -27,6 +28,7 @@ jobs:
           errors=[]
           home=Path('index.html').read_text(encoding='utf-8')
           tool=Path('qual-formato.html').read_text(encoding='utf-8')
+          css=Path('assets/site-v2.css').read_text(encoding='utf-8')
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           robots=Path('robots.txt').read_text(encoding='utf-8')
 
@@ -37,11 +39,14 @@ jobs:
             if 'name="description"' not in text: errors.append(f'{name}: meta description ausente')
             if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
             if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
+            if 'assets/site-v2.css' not in text: errors.append(f'{name}: stylesheet V2 ausente')
 
           if 'application/ld+json' not in home:
             errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots:
             errors.append('robots.txt: sitemap canônico ausente')
+          if len(css) < 2000:
+            errors.append('assets/site-v2.css: stylesheet inesperadamente vazio')
 
           required_home=['individual','dupla','trio','grupo','b1','portal dos alunos']
           low=home.lower()
@@ -50,14 +55,16 @@ jobs:
 
           forbidden=[
             r'english mentoring',r'acompanhamento premium',r'experi[eê]ncia premium',
-            r'sem improviso',r'prepara[cç][aã]o para entrevista',r'roteiro de respostas',
-            r'flu[eê]ncia r[aá]pida',r'm[eé]todo exclusivo',r'transforma[cç][aã]o'
+            r'sem improviso',r'produto de prateleira',r'enfeite de venda',
+            r'se voc[eê] chegou pelo google',r'prepara[cç][aã]o para entrevista',
+            r'roteiro de respostas',r'flu[eê]ncia r[aá]pida',r'm[eé]todo exclusivo',
+            r'transforma[cç][aã]o',r'destravar seu ingl[eê]s'
           ]
           for pattern in forbidden:
             if re.search(pattern,home,re.I): errors.append(f'index.html: linguagem proibida/AI-like: {pattern}')
             if re.search(pattern,tool,re.I): errors.append(f'qual-formato.html: linguagem proibida/serviço inventado: {pattern}')
 
-          if 'modalidade conversacional começa a partir do B1'.lower() not in low:
+          if 'modalidade conversacional começa a partir do b1' not in low:
             errors.append('index.html: regra B1+ não está explícita')
           if "individual:{60:280,90:360,120:430}" not in tool:
             errors.append('qual-formato.html: preços individuais divergentes')
@@ -69,9 +76,11 @@ jobs:
             errors.append('qual-formato.html: preços grupo divergentes')
           if 'isso não é teste de nível' not in tool.lower():
             errors.append('qual-formato.html: precisa deixar claro que não é teste de nível')
+          if 'wa.me/5592985273076' not in home or 'wa.me/5592985273076' not in tool:
+            errors.append('CTA WhatsApp ausente')
 
           if errors:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — posicionamento, oferta, SEO básico, B1+ e mensalidades coerentes')
+          print('QA OK — posicionamento, oferta, SEO básico, B1+, mensalidades e anti-AI copy coerentes')
