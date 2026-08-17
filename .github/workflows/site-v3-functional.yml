@@ -57,7 +57,7 @@ jobs:
           assert.ok(decodeURIComponent(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'WhatsApp must preserve ?src attribution');
           await page.locator('#revealPrice').click();
           assert.equal(await page.locator('#priceReveal').isVisible(), true);
-          assert.equal((await page.locator('#priceReveal').textContent()).trim(), 'Mensalidade desta opção: R$ 280/mês.');
+          assert.equal((await page.locator('#priceReveal').textContent()).trim(), 'Mensalidade desta opção: R$ 280/mês');
 
           // Case 2: beginner asking for conversation must not be presented as conversation class.
           await page.goto('http://127.0.0.1:8000/qual-formato.html',{waitUntil:'networkidle'});
