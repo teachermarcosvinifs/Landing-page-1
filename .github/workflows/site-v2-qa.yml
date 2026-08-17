@@ -1,0 +1,77 @@
+name: Site V2 QA
+
+on:
+  push:
+    branches: [site-v2-human-search]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'qual-formato.html'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/site-v2-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate human-first positioning and search basics
+        shell: python
+        run: |
+          from pathlib import Path
+          import re, sys
+          errors=[]
+          home=Path('index.html').read_text(encoding='utf-8')
+          tool=Path('qual-formato.html').read_text(encoding='utf-8')
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          robots=Path('robots.txt').read_text(encoding='utf-8')
+
+          for name,text,url in [
+            ('index.html',home,'https://teachermarcosvinifs.github.io/Landing-page-1/'),
+            ('qual-formato.html',tool,'https://teachermarcosvinifs.github.io/Landing-page-1/qual-formato.html')]:
+            if '<title>' not in text: errors.append(f'{name}: title ausente')
+            if 'name="description"' not in text: errors.append(f'{name}: meta description ausente')
+            if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
+            if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
+
+          if 'application/ld+json' not in home:
+            errors.append('index.html: dados estruturados ausentes')
+          if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots:
+            errors.append('robots.txt: sitemap canônico ausente')
+
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos']
+          low=home.lower()
+          for term in required_home:
+            if term not in low: errors.append(f'index.html: oferta real ausente: {term}')
+
+          forbidden=[
+            r'english mentoring',r'acompanhamento premium',r'experi[eê]ncia premium',
+            r'sem improviso',r'prepara[cç][aã]o para entrevista',r'roteiro de respostas',
+            r'flu[eê]ncia r[aá]pida',r'm[eé]todo exclusivo',r'transforma[cç][aã]o'
+          ]
+          for pattern in forbidden:
+            if re.search(pattern,home,re.I): errors.append(f'index.html: linguagem proibida/AI-like: {pattern}')
+            if re.search(pattern,tool,re.I): errors.append(f'qual-formato.html: linguagem proibida/serviço inventado: {pattern}')
+
+          if 'modalidade conversacional começa a partir do B1'.lower() not in low:
+            errors.append('index.html: regra B1+ não está explícita')
+          if "individual:{60:280,90:360,120:430}" not in tool:
+            errors.append('qual-formato.html: preços individuais divergentes')
+          if "dupla:{60:220,90:280,120:330}" not in tool:
+            errors.append('qual-formato.html: preços dupla divergentes')
+          if "trio:{60:190,90:240,120:280}" not in tool:
+            errors.append('qual-formato.html: preços trio divergentes')
+          if "grupo:{60:160,90:210,120:250}" not in tool:
+            errors.append('qual-formato.html: preços grupo divergentes')
+          if 'isso não é teste de nível' not in tool.lower():
+            errors.append('qual-formato.html: precisa deixar claro que não é teste de nível')
+
+          if errors:
+            print('QA FAILED')
+            for e in errors: print('-',e)
+            sys.exit(1)
+          print('QA OK — posicionamento, oferta, SEO básico, B1+ e mensalidades coerentes')
