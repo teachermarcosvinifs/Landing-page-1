@@ -9,12 +9,14 @@
 
   const revealTargets=[...document.querySelectorAll(revealSelectors.join(','))]
   if(!reduceMotion && 'IntersectionObserver' in window){
-    revealTargets.forEach(el=>el.classList.add('reveal-target'))
     const observer=new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
+          const el=entry.target
+          // Progressive enhancement: content stays visible unless it is actively animating
+          el.classList.add('reveal-target')
+          requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('is-visible')))
+          observer.unobserve(el)
         }
       })
     },{threshold:.12,rootMargin:'0px 0px -28px'})
