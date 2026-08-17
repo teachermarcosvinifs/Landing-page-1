@@ -11,6 +11,7 @@ on:
       - 'portal-dos-alunos.html'
       - 'ingles-para-devs.html'
       - 'ingles-para-compliance.html'
+      - 'professor-de-ingles-manaus.html'
       - 'assets/site-v2.css'
       - 'assets/portal-v2.css'
       - 'sitemap.xml'
@@ -29,15 +30,22 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
+          from urllib.parse import unquote, urlsplit
           import re, sys
+
           errors=[]
-          names=['index.html','qual-formato.html','como-funciona.html','portal-dos-alunos.html','ingles-para-devs.html','ingles-para-compliance.html']
+          names=[
+            'index.html','qual-formato.html','como-funciona.html',
+            'portal-dos-alunos.html','ingles-para-devs.html',
+            'ingles-para-compliance.html','professor-de-ingles-manaus.html'
+          ]
           pages={name:Path(name).read_text(encoding='utf-8') for name in names}
           home=pages['index.html']; tool=pages['qual-formato.html']
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           robots=Path('robots.txt').read_text(encoding='utf-8')
           base='https://teachermarcosvinifs.github.io/Landing-page-1/'
           canonicals={name:(base if name=='index.html' else base+name) for name in names}
+
           for name,text in pages.items():
             url=canonicals[name]
             if '<title>' not in text: errors.append(f'{name}: title ausente')
@@ -47,6 +55,29 @@ jobs:
             if 'assets/site-v2.css' not in text: errors.append(f'{name}: stylesheet V2 ausente')
             if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
             if 'marcosvinifs@gmail.com' not in text: errors.append(f'{name}: fallback de e-mail/atribuição ausente')
+            if 'property="og:title"' not in text or 'property="og:description"' not in text: errors.append(f'{name}: Open Graph básico ausente')
+
+            # Evita links/arquivos internos quebrados no draft.
+            for attr,target in re.findall(r'\b(href|src)="([^"]+)"', text, re.I):
+              if target.startswith(('http://','https://','mailto:','tel:','#','javascript:')):
+                continue
+              clean=urlsplit(target).path
+              if not clean or clean in ('./','../'):
+                continue
+              clean=unquote(clean).lstrip('/')
+              if not Path(clean).exists():
+                errors.append(f'{name}: {attr} interno quebrado -> {target}')
+
+            # Imagem sem alt é uma regressão de acessibilidade/SEO.
+            for img in re.findall(r'<img\b[^>]*>', text, re.I):
+              if not re.search(r'\balt="[^"]+"', img, re.I):
+                errors.append(f'{name}: imagem sem alt descritivo')
+
+            # target blank precisa rel noopener.
+            for tag in re.findall(r'<a\b[^>]*target="_blank"[^>]*>', text, re.I):
+              if 'rel="noopener"' not in tag:
+                errors.append(f'{name}: target=_blank sem rel=noopener')
+
           if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
           if not Path('assets/portal-v2.css').exists(): errors.append('assets/portal-v2.css: ausente')
@@ -56,15 +87,26 @@ jobs:
           for term in required_home:
             if term not in low: errors.append(f'index.html: oferta real ausente: {term}')
 
-          forbidden=[r'english mentoring',r'acompanhamento premium',r'experi[eê]ncia premium',r'sem improviso',r'produto de prateleira',r'enfeite de venda',r'se voc[eê] chegou pelo google',r'prepara[cç][aã]o para entrevista',r'roteiro de respostas',r'constru[cç][aã]o de respostas',r'flu[eê]ncia r[aá]pida',r'm[eé]todo exclusivo',r'transforma[cç][aã]o',r'destravar seu ingl[eê]s',r'dire[cç][aã]o clara',r'presen[cç]a profissional']
+          forbidden=[
+            r'english mentoring',r'acompanhamento premium',r'experi[eê]ncia premium',
+            r'sem improviso',r'produto de prateleira',r'enfeite de venda',
+            r'se voc[eê] chegou pelo google',r'prepara[cç][aã]o para entrevista',
+            r'roteiro de respostas',r'constru[cç][aã]o de respostas',r'flu[eê]ncia r[aá]pida',
+            r'm[eé]todo exclusivo',r'transforma[cç][aã]o',r'destravar seu ingl[eê]s',
+            r'dire[cç][aã]o clara',r'presen[cç]a profissional'
+          ]
           for name,text in pages.items():
             for pattern in forbidden:
               if re.search(pattern,text,re.I): errors.append(f'{name}: linguagem proibida/AI-like ou serviço inventado: {pattern}')
 
           if 'modalidade conversacional começa a partir do b1' not in low: errors.append('index.html: regra B1+ não está explícita')
           if 'a modalidade conversacional é oferecida a partir do b1' not in pages['como-funciona.html'].lower(): errors.append('como-funciona.html: regra B1+ não está explícita')
-          for name in ['ingles-para-devs.html','ingles-para-compliance.html']:
+          for name in ['ingles-para-devs.html','ingles-para-compliance.html','professor-de-ingles-manaus.html']:
             if 'modalidade conversacional é oferecida a partir do b1' not in pages[name].lower(): errors.append(f'{name}: regra B1+ não está explícita')
+
+          if '100% online' not in pages['professor-de-ingles-manaus.html'].lower(): errors.append('Manaus: precisa deixar explícito que o atendimento é online')
+          if 'não. meu atendimento é 100% online.' not in pages['professor-de-ingles-manaus.html'].lower(): errors.append('Manaus: não pode sugerir atendimento presencial')
+
           if "individual:{60:280,90:360,120:430}" not in tool: errors.append('qual-formato.html: preços individuais divergentes')
           if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('qual-formato.html: preços dupla divergentes')
           if "trio:{60:190,90:240,120:280}" not in tool: errors.append('qual-formato.html: preços trio divergentes')
@@ -77,6 +119,7 @@ jobs:
             'portal-dos-alunos.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20Portal%20dos%20Alunos',
             'ingles-para-devs.html':'Interesse%20em%20ingl%C3%AAs%20para%20tecnologia%20-%20site%20V2',
             'ingles-para-compliance.html':'Interesse%20em%20ingl%C3%AAs%20para%20compliance%20-%20site%20V2',
+            'professor-de-ingles-manaus.html':'Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20Manaus',
             'qual-formato.html':'Interesse em aulas de inglês - ferramenta de formatos'
           }
           for name,marker in attribution_markers.items():
@@ -86,4 +129,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — oferta, B1+, mensalidades, atribuição, SEO e anti-AI copy coerentes')
+          print('QA OK — oferta, B1+, mensalidades, atribuição, links, assets, SEO e anti-AI copy coerentes')
