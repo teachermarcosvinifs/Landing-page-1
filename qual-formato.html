@@ -7,13 +7,18 @@
 <meta name="description" content="Compare formatos, carga semanal e mensalidades das aulas online do professor Marcos Vinicius. Ensino regular para todos os níveis e conversação a partir do B1.">
 <link rel="canonical" href="https://teachermarcosvinifs.github.io/Landing-page-1/qual-formato.html">
 <meta name="robots" content="index,follow">
+<meta property="og:title" content="Formatos e valores das aulas de inglês | Professor Marcos Vinicius">
+<meta property="og:description" content="Compare modalidade, formato, carga semanal e mensalidades das aulas online.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://teachermarcosvinifs.github.io/Landing-page-1/qual-formato.html">
+<meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#f6f3ed">
 <link rel="stylesheet" href="assets/site-v2.css">
 </head>
 <body>
 <header><div class="wrap"><nav><a class="brand" href="./">Marcos Vinicius · Professor de inglês</a><div class="navlinks"><a class="nav-cta" href="./">Voltar ao site</a></div></nav></div></header>
 <main class="wrap reading">
-<section class="tool-hero"><div class="eyebrow">Formatos e mensalidades</div><h1>Veja qual formato combina melhor com o que você procura.</h1><p class="lead">São quatro perguntas. No final, você vê a modalidade mais coerente com as respostas, o formato escolhido e a mensalidade correspondente quando a carga semanal já estiver definida.</p><div class="notice">Isso não é teste de nível. Se você não souber seu nível, pode marcar essa opção normalmente.</div></section>
+<section class="tool-hero"><div class="eyebrow">Formatos e mensalidades</div><h1>Veja qual formato combina melhor com o que você procura.</h1><p class="lead">São quatro perguntas. No final, você vê uma referência de modalidade, o formato escolhido e a mensalidade correspondente quando a carga semanal já estiver definida.</p><div class="notice">Isso não é teste de nível. Se você não souber seu nível, pode marcar essa opção normalmente.</div></section>
 <form id="fitForm">
 <section class="question"><h2>1. Como está seu inglês hoje?</h2><div class="options"><div class="option"><input required type="radio" name="level" value="beginner" id="l1"><label for="l1">Estou começando / ainda tenho pouca base</label></div><div class="option"><input type="radio" name="level" value="basic" id="l2"><label for="l2">Já estudei, mas minha base ainda é limitada</label></div><div class="option"><input type="radio" name="level" value="b1plus" id="l3"><label for="l3">Já consigo me comunicar e acredito estar no B1 ou acima</label></div><div class="option"><input type="radio" name="level" value="unknown" id="l4"><label for="l4">Não sei dizer</label></div></div></section>
 <section class="question"><h2>2. O que você procura principalmente?</h2><div class="options"><div class="option"><input required type="radio" name="goal" value="regular" id="g1"><label for="g1">Aprender inglês com ensino regular</label></div><div class="option"><input type="radio" name="goal" value="conversation" id="g2"><label for="g2">Ter mais espaço para falar e trabalhar conversação</label></div><div class="option"><input type="radio" name="goal" value="professional" id="g3"><label for="g3">Estudar inglês pensando também no meu trabalho ou profissão</label></div><div class="option"><input type="radio" name="goal" value="unsure" id="g4"><label for="g4">Ainda não sei qual modalidade faz mais sentido</label></div></div></section>
@@ -21,7 +26,7 @@
 <section class="question"><h2>4. Qual carga semanal você considera?</h2><div class="options"><div class="option"><input required type="radio" name="minutes" value="60" id="m1"><label for="m1">60 minutos por semana</label></div><div class="option"><input type="radio" name="minutes" value="90" id="m2"><label for="m2">90 minutos por semana</label></div><div class="option"><input type="radio" name="minutes" value="120" id="m3"><label for="m3">120 minutos por semana</label></div><div class="option"><input type="radio" name="minutes" value="unknown" id="m4"><label for="m4">Ainda não sei</label></div></div></section>
 <section class="tool-actions"><button class="btn btn-primary" type="submit">Ver opção</button><button class="btn" type="reset" id="resetBtn">Limpar respostas</button></section>
 </form>
-<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" href="./">Voltar para o site</a></div><p class="small">Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos. A modalidade conversacional é oferecida a partir do B1.</p></section>
+<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" id="emailResult">Prefiro e-mail</a><a class="btn" href="./">Voltar para o site</a></div><p class="small">Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos. A modalidade conversacional é oferecida a partir do B1.</p></section>
 </main>
 <footer><div class="wrap">Professor Marcos Vinicius · Aulas de inglês online</div></footer>
 <script>
@@ -29,17 +34,20 @@ const prices={individual:{60:280,90:360,120:430},dupla:{60:220,90:280,120:330},t
 const labels={individual:'Individual',dupla:'Dupla',trio:'Trio',grupo:'Grupo de 4 a 6 pessoas'};
 const form=document.getElementById('fitForm');
 const result=document.getElementById('result');
-form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');let mode='Ensino regular';let copy='Pelas respostas, o ensino regular é a opção mais coerente como ponto de partida.';
-if(goal==='conversation'&&level==='b1plus'){mode='Aulas conversacionais (B1+)';copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. Nesse caso, a modalidade conversacional pode ser adequada.'}
-else if(goal==='conversation'&&level!=='b1plus'){mode='Ensino regular';copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Antes disso, trabalho com ensino regular.'}
-else if(goal==='professional'){mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';copy='A necessidade profissional pode entrar no conteúdo das aulas quando houver vocabulário ou situações específicas da sua área. Isso não exige criar uma modalidade separada.'}
-else if(goal==='unsure'){mode='Ensino regular como referência inicial';copy='Como você ainda está comparando possibilidades, o ensino regular é a referência inicial mais simples. O formato e a carga podem ser definidos separadamente.'}
+form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');let mode='Ensino regular';let copy='O ensino regular trabalha o inglês de forma ampla e atende desde o nível iniciante.';
+if(goal==='conversation'&&level==='b1plus'){mode='Aulas conversacionais (B1+)';copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. A modalidade conversacional pode ser uma opção.'}
+else if(goal==='conversation'&&level!=='b1plus'){mode='Ensino regular';copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Para níveis anteriores, trabalho com ensino regular.'}
+else if(goal==='professional'){mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';copy='O formato principal depende do seu nível. Vocabulário e situações da sua área podem entrar nas aulas quando forem relevantes.'}
+else if(goal==='unsure'){mode='Ensino regular como referência inicial';copy='Se você ainda não sabe qual modalidade escolher, o ensino regular é a referência inicial. Formato e carga semanal podem ser definidos separadamente.'}
 document.getElementById('resultTitle').textContent=mode+' · '+labels[format];document.getElementById('resultCopy').textContent=copy;
 let rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b></div><div class="result-fact"><span>Carga semanal</span><b>${minutes==='unknown'?'Ainda não definida':minutes+' minutos'}</b></div>`;
 if(minutes!=='unknown'){rows+=`<div class="result-fact"><span>Mensalidade</span><b>R$ ${prices[format][minutes]}/mês</b></div>`}else{rows+=`<div class="result-fact"><span>Mensalidade</span><b>Depende da carga semanal</b></div>`}
 document.getElementById('facts').innerHTML=rows;
-const text=`Olá! Vi os formatos no site. Tenho interesse em estudar inglês. Minha preferência ficou em ${labels[format]}${minutes==='unknown'?'':', '+minutes+' minutos por semana'}.`;
-document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+const summary=`${mode}, ${labels[format]}${minutes==='unknown'?'':', '+minutes+' minutos por semana'}`;
+const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}.`;
+document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
+document.getElementById('emailResult').href='mailto:marcosvinifs@gmail.com?subject='+encodeURIComponent('Interesse em aulas de inglês - ferramenta de formatos')+'&body='+encodeURIComponent(text);
+result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
 });
 document.getElementById('resetBtn').addEventListener('click',()=>result.classList.remove('show'));
 </script>
