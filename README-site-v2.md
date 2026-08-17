@@ -21,6 +21,7 @@ Esta branch reconstrói o site sem alterar a produção antes da aprovação.
 - não inventar preparação de entrevista, coaching ou produtos especiais
 - não usar linguagem de marketing artificial como “English Mentoring”, “premium”, “destravar”, “transformação” ou equivalentes
 - tecnologia/compliance entram como contexto de inglês quando realmente necessários
+- aquisição não depende de vídeo: Google/site, ferramenta interativa e peças visuais estáticas são os motores principais de descoberta
 
 ## Antes do merge
 1. revisão visual desktop/mobile
