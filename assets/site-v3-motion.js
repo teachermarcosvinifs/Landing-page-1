@@ -99,7 +99,7 @@
   const revealSelectors=[
     '.section-intro','.offer-line','.split-copy','.fact-list','.context-link',
     '.article-body','.portal-frame','.activity-frame','.portal-shot','.gallery figure','.situation',
-    '.faq details','.final-grid','.question','.result'
+    '.faq details','.final-grid','.question','.result','.professional-visual','.specialty-visual'
   ]
 
   const revealTargets=[...document.querySelectorAll(revealSelectors.join(','))]
