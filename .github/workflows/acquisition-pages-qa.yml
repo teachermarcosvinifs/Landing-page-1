@@ -1,0 +1,107 @@
+name: Acquisition pages QA
+
+on:
+  pull_request:
+    paths:
+      - 'aulas-de-ingles-online-adultos/**'
+      - 'ingles-para-trabalho/**'
+      - 'ingles-para-entrevista/**'
+      - 'conversacao-ingles-adultos/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/acquisition-pages-qa.yml'
+  push:
+    branches:
+      - acquisition-seo-v1
+    paths:
+      - 'aulas-de-ingles-online-adultos/**'
+      - 'ingles-para-trabalho/**'
+      - 'ingles-para-entrevista/**'
+      - 'conversacao-ingles-adultos/**'
+      - 'sitemap.xml'
+      - 'robots.txt'
+      - '.github/workflows/acquisition-pages-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate acquisition pages
+        shell: python
+        run: |
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          import sys
+
+          pages = {
+              'aulas-de-ingles-online-adultos/index.html': 'aulas-de-ingles-online-adultos/',
+              'ingles-para-trabalho/index.html': 'ingles-para-trabalho/',
+              'ingles-para-entrevista/index.html': 'ingles-para-entrevista/',
+              'conversacao-ingles-adultos/index.html': 'conversacao-ingles-adultos/',
+          }
+          base = 'https://teachermarcosvinifs.github.io/Landing-page-1/'
+          errors = []
+
+          class Parser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.hrefs = []
+                  self.canonicals = []
+                  self.has_title = False
+                  self.has_description = False
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if tag == 'a' and attrs.get('href'):
+                      self.hrefs.append(attrs['href'])
+                  if tag == 'link' and attrs.get('rel') == 'canonical' and attrs.get('href'):
+                      self.canonicals.append(attrs['href'])
+                  if tag == 'title':
+                      self.has_title = True
+                  if tag == 'meta' and attrs.get('name') == 'description' and attrs.get('content'):
+                      self.has_description = True
+
+          sitemap = Path('sitemap.xml').read_text(encoding='utf-8')
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+
+          if f'Sitemap: {base}sitemap.xml' not in robots:
+              errors.append('robots.txt não aponta para o sitemap canônico')
+
+          for filename, slug in pages.items():
+              path = Path(filename)
+              if not path.exists():
+                  errors.append(f'arquivo ausente: {filename}')
+                  continue
+              text = path.read_text(encoding='utf-8')
+              parser = Parser()
+              parser.feed(text)
+              expected = base + slug
+
+              if expected not in parser.canonicals:
+                  errors.append(f'{filename}: canonical ausente/incorreto')
+              if expected not in sitemap:
+                  errors.append(f'{filename}: URL ausente do sitemap')
+              if not parser.has_title:
+                  errors.append(f'{filename}: title ausente')
+              if not parser.has_description:
+                  errors.append(f'{filename}: meta description ausente')
+              if not any(h.startswith('https://wa.me/') for h in parser.hrefs):
+                  errors.append(f'{filename}: CTA WhatsApp ausente')
+              if not any(h.startswith('mailto:') for h in parser.hrefs):
+                  errors.append(f'{filename}: fallback por e-mail ausente')
+              if 'application/ld+json' not in text:
+                  errors.append(f'{filename}: structured data ausente')
+              if re.search(r'garant(?:ia|imos)|flu[eê]ncia r[aá]pida|aprova[cç][aã]o garantida', text, re.I):
+                  errors.append(f'{filename}: possível promessa comercial indevida')
+
+          if errors:
+              print('QA FAILED')
+              for error in errors:
+                  print('-', error)
+              sys.exit(1)
+
+          print('QA OK — 4 páginas, sitemap, robots, CTAs e metadados essenciais validados')
