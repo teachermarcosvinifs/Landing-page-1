@@ -122,6 +122,11 @@ jobs:
           if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('qual-formato.html: preços grupo divergentes')
           if 'isso não é teste de nível' not in tool.lower(): errors.append('qual-formato.html: precisa deixar claro que não é teste de nível')
 
+          # Links estáticos podem carregar origem até o contato, sem depender de rastreamento invasivo.
+          if "new URLSearchParams(window.location.search).get('src')" not in tool: errors.append('qual-formato.html: leitura de origem src ausente')
+          for src in ['ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','ig-portal','x-portal']:
+            if src not in tool: errors.append(f'qual-formato.html: origem estática ausente: {src}')
+
           # As antigas artes-dashboard sintéticas davam aparência de site gerado por IA.
           if 'lp-dev-communication.webp' in pages['ingles-para-devs.html']: errors.append('tecnologia: hero sintético antigo voltou a ser usado')
           if 'lp-compliance-communication.webp' in pages['ingles-para-compliance.html']: errors.append('compliance: hero sintético antigo voltou a ser usado')
@@ -142,4 +147,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — oferta, alcance online, preço em segundo momento, B1+, atribuição, links, assets, SEO e anti-AI copy coerentes')
+          print('QA OK — oferta, alcance online, preço em segundo momento, atribuição estática, B1+, links, assets, SEO e anti-AI copy coerentes')
