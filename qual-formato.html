@@ -34,6 +34,17 @@
 <script>
 const prices={individual:{60:280,90:360,120:430},dupla:{60:220,90:280,120:330},trio:{60:190,90:240,120:280},grupo:{60:160,90:210,120:250}};
 const labels={individual:'Individual',dupla:'Dupla',trio:'Trio',grupo:'Grupo de 4 a 6 pessoas'};
+const sourceLabels={
+  'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
+  'x-formatos':'uma publicação no X sobre os formatos das aulas',
+  'wa-formatos':'um Status do WhatsApp sobre os formatos das aulas',
+  'ig-conversacao':'uma publicação no Instagram sobre aulas conversacionais',
+  'x-conversacao':'uma publicação no X sobre aulas conversacionais',
+  'ig-portal':'uma publicação no Instagram sobre o Portal dos Alunos',
+  'x-portal':'uma publicação no X sobre o Portal dos Alunos'
+};
+const sourceKey=new URLSearchParams(window.location.search).get('src');
+const sourceLabel=sourceLabels[sourceKey]||'';
 const form=document.getElementById('fitForm');
 const result=document.getElementById('result');
 const priceReveal=document.getElementById('priceReveal');
@@ -49,7 +60,8 @@ let rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b><
 document.getElementById('facts').innerHTML=rows;
 currentSelection={mode,format,minutes};priceReveal.hidden=true;priceReveal.textContent='';
 const summary=`${mode}, ${labels[format]}${minutes==='unknown'?'':', '+minutes+' minutos por semana'}`;
-const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}.`;
+const sourceSentence=sourceLabel?` Vi a página a partir de ${sourceLabel}.`:'';
+const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}.${sourceSentence}`;
 document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
 document.getElementById('emailResult').href='mailto:marcosvinifs@gmail.com?subject='+encodeURIComponent('Interesse em aulas de inglês - ferramenta de formatos')+'&body='+encodeURIComponent(text);
 result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
