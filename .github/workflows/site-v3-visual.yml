@@ -1,0 +1,115 @@
+name: Site V3 Visual QA
+
+on:
+  push:
+    branches: [site-v3-redesign]
+    paths:
+      - 'index.html'
+      - 'qual-formato.html'
+      - 'professor-de-ingles-manaus.html'
+      - 'como-funciona.html'
+      - 'portal-dos-alunos.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'assets/**'
+      - '.github/workflows/site-v3-visual.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'qual-formato.html'
+      - 'professor-de-ingles-manaus.html'
+      - 'como-funciona.html'
+      - 'portal-dos-alunos.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'assets/**'
+      - '.github/workflows/site-v3-visual.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python3 -m http.server 8000 >/tmp/site-v3-http.log 2>&1 &
+          sleep 2
+      - name: Render all pages on desktop and mobile
+        run: |
+          mkdir -p visual-artifacts
+          cat > visual-check.mjs <<'EOF'
+          import { chromium, devices } from 'playwright';
+          import fs from 'fs';
+
+          const browser = await chromium.launch({headless:true});
+          const pages = [
+            ['home','/index.html'],
+            ['formatos','/qual-formato.html'],
+            ['manaus','/professor-de-ingles-manaus.html'],
+            ['como-funciona','/como-funciona.html'],
+            ['portal','/portal-dos-alunos.html'],
+            ['tecnologia','/ingles-para-devs.html'],
+            ['compliance','/ingles-para-compliance.html']
+          ];
+          const profiles = [
+            ['desktop',{viewport:{width:1440,height:900}}],
+            ['mobile',{...devices['iPhone 13']}]
+          ];
+          const report=[];
+          for (const [profile,opts] of profiles) {
+            const context=await browser.newContext(opts);
+            for (const [name,path] of pages) {
+              const page=await context.newPage();
+              const consoleErrors=[];
+              page.on('console',m=>{ if(m.type()==='error') consoleErrors.push(m.text()); });
+              page.on('pageerror',e=>consoleErrors.push(String(e)));
+              await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
+              await page.screenshot({path:`visual-artifacts/${name}-${profile}.png`,fullPage:true});
+              const data=await page.evaluate(()=>{
+                const body=document.body;
+                const html=document.documentElement;
+                const overflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
+                const actionable=[...document.querySelectorAll('a.btn,button,nav a')];
+                const tiny=actionable.filter(el=>{
+                  const r=el.getBoundingClientRect();
+                  return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
+                }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
+                const h1=document.querySelector('h1')?.getBoundingClientRect();
+                const nav=document.querySelector('nav')?.getBoundingClientRect();
+                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,h1:h1?{w:Math.round(h1.width),h:Math.round(h1.height)}:null,nav:nav?{w:Math.round(nav.width),h:Math.round(nav.height)}:null,documentHeight:Math.round(html.scrollHeight)};
+              });
+              report.push({name,profile,...data,consoleErrors});
+              await page.close();
+            }
+            await context.close();
+          }
+          await browser.close();
+          fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
+          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0);
+          console.log(JSON.stringify(report,null,2));
+          if(failures.length){
+            console.error('VISUAL QA FAILED: overflow, console error or undersized target detected');
+            process.exit(1);
+          }
+          console.log('VISUAL QA OK — all 7 pages checked on desktop/mobile');
+          EOF
+          node visual-check.mjs
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-v3-visual-evidence
+          path: visual-artifacts/
+          retention-days: 14
