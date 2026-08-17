@@ -1,5 +1,14 @@
 (()=>{
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const sourceLabels={
+    'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
+    'x-formatos':'uma publicação no X sobre os formatos das aulas',
+    'wa-formatos':'um Status do WhatsApp sobre os formatos das aulas',
+    'ig-conversacao':'uma publicação no Instagram sobre aulas conversacionais',
+    'x-conversacao':'uma publicação no X sobre aulas conversacionais',
+    'ig-portal':'uma publicação no Instagram sobre o Portal dos Alunos',
+    'x-portal':'uma publicação no X sobre o Portal dos Alunos'
+  }
 
   const setupMobileMenu=()=>{
     const nav=document.querySelector('.site-nav')
@@ -58,18 +67,19 @@
 
   const applySourceAttribution=()=>{
     const sourceKey=new URLSearchParams(window.location.search).get('src')
-    if(!sourceKey)return
-    const sourceLabels={
-      'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
-      'x-formatos':'uma publicação no X sobre os formatos das aulas',
-      'wa-formatos':'um Status do WhatsApp sobre os formatos das aulas',
-      'ig-conversacao':'uma publicação no Instagram sobre aulas conversacionais',
-      'x-conversacao':'uma publicação no X sobre aulas conversacionais',
-      'ig-portal':'uma publicação no Instagram sobre o Portal dos Alunos',
-      'x-portal':'uma publicação no X sobre o Portal dos Alunos'
-    }
     const sourceLabel=sourceLabels[sourceKey]
     if(!sourceLabel)return
+
+    document.querySelectorAll('a[href]').forEach(link=>{
+      const raw=link.getAttribute('href')||''
+      if(!raw||raw.startsWith('#')||raw.startsWith('mailto:')||raw.startsWith('tel:')||raw.startsWith('javascript:'))return
+      try{
+        const url=new URL(raw,window.location.href)
+        if(url.origin!==window.location.origin)return
+        url.searchParams.set('src',sourceKey)
+        link.href=url.toString()
+      }catch{}
+    })
 
     document.querySelectorAll('a[href^="https://wa.me/5592985273076"]').forEach(link=>{
       try{
