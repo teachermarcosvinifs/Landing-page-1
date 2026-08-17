@@ -13,6 +13,7 @@ on:
       - 'ingles-para-compliance.html'
       - 'assets/site-v3-black.css'
       - 'assets/home-v3.css'
+      - 'assets/professional-visuals.css'
       - 'assets/site-v3-motion.js'
       - 'sitemap.xml'
       - 'robots.txt'
@@ -43,6 +44,8 @@ jobs:
           pages={name:Path(name).read_text(encoding='utf-8') for name in names}
           home=pages['index.html']; tool=pages['qual-formato.html']; portal=pages['portal-dos-alunos.html']
           css=Path('assets/site-v3-black.css').read_text(encoding='utf-8')
+          home_css=Path('assets/home-v3.css').read_text(encoding='utf-8')
+          professional_css=Path('assets/professional-visuals.css').read_text(encoding='utf-8')
           motion=Path('assets/site-v3-motion.js').read_text(encoding='utf-8')
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           robots=Path('robots.txt').read_text(encoding='utf-8')
@@ -101,6 +104,8 @@ jobs:
           if '<h1>Professor de Inglês para adolescentes e adultos</h1>' not in home: errors.append('index.html: H1 aprovado pelo professor foi alterado')
           promise='Adquira fluência com acompanhamento profissional e estrutura completa'
           if promise not in home: errors.append('index.html: promessa principal aprovada pelo professor foi alterada')
+          pricing_contact='Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp'
+          if pricing_contact not in home: errors.append('index.html: orientação de valores pelo WhatsApp ausente')
           if '<h1>Inglês para desenvolvedores e programadores</h1>' not in pages['ingles-para-devs.html']:
             errors.append('ingles-para-devs.html: H1 precisa manter desenvolvedores e programadores explícitos')
           if '<h1>Inglês para profissionais de Compliance</h1>' not in pages['ingles-para-compliance.html']:
@@ -110,6 +115,15 @@ jobs:
           hero=home.split('<section class="hero">',1)[-1].split('</section>',1)[0]
           if 'Falar pelo WhatsApp' not in hero or 'Preencher formulário' not in hero: errors.append('index.html: hero precisa manter WhatsApp + formulário')
           if 'Comparar formatos' in hero: errors.append('index.html: comparar formatos não deve competir no hero')
+          if '.hero-portrait::after' in home_css: errors.append('assets/home-v3.css: linha decorativa ao lado do retrato voltou')
+
+          dev=pages['ingles-para-devs.html']; compliance=pages['ingles-para-compliance.html']
+          for marker in ['Participar de calls e reuniões internacionais','Trabalhar com equipes e empresas internacionais','class="professional-visual dev-visual"']:
+            if marker not in dev: errors.append(f'ingles-para-devs.html: objetivo/visual essencial ausente -> {marker}')
+          if 'class="professional-visual compliance-visual"' not in compliance:
+            errors.append('ingles-para-compliance.html: visual profissional específico ausente')
+          if 'prefers-reduced-motion:reduce' not in professional_css.replace(' ','').lower():
+            errors.append('assets/professional-visuals.css: movimento sem fallback reduced-motion')
 
           forbidden=[
             r'english mentoring',r'premium',r'destravar',r'transforma[cç][aã]o',
@@ -140,13 +154,11 @@ jobs:
           if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir brasileiros no exterior')
 
           if '<table class="price-table">' in tool: errors.append('qual-formato.html: tabela pública de preços voltou')
-          if 'id="revealPrice"' not in tool or 'Ver mensalidade desta opção' not in tool: errors.append('qual-formato.html: controle de revelação ausente')
-          if 'id="priceReveal"' not in tool or 'hidden' not in tool: errors.append('qual-formato.html: área de preço precisa iniciar oculta')
-          if 'Mensalidade desta opção: R$ ${prices[format][minutes]}/mês`' not in tool: errors.append('qual-formato.html: revelação contextual de mensalidade ausente')
-          if "individual:{60:280,90:360,120:430}" not in tool: errors.append('preços individuais divergentes')
-          if "dupla:{60:220,90:280,120:330}" not in tool: errors.append('preços dupla divergentes')
-          if "trio:{60:190,90:240,120:280}" not in tool: errors.append('preços trio divergentes')
-          if "grupo:{60:160,90:210,120:250}" not in tool: errors.append('preços grupo divergentes')
+          if 'const prices=' in tool or 'id="revealPrice"' in tool or 'id="priceReveal"' in tool:
+            errors.append('qual-formato.html: preço automático não deve ser exposto pela ferramenta')
+          if re.search(r'R\$\s*\d',tool): errors.append('qual-formato.html: valor monetário público retornou')
+          if pricing_contact not in tool: errors.append('qual-formato.html: deve encaminhar valores, planos e cargas para WhatsApp')
+          if 'Consultar pelo WhatsApp' not in tool: errors.append('qual-formato.html: CTA de consulta pelo WhatsApp ausente')
           if 'informe seu nível, objetivo, formato e carga semanal' not in tool.lower(): errors.append('qual-formato.html: explicação direta da ferramenta ausente')
           if 'isso não é teste de nível' in tool.lower(): errors.append('qual-formato.html: formulação negativa antiga voltou')
 
@@ -170,4 +182,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — V3 preserves approved promise, audience, Dev/Compliance specialization, SEO, B1+, delayed pricing, attribution, privacy and editorial rules')
+          print('QA OK — V3 preserves approved promise, direct WhatsApp pricing, Dev/Compliance specialization, SEO, B1+, attribution, privacy and editorial rules')
