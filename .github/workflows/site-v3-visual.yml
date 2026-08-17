@@ -2,7 +2,7 @@ name: Site V3 Visual QA
 
 on:
   push:
-    branches: [site-v3-redesign]
+    branches: [main, site-v3-redesign]
     paths:
       - 'index.html'
       - 'qual-formato.html'
