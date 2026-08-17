@@ -4,11 +4,19 @@ on:
   push:
     branches: [site-v3-redesign]
     paths:
+      - 'index.html'
       - 'qual-formato.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'assets/site-v3-motion.js'
       - '.github/workflows/site-v3-functional.yml'
   pull_request:
     paths:
+      - 'index.html'
       - 'qual-formato.html'
+      - 'ingles-para-devs.html'
+      - 'ingles-para-compliance.html'
+      - 'assets/site-v3-motion.js'
       - '.github/workflows/site-v3-functional.yml'
 
 permissions:
@@ -32,7 +40,7 @@ jobs:
         run: |
           python3 -m http.server 8000 >/tmp/site-v3-functional-http.log 2>&1 &
           sleep 2
-      - name: Test real format-finder interactions
+      - name: Test format finder, direct attribution and contact flows
         run: |
           cat > functional-check.mjs <<'EOF'
           import { chromium } from 'playwright';
@@ -54,7 +62,7 @@ jobs:
           assert.equal(await page.locator('#resultTitle').textContent(), 'Aulas conversacionais (B1+) · Individual');
           assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must remain hidden after result');
           const waHref = await page.locator('#waResult').getAttribute('href');
-          assert.ok(decodeURIComponent(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'WhatsApp must preserve ?src attribution');
+          assert.ok(decodeURIComponent(waHref).includes('uma publicação no Instagram sobre os formatos das aulas'), 'Format result WhatsApp must preserve ?src attribution');
           await page.locator('#revealPrice').click();
           assert.equal(await page.locator('#priceReveal').isVisible(), true);
           assert.equal((await page.locator('#priceReveal').textContent()).trim(), 'Mensalidade desta opção: R$ 280/mês');
@@ -84,7 +92,19 @@ jobs:
           assert.ok(unknownPrice.includes('A mensalidade depende da carga semanal'));
           assert.ok(!/R\$\s*\d/.test(unknownPrice), 'Unknown load must not show an invented price');
 
+          // Case 4: direct homepage WhatsApp must preserve source attribution too.
+          await page.goto('http://127.0.0.1:8000/index.html?src=ig-portal',{waitUntil:'networkidle'});
+          const directWa = await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href');
+          assert.ok(decodeURIComponent(directWa).includes('uma publicação no Instagram sobre o Portal dos Alunos'), 'Direct homepage WhatsApp must preserve ?src attribution');
+          assert.equal(await page.locator('a[href^="mailto:"]').count(), 0, 'Homepage must not expose email');
+          assert.ok(await page.locator('.hero a[href*="docs.google.com/forms"]').count() >= 1, 'Homepage must expose the form alongside WhatsApp');
+
+          // Case 5: an unknown source must not inject invented attribution.
+          await page.goto('http://127.0.0.1:8000/index.html?src=unknown-source',{waitUntil:'networkidle'});
+          const unknownWa = decodeURIComponent(await page.locator('.hero a[href^="https://wa.me/5592985273076"]').first().getAttribute('href'));
+          assert.ok(!unknownWa.includes('Vi esta página a partir de'), 'Unknown source must not create invented attribution');
+
           await browser.close();
-          console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price and ?src attribution verified by visible user interactions');
+          console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price, direct/form contact and source attribution verified by visible user interactions');
           EOF
           node functional-check.mjs
