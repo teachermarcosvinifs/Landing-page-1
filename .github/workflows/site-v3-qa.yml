@@ -47,6 +47,8 @@ jobs:
           robots=Path('robots.txt').read_text(encoding='utf-8')
           base='https://teachermarcosvinifs.github.io/Landing-page-1/'
           canonicals={name:(base if name=='index.html' else base+name) for name in names}
+          form_marker='docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+          email_pattern=re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I)
 
           for name,text in pages.items():
             url=canonicals[name]
@@ -60,7 +62,8 @@ jobs:
               errors.append(f'{name}: stylesheet visual anterior ainda referenciado')
             if 'name="theme-color" content="#030405"' not in text: errors.append(f'{name}: theme-color não acompanha o novo fundo')
             if 'wa.me/5592985273076' not in text: errors.append(f'{name}: CTA WhatsApp ausente')
-            if 'marcosvinifs@gmail.com' not in text: errors.append(f'{name}: fallback de e-mail ausente')
+            if form_marker not in text: errors.append(f'{name}: caminho pelo formulário ausente')
+            if email_pattern.search(text) or 'mailto:' in text.lower(): errors.append(f'{name}: endereço de e-mail não deve ser exposto na V3')
             if 'property="og:title"' not in text or 'property="og:description"' not in text: errors.append(f'{name}: Open Graph básico ausente')
             if len(re.findall(r'<h1\b',text,re.I)) != 1: errors.append(f'{name}: precisa ter exatamente um H1')
 
@@ -90,10 +93,14 @@ jobs:
           if 'application/ld+json' not in home: errors.append('index.html: dados estruturados ausentes')
           if 'Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml' not in robots: errors.append('robots.txt: sitemap canônico ausente')
 
-          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','tecnologia','compliance']
+          required_home=['individual','dupla','trio','grupo','b1','portal dos alunos','brasileiros','exterior','tecnologia','compliance','adolescentes','adultos']
           low=home.lower()
           for term in required_home:
             if term not in low: errors.append(f'index.html: oferta/alcance real ausente: {term}')
+          if '<h1>Professor de Inglês para adolescentes e adultos</h1>' not in home: errors.append('index.html: H1 aprovado pelo professor foi alterado')
+          hero=home.split('<section class="hero">',1)[-1].split('</section>',1)[0]
+          if 'Falar pelo WhatsApp' not in hero or 'Preencher formulário' not in hero: errors.append('index.html: hero precisa manter WhatsApp + formulário')
+          if 'Comparar formatos' in hero: errors.append('index.html: comparar formatos não deve competir no hero')
 
           forbidden=[
             r'english mentoring',r'premium',r'destravar',r'transforma[cç][aã]o',
@@ -118,7 +125,8 @@ jobs:
 
           if 'modalidade conversacional começa a partir do b1' not in low: errors.append('index.html: regra B1+ não está explícita')
           for name in ['como-funciona.html','ingles-para-devs.html','ingles-para-compliance.html']:
-            if 'modalidade conversacional é oferecida a partir do b1' not in pages[name].lower(): errors.append(f'{name}: regra B1+ não está explícita')
+            page_low=pages[name].lower()
+            if 'b1' not in page_low or 'conversacional' not in page_low: errors.append(f'{name}: regra B1+ não está explícita')
 
           if '"brasileiros no exterior"' not in low: errors.append('index.html: JSON-LD precisa refletir brasileiros no exterior')
 
@@ -152,4 +160,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — professional-satellite V3 preserves offer, SEO, B1+, delayed pricing, attribution, privacy and editorial punctuation rules')
+          print('QA OK — V3 preserves audience, offer, SEO, B1+, delayed pricing, attribution, privacy, contact paths and editorial punctuation rules')
