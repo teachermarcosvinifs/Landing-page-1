@@ -40,14 +40,15 @@ jobs:
 
           const browser = await chromium.launch({headless:true});
           const page = await browser.newPage({viewport:{width:1280,height:900}});
+          const choose = async id => page.locator(`label[for="${id}"]`).click();
 
           // Case 1: B1+ + conversation + individual + 60 min + attributed source.
           await page.goto('http://127.0.0.1:8000/qual-formato.html?src=ig-formatos',{waitUntil:'networkidle'});
           assert.equal(await page.locator('#priceReveal').isHidden(), true, 'Price must start hidden');
-          await page.locator('#l3').check();
-          await page.locator('#g2').check();
-          await page.locator('#f1').check();
-          await page.locator('#m1').check();
+          await choose('l3');
+          await choose('g2');
+          await choose('f1');
+          await choose('m1');
           await page.locator('#fitForm').evaluate(form => form.requestSubmit());
           await page.locator('#result.show').waitFor();
           assert.equal(await page.locator('#resultTitle').textContent(), 'Aulas conversacionais (B1+) · Individual');
@@ -60,10 +61,10 @@ jobs:
 
           // Case 2: beginner asking for conversation must not be presented as conversation class.
           await page.goto('http://127.0.0.1:8000/qual-formato.html',{waitUntil:'networkidle'});
-          await page.locator('#l1').check();
-          await page.locator('#g2').check();
-          await page.locator('#f1').check();
-          await page.locator('#m1').check();
+          await choose('l1');
+          await choose('g2');
+          await choose('f1');
+          await choose('m1');
           await page.locator('#fitForm').evaluate(form => form.requestSubmit());
           await page.locator('#result.show').waitFor();
           assert.equal(await page.locator('#resultTitle').textContent(), 'Ensino regular · Individual');
@@ -72,10 +73,10 @@ jobs:
 
           // Case 3: unknown weekly load must never invent a price.
           await page.goto('http://127.0.0.1:8000/qual-formato.html',{waitUntil:'networkidle'});
-          await page.locator('#l4').check();
-          await page.locator('#g4').check();
-          await page.locator('#f4').check();
-          await page.locator('#m4').check();
+          await choose('l4');
+          await choose('g4');
+          await choose('f4');
+          await choose('m4');
           await page.locator('#fitForm').evaluate(form => form.requestSubmit());
           await page.locator('#result.show').waitFor();
           await page.locator('#revealPrice').click();
@@ -84,6 +85,6 @@ jobs:
           assert.ok(!/R\$\s*\d/.test(unknownPrice), 'Unknown load must not show an invented price');
 
           await browser.close();
-          console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price and ?src attribution verified by interaction');
+          console.log('FUNCTIONAL QA OK — B1+ rule, delayed pricing, exact price and ?src attribution verified by visible user interactions');
           EOF
           node functional-check.mjs
