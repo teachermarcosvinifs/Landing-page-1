@@ -19,7 +19,7 @@
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-<header class="site-header"><div class="wrap"><nav class="site-nav" aria-label="Navegação principal"><a class="brand" href="./"><strong>Marcos Vinicius</strong><span>Professor de inglês · aulas online</span></a><div class="nav-links"><a href="./">Voltar ao site</a><a class="nav-contact" href="https://wa.me/5592985273076?text=Ol%C3%A1%21%20Vi%20a%20ferramenta%20de%20formatos%20e%20tenho%20interesse%20em%20estudar%20ingl%C3%AAs." target="_blank" rel="noopener">Entrar em contato</a></div></nav></div></header>
+<header class="site-header"><div class="wrap"><nav class="site-nav" aria-label="Navegação principal"><a class="brand" href="./"><strong>Marcos Vinicius</strong><span>Professor de inglês · aulas online</span></a><div class="nav-links"><a href="./">Voltar ao site</a><a class="nav-contact" href="https://wa.me/5592985273076?text=Ol%C3%A1%21%20Vi%20a%20ferramenta%20de%20formatos%20e%20tenho%20interesse%20em%20estudar%20ingl%C3%AAs" target="_blank" rel="noopener">Entrar em contato</a></div></nav></div></header>
 
 <main id="conteudo" class="tool-main">
 <section class="tool-hero"><p class="kicker">Formatos das aulas</p><h1>Individual, dupla, trio ou grupo?</h1><p class="lead">Você pode comparar primeiro as opções e, se quiser, responder quatro perguntas. A ferramenta organiza a escolha; isso não é teste de nível</p></section>
@@ -36,10 +36,10 @@
 <section class="tool-actions"><button class="btn btn-primary" type="submit">Ver opção</button><button class="btn" type="reset" id="resetBtn">Limpar respostas</button></section>
 </form>
 
-<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><button class="btn" type="button" id="revealPrice">Ver mensalidade desta opção</button><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" id="emailResult">Prefiro e-mail</a></div><div id="priceReveal" class="notice" hidden></div><p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p></section>
+<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><div class="tool-actions"><button class="btn" type="button" id="revealPrice">Ver mensalidade desta opção</button><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Tenho interesse</a><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=header" target="_blank" rel="noopener">Preencher formulário</a></div><div id="priceReveal" class="notice" hidden></div><p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p></section>
 </main>
 
-<footer class="site-footer"><div class="tool-main footer-row"><span>Professor Marcos Vinicius · aulas de inglês online</span><a href="mailto:marcosvinifs@gmail.com?subject=Interesse%20em%20aulas%20de%20ingl%C3%AAs%20-%20ferramenta%20de%20formatos">marcosvinifs@gmail.com</a></div></footer>
+<footer class="site-footer"><div class="tool-main footer-row"><span>Professor Marcos Vinicius · aulas de inglês online</span><a href="./">Página inicial</a></div></footer>
 <script>
 const prices={individual:{60:280,90:360,120:430},dupla:{60:220,90:280,120:330},trio:{60:190,90:240,120:280},grupo:{60:160,90:210,120:250}};
 const labels={individual:'Individual',dupla:'Dupla',trio:'Trio',grupo:'Grupo de 4 a 6 pessoas'};
@@ -72,7 +72,6 @@ const summary=`${mode}, ${labels[format]}${minutes==='unknown'?'':', '+minutes+'
 const sourceSentence=sourceLabel?` Vi a página a partir de ${sourceLabel}.`:'';
 const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}.${sourceSentence}`;
 document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
-document.getElementById('emailResult').href='mailto:marcosvinifs@gmail.com?subject='+encodeURIComponent('Interesse em aulas de inglês - ferramenta de formatos')+'&body='+encodeURIComponent(text);
 result.classList.add('show');result.classList.add('is-visible');result.scrollIntoView({behavior:'smooth',block:'start'});
 });
 revealPrice.addEventListener('click',()=>{if(!currentSelection)return;const {format,minutes}=currentSelection;priceReveal.hidden=false;if(minutes==='unknown'){priceReveal.textContent='A mensalidade depende da carga semanal. Escolha 60, 90 ou 120 minutos por semana para ver o valor exato';return;}priceReveal.textContent=`Mensalidade desta opção: R$ ${prices[format][minutes]}/mês`;});
