@@ -29,11 +29,18 @@
     const count=carousel.querySelector('[data-count]')
     if(slides.length<2)return
 
+    dots.forEach(dot=>{
+      dot.style.width='36px'
+      dot.style.height='36px'
+      dot.style.border='0'
+      dot.style.backgroundClip='content-box'
+    })
+
     let index=0
     let timer=null
     const delay=Number(carousel.dataset.autoplay||6500)
 
-    const render=(nextIndex,focusDot=false)=>{
+    const render=nextIndex=>{
       index=(nextIndex+slides.length)%slides.length
       slides.forEach((slide,i)=>{
         const active=i===index
@@ -44,9 +51,9 @@
         const active=i===index
         dot.classList.toggle('is-active',active)
         dot.setAttribute('aria-current',active?'true':'false')
+        dot.style.padding=active?'13px 4px':'13px'
       })
       if(count)count.textContent=`${index+1} / ${slides.length}`
-      if(focusDot && dots[index])dots[index].focus()
     }
 
     const stop=()=>{if(timer){window.clearInterval(timer);timer=null}}
