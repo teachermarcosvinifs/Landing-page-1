@@ -1,108 +1,125 @@
-.professional-visual.cinematic-reveal,.specialty-visual.cinematic-reveal{
+/* Production B — Spatial Frame Orbit
+   One sharp photograph plane. Spatial depth is produced only by temporary geometry
+   and controlled perspective on the frame itself. */
+.spatial-orbit-target{
   isolation:isolate;
-  transform-style:preserve-3d;
+  overflow:visible;
   transform:none;
+  transform-style:preserve-3d;
+  transform-origin:center;
   transition:none;
 }
-
-.professional-visual.cinematic-reveal>img,.specialty-visual.cinematic-reveal>img{
-  filter:none;
-  transform:none;
-  transition:none;
-}
-
-.cinematic-reveal.motion-pending{
-  opacity:0;
-  clip-path:inset(0 100% 0 0 round 16px);
-  transform:perspective(1500px) translate3d(52px,14px,-78px) rotateY(-5.2deg) scale(.94);
-}
-
-.cinematic-reveal .motion-reveal-layer{
-  position:absolute;
-  inset:-1px;
-  width:calc(100% + 2px);
-  height:calc(100% + 2px);
-  object-fit:cover;
-  pointer-events:none;
-  user-select:none;
-  opacity:0;
-  z-index:1;
-  transform-style:preserve-3d;
-}
-
-.cinematic-reveal .motion-reveal-mid{z-index:1}
-.cinematic-reveal .motion-reveal-near{z-index:2}
-
-.cinematic-reveal.dev-visual .motion-reveal-mid{
-  -webkit-mask-image:radial-gradient(ellipse 76% 76% at 62% 58%,#000 36%,rgba(0,0,0,.95) 58%,transparent 84%);
-  mask-image:radial-gradient(ellipse 76% 76% at 62% 58%,#000 36%,rgba(0,0,0,.95) 58%,transparent 84%);
-}
-.cinematic-reveal.dev-visual .motion-reveal-near{
-  -webkit-mask-image:radial-gradient(ellipse 52% 58% at 68% 70%,#000 25%,rgba(0,0,0,.92) 50%,transparent 78%);
-  mask-image:radial-gradient(ellipse 52% 58% at 68% 70%,#000 25%,rgba(0,0,0,.92) 50%,transparent 78%);
-}
-.cinematic-reveal.compliance-visual .motion-reveal-mid{
-  -webkit-mask-image:radial-gradient(ellipse 80% 72% at 54% 62%,#000 35%,rgba(0,0,0,.95) 57%,transparent 85%);
-  mask-image:radial-gradient(ellipse 80% 72% at 54% 62%,#000 35%,rgba(0,0,0,.95) 57%,transparent 85%);
-}
-.cinematic-reveal.compliance-visual .motion-reveal-near{
-  -webkit-mask-image:radial-gradient(ellipse 60% 58% at 55% 70%,#000 24%,rgba(0,0,0,.9) 50%,transparent 78%);
-  mask-image:radial-gradient(ellipse 60% 58% at 55% 70%,#000 24%,rgba(0,0,0,.9) 50%,transparent 78%);
-}
-
-.cinematic-reveal .motion-reveal-sweep{
-  position:absolute;
-  z-index:4;
-  top:-15%;
-  bottom:-15%;
-  left:-36%;
-  width:22%;
-  opacity:0;
-  transform:skewX(-12deg);
-  background:linear-gradient(90deg,transparent,rgba(216,242,250,.20),rgba(255,255,255,.34),rgba(152,223,245,.09),transparent);
-  mix-blend-mode:screen;
-  pointer-events:none;
-}
-
-.cinematic-reveal.motion-running{
-  will-change:transform,clip-path,opacity;
-}
-.cinematic-reveal.motion-running>img{
-  will-change:transform,filter;
-}
-
-/* The finished frame is deliberately pristine: only the original photo remains. */
-.cinematic-reveal.reveal-complete,
-.cinematic-reveal.reveal-complete.reveal-target,
-.cinematic-reveal.reveal-complete.reveal-target.is-visible.media-ready{
-  opacity:1!important;
-  clip-path:none!important;
-  transform:none!important;
-  transition:none!important;
-}
-.cinematic-reveal.reveal-complete>img{
+.spatial-orbit-target>img{
+  position:relative;
+  z-index:0;
+  border-radius:inherit;
+  clip-path:inset(0 round 16px);
   filter:none!important;
-  transform:none!important;
+  opacity:1!important;
+  transform:translate3d(0,0,18px) scale(1.14);
   transition:none!important;
-  will-change:auto!important;
 }
-.cinematic-reveal.reveal-complete .motion-reveal-layer,
-.cinematic-reveal.reveal-complete .motion-reveal-sweep{
-  display:none!important;
+
+/* Neutralize the older pointer/scroll visual output on these exact production targets. */
+.spatial-orbit-target.is-motion-active{
+  border-color:var(--line-strong);
+  box-shadow:0 28px 70px rgba(0,0,0,.38);
+}
+.spatial-orbit-target.is-motion-active>img{filter:none!important}
+.spatial-orbit-target.reveal-target,
+.spatial-orbit-target.reveal-target.is-visible.media-ready{
+  opacity:1;
+  clip-path:none;
+  transform:none;
+  transition:none;
+}
+
+/* Temporary geometry. No image clone is ever created. */
+.spatial-orbit-target .orbit-frame{
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  border:1px solid rgba(121,215,239,.34);
+  border-radius:20px;
+  opacity:0;
+  pointer-events:none;
+  transform-style:preserve-3d;
+  box-shadow:0 0 34px rgba(88,190,222,.06);
+}
+.spatial-orbit-target .orbit-frame.f1{border-color:rgba(153,229,248,.52)}
+.spatial-orbit-target .orbit-frame.f2{border-color:rgba(110,164,255,.34)}
+.spatial-orbit-target .orbit-frame.f3{border-color:rgba(154,118,255,.24)}
+.spatial-orbit-target .orbit-rail{
+  position:absolute;
+  z-index:8;
+  left:16%;
+  width:68%;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(158,231,249,.76),rgba(255,255,255,.88),rgba(144,190,255,.56),transparent);
+}
+.spatial-orbit-target .orbit-rail.top{top:-18px}
+.spatial-orbit-target .orbit-rail.bottom{bottom:-18px}
+.spatial-orbit-target .orbit-node{
+  position:absolute;
+  z-index:9;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  opacity:0;
+  pointer-events:none;
+  background:#a4e9fa;
+  box-shadow:0 0 18px rgba(116,220,247,.82);
+}
+.spatial-orbit-target .orbit-node.n1{left:-13px;top:18%}
+.spatial-orbit-target .orbit-node.n2{right:-13px;bottom:20%}
+.spatial-orbit-target .orbit-halo{
+  position:absolute;
+  z-index:-2;
+  inset:-30px;
+  border:1px solid rgba(124,209,233,.13);
+  border-radius:32px;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* The final state restores the normal production frame. */
+.spatial-orbit-target.orbit-complete{
+  overflow:hidden;
+  transform:none;
+  box-shadow:0 28px 70px rgba(0,0,0,.38);
+}
+.spatial-orbit-target.orbit-complete>img{
+  filter:none!important;
+  opacity:1!important;
+  transform:translate3d(0,0,18px) scale(1.14);
 }
 
 @media(max-width:640px){
-  .cinematic-reveal.motion-pending{clip-path:inset(0 100% 0 0 round 12px)}
+  .spatial-orbit-target>img{clip-path:inset(0 round 12px)}
+  .spatial-orbit-target .orbit-frame{border-radius:16px}
+  .spatial-orbit-target .orbit-rail.top{top:-10px}
+  .spatial-orbit-target .orbit-rail.bottom{bottom:-10px}
+  .spatial-orbit-target .orbit-node.n1{left:-7px}
+  .spatial-orbit-target .orbit-node.n2{right:-7px}
+  .spatial-orbit-target .orbit-halo{inset:-14px;border-radius:20px}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .professional-visual.cinematic-reveal,.specialty-visual.cinematic-reveal,
-  .professional-visual.cinematic-reveal>img,.specialty-visual.cinematic-reveal>img{
-    opacity:1!important;
-    clip-path:none!important;
+  .spatial-orbit-target{
+    overflow:hidden!important;
     transform:none!important;
-    filter:none!important;
     transition:none!important;
   }
-  .cinematic-reveal .motion-reveal-layer,.cinematic-reveal .motion-reveal-sweep{display:none!important}
+  .spatial-orbit-target>img{
+    filter:none!important;
+    opacity:1!important;
+    transform:translate3d(0,0,18px) scale(1.14)!important;
+    transition:none!important;
+  }
+  .spatial-orbit-target .orbit-frame,
+  .spatial-orbit-target .orbit-rail,
+  .spatial-orbit-target .orbit-node,
+  .spatial-orbit-target .orbit-halo{display:none!important}
 }
