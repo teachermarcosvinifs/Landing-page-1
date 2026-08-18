@@ -8,11 +8,15 @@
 
 .professional-focus{background:#040506}
 .specialty-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
-.specialty-feature{padding:28px 0 8px;border-top:1px solid var(--line-strong)}
+.specialty-feature{padding:28px 0 8px;border-top:1px solid var(--line-strong);min-width:0}
 .specialty-label{margin:0 0 14px;color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.085em;text-transform:uppercase}
-.specialty-feature h3{font-size:clamp(27px,3vw,36px);line-height:1.08;max-width:16ch;margin-bottom:17px}
+.specialty-feature h3{font-size:clamp(28px,2.45vw,34px);line-height:1.08;max-width:none;margin-bottom:17px;text-wrap:balance}
 .specialty-feature>p:not(.specialty-label):not(.specialty-topics){color:var(--muted);font-size:18px;max-width:590px;margin:0 0 18px}
 .specialty-topics{color:var(--ink-soft);font-size:14px;line-height:1.6;margin:0 0 22px}
+.specialty-action{display:inline-flex;align-items:center;gap:14px;width:fit-content;max-width:100%;padding:12px 15px;border:1px solid var(--line-strong);border-radius:3px;background:#090b0d;text-decoration:none;line-height:1.35;transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease}
+.specialty-action::after{content:'→';font-size:18px;line-height:1;color:var(--accent-strong);transition:transform .18s ease}
+.specialty-action:hover{color:var(--ink);background:#151a1f;border-color:#59656e;transform:translateY(-2px)}
+.specialty-action:hover::after{transform:translateX(3px)}
 
 .portal-frame .carousel-head{justify-content:flex-start}
 .portal-frame .carousel-head span{font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#a9b1b6}
@@ -36,6 +40,7 @@
   .hero-grid{grid-template-columns:1fr;gap:30px}
   .hero-portrait{width:166px;height:166px;justify-self:start}
   .specialty-grid{grid-template-columns:1fr;gap:34px}
+  .specialty-feature h3{max-width:22ch}
   .contact-choice{justify-content:flex-start}
 }
 
@@ -43,7 +48,8 @@
   .hero h1{max-width:12ch}
   .hero-portrait{width:138px;height:138px}
   .hero-promise{font-size:26px;max-width:21ch;margin-bottom:17px}
-  .specialty-feature h3{font-size:29px}
+  .specialty-feature h3{font-size:29px;max-width:none}
+  .specialty-action{width:100%;justify-content:space-between;padding:13px 14px}
   .activity-frame{padding:9px;border-radius:17px}
   .activity-frame .carousel-stage{border-radius:11px}
   .activity-section .activity-heading{margin-bottom:24px}
