@@ -6,12 +6,14 @@ on:
     paths:
       - 'aulas-de-ingles-online-adultos.html'
       - 'conversacao-ingles-adultos.html'
+      - 'assets/acquisition-source.js'
       - 'sitemap.xml'
       - '.github/workflows/seo-v3-intent-pages-qa.yml'
   pull_request:
     paths:
       - 'aulas-de-ingles-online-adultos.html'
       - 'conversacao-ingles-adultos.html'
+      - 'assets/acquisition-source.js'
       - 'sitemap.xml'
       - '.github/workflows/seo-v3-intent-pages-qa.yml'
 
@@ -23,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Validate search pages against real offer and V3 rules
+      - name: Validate search pages against real offer, V3 and attribution rules
         shell: python
         run: |
           from pathlib import Path
@@ -36,6 +38,8 @@ jobs:
           names=['aulas-de-ingles-online-adultos.html','conversacao-ingles-adultos.html']
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           form_marker='docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+          source_path=Path('assets/acquisition-source.js')
+          source_js=source_path.read_text(encoding='utf-8') if source_path.exists() else ''
 
           for name in names:
             text=Path(name).read_text(encoding='utf-8')
@@ -46,6 +50,7 @@ jobs:
             if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
             if 'assets/site-v3-black.css' not in text: errors.append(f'{name}: CSS V3 ausente')
             if 'assets/site-v3-motion.js' not in text: errors.append(f'{name}: motion V3 ausente')
+            if 'assets/acquisition-source.js' not in text: errors.append(f'{name}: preservação de origem ausente')
             if 'wa.me/5592985273076' not in text: errors.append(f'{name}: WhatsApp ausente')
             if form_marker not in text: errors.append(f'{name}: formulário ausente')
             if 'application/ld+json' not in text: errors.append(f'{name}: dados estruturados ausentes')
@@ -81,8 +86,22 @@ jobs:
           if 'conversacao-ingles-adultos.html' not in adult:
             errors.append('adultos: link contextual para conversação ausente')
 
+          if not source_js:
+            errors.append('atribuição: assets/acquisition-source.js ausente/vazio')
+          else:
+            required_sources=['acheiusa','minhavidausa','brfind','ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','ig-portal','x-portal']
+            for key in required_sources:
+              if f"'{key}'" not in source_js:
+                errors.append(f'atribuição: origem permitida ausente -> {key}')
+            if "sourceSentences[sourceKey]" not in source_js or "if(!sourceSentence)return" not in source_js:
+              errors.append('atribuição: origens desconhecidas precisam falhar fechadas')
+            if "url.hostname!=='wa.me'" not in source_js or "url.origin!==window.location.origin" not in source_js:
+              errors.append('atribuição: separação entre WhatsApp e links internos ausente')
+            if "url.searchParams.set('src',sourceKey)" not in source_js:
+              errors.append('atribuição: propagação segura de src em links internos ausente')
+
           if errors:
             print('QA FAILED')
             for error in errors: print('-',error)
             sys.exit(1)
-          print('QA OK — duas páginas V3 úteis, distintas, alinhadas à oferta real e prontas para revisão')
+          print('QA OK — páginas V3 alinhadas à oferta real, B1+, sem preço público e com origem preservada até o contato')
