@@ -1,0 +1,22 @@
+/* B2 — SPATIAL FRAME ORBIT: one sharp image plane, geometry creates the depth */
+.effect-b{overflow:visible;will-change:transform,box-shadow}
+.effect-b>.base-photo{border-radius:17px;clip-path:inset(0 round 17px)}
+.effect-b .orbit-frame{position:absolute;inset:0;z-index:-1;border:1px solid rgba(121,215,239,.34);border-radius:20px;opacity:0;pointer-events:none;transform-style:preserve-3d;box-shadow:0 0 34px rgba(88,190,222,.06)}
+.effect-b .orbit-frame.f1{border-color:rgba(153,229,248,.52)}
+.effect-b .orbit-frame.f2{border-color:rgba(110,164,255,.34)}
+.effect-b .orbit-frame.f3{border-color:rgba(154,118,255,.24)}
+.effect-b .orbit-rail{position:absolute;z-index:8;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,rgba(158,231,249,.76),rgba(255,255,255,.88),rgba(144,190,255,.56),transparent);height:1px;width:68%;left:16%}
+.effect-b .orbit-rail.top{top:-18px}.effect-b .orbit-rail.bottom{bottom:-18px}
+.effect-b .orbit-node{position:absolute;z-index:9;width:7px;height:7px;border-radius:50%;opacity:0;background:#a4e9fa;box-shadow:0 0 18px rgba(116,220,247,.82);pointer-events:none}
+.effect-b .orbit-node.n1{left:-13px;top:18%}.effect-b .orbit-node.n2{right:-13px;bottom:20%}
+.effect-b .orbit-halo{position:absolute;z-index:-2;inset:-36px;border:1px solid rgba(124,209,233,.13);border-radius:32px;opacity:0;pointer-events:none}
+
+/* C2 — LOCAL OPTICAL REFRACTION: narrow band only; rest of photo remains untouched */
+.effect-c .refract-band{z-index:4;opacity:0;transform:translate3d(7px,0,0) scale(1.025);mix-blend-mode:normal}
+.effect-c .refract-band-cyan{z-index:5;opacity:0;transform:translate3d(-3px,0,0) scale(1.025);mix-blend-mode:screen}
+.effect-c .refract-band-violet{z-index:6;opacity:0;transform:translate3d(3px,0,0) scale(1.025);mix-blend-mode:screen}
+.effect-c .refraction-gl-refined{position:absolute;inset:0;z-index:7;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen;opacity:.72}
+.effect-c .lens-edge-refined{position:absolute;z-index:8;top:-14%;bottom:-14%;width:1px;left:-16%;opacity:0;transform:rotate(9deg);background:linear-gradient(180deg,transparent,rgba(224,248,255,.74) 30%,rgba(135,222,246,.92) 58%,transparent);box-shadow:0 0 14px rgba(127,219,245,.44);pointer-events:none}
+.effect-c .lens-shadow{position:absolute;z-index:3;top:-15%;bottom:-15%;width:12%;left:-18%;opacity:0;transform:rotate(9deg);background:linear-gradient(90deg,transparent,rgba(0,0,0,.10),transparent);pointer-events:none}
+
+@media(prefers-reduced-motion:reduce){.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo,.refraction-gl-refined,.lens-edge-refined,.lens-shadow,.refract-band,.refract-band-cyan,.refract-band-violet{display:none!important}}
