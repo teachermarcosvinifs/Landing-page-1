@@ -1,0 +1,45 @@
+name: Spatial Pulse Cache Bust Once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/spatial-pulse-cache-bust-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch-cache-keys:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Generate cache-bust branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git switch -c agent/spatial-pulse-cache-bust-20260818
+          python3 - <<'PY'
+          from pathlib import Path
+          old='20260817-2350-orbit-b1'
+          new='20260818-0115-pulse-b1'
+          files=[Path('index.html'),Path('ingles-para-devs.html'),Path('ingles-para-compliance.html')]
+          for path in files:
+              text=path.read_text(encoding='utf-8')
+              count=text.count(old)
+              if count != 2:
+                  raise SystemExit(f'{path}: expected 2 old cache keys, found {count}')
+              path.write_text(text.replace(old,new),encoding='utf-8')
+              if path.read_text(encoding='utf-8').count(new) != 2:
+                  raise SystemExit(f'{path}: cache key replacement failed')
+          print('CACHE BUST OK — Spatial Pulse CSS/JS keys updated on all three production pages')
+          PY
+          git rm .github/workflows/spatial-pulse-cache-bust-once.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html ingles-para-devs.html ingles-para-compliance.html
+          git commit -m 'Bump Spatial Pulse asset cache keys'
+          git push -u origin agent/spatial-pulse-cache-bust-20260818
