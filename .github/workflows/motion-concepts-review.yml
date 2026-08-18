@@ -9,6 +9,13 @@ on:
       - 'assets/motion-concepts.css'
       - 'assets/motion-concepts.js'
       - '.github/workflows/motion-concepts-review.yml'
+  pull_request:
+    paths:
+      - 'motion-option-a.html'
+      - 'motion-option-b.html'
+      - 'assets/motion-concepts.css'
+      - 'assets/motion-concepts.js'
+      - '.github/workflows/motion-concepts-review.yml'
 
 permissions:
   contents: read
