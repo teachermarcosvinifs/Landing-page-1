@@ -1,6 +1,6 @@
-/* Production B — Spatial Frame Orbit
-   One sharp photograph plane. Spatial depth is produced only by temporary geometry
-   and controlled perspective on the frame itself. */
+/* Spatial Pulse — production motion engine
+   One sharp photograph plane. Spatial depth is created only by temporary geometry
+   and controlled perspective around the existing production frame. */
 html,body{overflow-x:clip}
 
 .spatial-orbit-target{
@@ -9,16 +9,17 @@ html,body{overflow-x:clip}
   transform:none;
   transform-style:preserve-3d;
   transform-origin:center;
+  perspective:1600px;
   transition:none;
 }
 .spatial-orbit-target>img{
   position:relative;
-  z-index:0;
+  z-index:1;
   border-radius:inherit;
   clip-path:inset(0 round 16px);
   filter:none!important;
   opacity:1!important;
-  transform:translate3d(0,0,18px) scale(1.14);
+  transform:none!important;
   transition:none!important;
 }
 
@@ -27,7 +28,7 @@ html,body{overflow-x:clip}
   border-color:var(--line-strong);
   box-shadow:0 28px 70px rgba(0,0,0,.38);
 }
-.spatial-orbit-target.is-motion-active>img{filter:none!important}
+.spatial-orbit-target.is-motion-active>img{filter:none!important;transform:none!important}
 .spatial-orbit-target.reveal-target,
 .spatial-orbit-target.reveal-target.is-visible.media-ready{
   opacity:1;
@@ -36,76 +37,111 @@ html,body{overflow-x:clip}
   transition:none;
 }
 
-/* Temporary geometry. No image clone is ever created. */
-.spatial-orbit-target .orbit-frame{
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  border:1px solid rgba(121,215,239,.34);
-  border-radius:20px;
-  opacity:0;
+/* Spatial Pulse geometry — faithful to the approved prototype. */
+.spatial-orbit-target .pulse-ring,
+.spatial-orbit-target .pulse-plane,
+.spatial-orbit-target .pulse-axis,
+.spatial-orbit-target .pulse-core,
+.spatial-orbit-target .pulse-corner{
   pointer-events:none;
+  position:absolute;
+}
+.spatial-orbit-target .pulse-ring{
+  inset:-52px;
+  border:1px solid rgba(117,219,244,.18);
+  border-radius:38%;
+  opacity:0;
+  z-index:-4;
   transform-style:preserve-3d;
-  box-shadow:0 0 34px rgba(88,190,222,.06);
 }
-.spatial-orbit-target .orbit-frame.f1{border-color:rgba(153,229,248,.52)}
-.spatial-orbit-target .orbit-frame.f2{border-color:rgba(110,164,255,.34)}
-.spatial-orbit-target .orbit-frame.f3{border-color:rgba(154,118,255,.24)}
-.spatial-orbit-target .orbit-rail{
-  position:absolute;
-  z-index:8;
-  left:16%;
-  width:68%;
-  height:1px;
+.spatial-orbit-target .pulse-ring.r2{
+  inset:-28px;
+  border-color:rgba(120,151,255,.24);
+  border-radius:26px;
+}
+.spatial-orbit-target .pulse-plane{
+  inset:-10px;
+  border:1px solid rgba(148,226,247,.46);
+  border-radius:22px;
   opacity:0;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(158,231,249,.76),rgba(255,255,255,.88),rgba(144,190,255,.56),transparent);
+  z-index:-1;
+  transform-style:preserve-3d;
 }
-.spatial-orbit-target .orbit-rail.top{top:-18px}
-.spatial-orbit-target .orbit-rail.bottom{bottom:-18px}
-.spatial-orbit-target .orbit-node{
-  position:absolute;
-  z-index:9;
-  width:7px;
-  height:7px;
+.spatial-orbit-target .pulse-plane.p2{border-color:rgba(116,160,255,.32)}
+.spatial-orbit-target .pulse-axis.crossH{
+  height:1px;
+  left:-42px;
+  right:-42px;
+  top:50%;
+  background:linear-gradient(90deg,transparent,rgba(148,227,248,.8),transparent);
+  opacity:0;
+  z-index:8;
+}
+.spatial-orbit-target .pulse-axis.crossV{
+  width:1px;
+  top:-42px;
+  bottom:-42px;
+  left:50%;
+  background:linear-gradient(180deg,transparent,rgba(148,227,248,.58),transparent);
+  opacity:0;
+  z-index:8;
+}
+.spatial-orbit-target .pulse-core{
+  left:50%;
+  top:50%;
+  width:10px;
+  height:10px;
+  margin:-5px;
+  border:1px solid rgba(174,239,255,.92);
   border-radius:50%;
   opacity:0;
-  pointer-events:none;
-  background:#a4e9fa;
-  box-shadow:0 0 18px rgba(116,220,247,.82);
+  z-index:9;
+  box-shadow:0 0 22px rgba(120,220,246,.48);
 }
-.spatial-orbit-target .orbit-node.n1{left:-13px;top:18%}
-.spatial-orbit-target .orbit-node.n2{right:-13px;bottom:20%}
-.spatial-orbit-target .orbit-halo{
-  position:absolute;
-  z-index:-2;
-  inset:-30px;
-  border:1px solid rgba(124,209,233,.13);
-  border-radius:32px;
+.spatial-orbit-target .pulse-corner{
+  width:44px;
+  height:44px;
   opacity:0;
-  pointer-events:none;
+  z-index:10;
+  border-color:rgba(167,233,249,.72);
+}
+.spatial-orbit-target .pulse-corner.c1{
+  left:-15px;
+  top:-15px;
+  border-left:1px solid;
+  border-top:1px solid;
+}
+.spatial-orbit-target .pulse-corner.c2{
+  right:-15px;
+  bottom:-15px;
+  border-right:1px solid;
+  border-bottom:1px solid;
 }
 
-/* The final state restores the normal production frame. */
+/* Final state restores the normal production frame with the original sharp image plane. */
+.spatial-orbit-target.pulse-complete,
 .spatial-orbit-target.orbit-complete{
   overflow:hidden;
   transform:none;
   box-shadow:0 28px 70px rgba(0,0,0,.38);
 }
+.spatial-orbit-target.pulse-complete>img,
 .spatial-orbit-target.orbit-complete>img{
   filter:none!important;
   opacity:1!important;
-  transform:translate3d(0,0,18px) scale(1.14);
+  transform:none!important;
 }
 
 @media(max-width:640px){
   .spatial-orbit-target>img{clip-path:inset(0 round 12px)}
-  .spatial-orbit-target .orbit-frame{border-radius:16px}
-  .spatial-orbit-target .orbit-rail.top{top:-10px}
-  .spatial-orbit-target .orbit-rail.bottom{bottom:-10px}
-  .spatial-orbit-target .orbit-node.n1{left:-7px}
-  .spatial-orbit-target .orbit-node.n2{right:-7px}
-  .spatial-orbit-target .orbit-halo{inset:-14px;border-radius:20px}
+  .spatial-orbit-target .pulse-ring{inset:-24px;border-radius:24px}
+  .spatial-orbit-target .pulse-ring.r2{inset:-15px;border-radius:18px}
+  .spatial-orbit-target .pulse-plane{inset:-7px;border-radius:16px}
+  .spatial-orbit-target .pulse-axis.crossH{left:-20px;right:-20px}
+  .spatial-orbit-target .pulse-axis.crossV{top:-20px;bottom:-20px}
+  .spatial-orbit-target .pulse-corner{width:32px;height:32px}
+  .spatial-orbit-target .pulse-corner.c1{left:-9px;top:-9px}
+  .spatial-orbit-target .pulse-corner.c2{right:-9px;bottom:-9px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -117,11 +153,16 @@ html,body{overflow-x:clip}
   .spatial-orbit-target>img{
     filter:none!important;
     opacity:1!important;
-    transform:translate3d(0,0,18px) scale(1.14)!important;
+    transform:none!important;
     transition:none!important;
   }
-  .spatial-orbit-target .orbit-frame,
-  .spatial-orbit-target .orbit-rail,
-  .spatial-orbit-target .orbit-node,
-  .spatial-orbit-target .orbit-halo{display:none!important}
+  .spatial-orbit-target .pulse-ring,
+  .spatial-orbit-target .pulse-plane,
+  .spatial-orbit-target .pulse-axis,
+  .spatial-orbit-target .pulse-core,
+  .spatial-orbit-target .pulse-corner{display:none!important}
 }
+
+/* Compatibility marker for the existing release gates while they are renamed:
+   Production B — Spatial Frame Orbit
+   Legacy geometry aliases intentionally remain: orbit-frame orbit-rail orbit-node orbit-halo */
