@@ -15,7 +15,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#030405">
 <link rel="stylesheet" href="assets/site-v3-black.css">
-<link rel="stylesheet" href="assets/format-tool-v2.css?v=20260818-0215-format-v2">
+<link rel="stylesheet" href="assets/format-tool-v2.css?v=20260818-0225-format-v3">
 <script src="assets/site-v3-motion.js" defer></script>
 </head>
 <body>
@@ -38,11 +38,6 @@
   <h2>Responda quatro perguntas</h2>
   <p class="lead">Informe seu nível, objetivo, formato e carga semanal. No final, você verá uma combinação para levar ao contato</p>
 </section>
-
-<div class="fit-progress" id="fitProgress" aria-live="polite">
-  <div class="fit-progress-head"><span>Seu progresso</span><b id="progressText">0 de 4 respostas selecionadas</b></div>
-  <div class="fit-progress-track" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-</div>
 
 <form id="fitForm">
 <section class="question"><h2>1. Como está seu inglês hoje?</h2><div class="options"><div class="option"><input required type="radio" name="level" value="beginner" id="l1"><label for="l1">Estou começando / ainda tenho pouca base</label></div><div class="option"><input type="radio" name="level" value="basic" id="l2"><label for="l2">Já estudei, mas minha base ainda é limitada</label></div><div class="option"><input type="radio" name="level" value="b1plus" id="l3"><label for="l3">Já consigo me comunicar e acredito estar no B1 ou acima</label></div><div class="option"><input type="radio" name="level" value="unknown" id="l4"><label for="l4">Não sei dizer</label></div></div></section>
@@ -88,24 +83,16 @@ const sourceKey=new URLSearchParams(window.location.search).get('src');
 const sourceLabel=sourceLabels[sourceKey]||'';
 const form=document.getElementById('fitForm');
 const result=document.getElementById('result');
-const groups=['level','goal','format','minutes'];
-const progressText=document.getElementById('progressText');
-const progressSegments=[...document.querySelectorAll('.fit-progress-track i')];
 const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function updateProgress(){
-  const completed=groups.filter(name=>form.querySelector(`input[name="${name}"]:checked`)).length;
-  progressText.textContent=`${completed} de 4 ${completed===1?'resposta selecionada':'respostas selecionadas'}`;
-  progressSegments.forEach((segment,index)=>segment.classList.toggle('is-complete',index<completed));
-}
-
 form.addEventListener('change',event=>{
-  if(!event.target.matches('input[type="radio"]'))return;
-  updateProgress();
-  if(!reduceMotion){
-    const label=event.target.nextElementSibling;
-    label?.animate([{transform:'translateY(-1px) scale(.985)'},{transform:'translateY(-1px) scale(1.012)'},{transform:'translateY(-1px) scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
-  }
+  if(!event.target.matches('input[type="radio"]')||reduceMotion)return;
+  const label=event.target.nextElementSibling;
+  label?.animate([
+    {transform:'translateY(-1px) scale(.985)'},
+    {transform:'translateY(-1px) scale(1.012)'},
+    {transform:'translateY(-1px) scale(1)'}
+  ],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
 });
 
 form.addEventListener('submit',e=>{
@@ -151,10 +138,7 @@ form.addEventListener('submit',e=>{
 
 document.getElementById('resetBtn').addEventListener('click',()=>{
   result.classList.remove('show');
-  requestAnimationFrame(updateProgress);
 });
-
-updateProgress();
 </script>
 </body>
 </html>
