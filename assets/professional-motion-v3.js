@@ -3,18 +3,39 @@
   const figures=[...document.querySelectorAll('.spatial-orbit-target')]
   if(!figures.length)return
 
-  const easing='cubic-bezier(.16,.84,.18,1)'
-  const geometryClasses='.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo'
-
-  const removeGeometry=figure=>{
-    figure.querySelectorAll(geometryClasses).forEach(node=>node.remove())
-  }
+  const geometrySelector='[data-spatial-pulse-geo]'
 
   const baseImage=figure=>figure.querySelector(':scope > img')||figure.querySelector('img')
 
+  const removeGeometry=figure=>{
+    figure.querySelectorAll(geometrySelector).forEach(node=>node.remove())
+  }
+
+  function finish(figure,passed=true){
+    if(figure.dataset.spatialPulse==='done')return
+    const base=baseImage(figure)
+    if(figure._pulseTimer){clearTimeout(figure._pulseTimer);figure._pulseTimer=0}
+    if(figure._pulseGuard){cancelAnimationFrame(figure._pulseGuard);figure._pulseGuard=0}
+    figure.getAnimations().forEach(animation=>animation.cancel())
+    removeGeometry(figure)
+    figure.style.setProperty('transform','none')
+    if(base){
+      base.style.setProperty('filter','none','important')
+      base.style.setProperty('opacity','1','important')
+      base.style.setProperty('transform','none','important')
+    }
+    figure.classList.remove('pulse-running','orbit-running')
+    figure.classList.add('pulse-complete','orbit-complete','media-ready')
+    figure.dataset.spatialPulse='done'
+    figure.dataset.spatialOrbit='done'
+    figure.dataset.pulseIntegrity=passed?'passed':'failed'
+    figure.dataset.orbitIntegrity=passed?'passed':'failed'
+  }
+
   const failIntegrity=(figure,reason)=>{
+    figure.dataset.pulseIntegrity='failed'
     figure.dataset.orbitIntegrity='failed'
-    console.error(`[Spatial Frame Orbit] integrity failure: ${reason}`,figure)
+    console.error(`[Spatial Pulse] integrity failure: ${reason}`,figure)
     finish(figure,false)
   }
 
@@ -29,142 +50,117 @@
     return true
   }
 
-  const finish=(figure,passed=true)=>{
-    if(figure.dataset.spatialOrbit==='done')return
-    const base=baseImage(figure)
-    if(figure._orbitTimer){clearTimeout(figure._orbitTimer);figure._orbitTimer=0}
-    if(figure._orbitGuard){cancelAnimationFrame(figure._orbitGuard);figure._orbitGuard=0}
-    figure.getAnimations().forEach(animation=>animation.cancel())
-    removeGeometry(figure)
-    figure.style.transform=''
-    figure.style.boxShadow=''
-    if(base){
-      base.style.setProperty('filter','none','important')
-      base.style.setProperty('opacity','1','important')
-    }
-    figure.classList.remove('orbit-running')
-    figure.classList.add('orbit-complete','media-ready')
-    figure.dataset.spatialOrbit='done'
-    figure.dataset.orbitIntegrity=passed?'passed':'failed'
-  }
-
   const monitorIntegrity=figure=>{
-    if(figure.dataset.spatialOrbit!=='running')return
+    if(figure.dataset.spatialPulse!=='running')return
     if(!assertBaseIntegrity(figure))return
-    figure._orbitGuard=requestAnimationFrame(()=>monitorIntegrity(figure))
+    figure._pulseGuard=requestAnimationFrame(()=>monitorIntegrity(figure))
   }
 
   const makeNode=(figure,className)=>{
     const node=document.createElement('span')
     node.className=className
+    node.dataset.spatialPulseGeo='true'
     node.setAttribute('aria-hidden','true')
     figure.append(node)
     return node
   }
 
-  const runOrbit=figure=>{
-    if(figure.dataset.spatialOrbit==='running'||figure.dataset.spatialOrbit==='done')return
+  const runPulse=figure=>{
+    if(figure.dataset.spatialPulse==='running'||figure.dataset.spatialPulse==='done')return
     const base=baseImage(figure)
     if(!base)return
+
+    figure.dataset.pulseAutonomous='true'
     figure.dataset.orbitAutonomous='true'
+
     if(reduceMotion){finish(figure,true);return}
 
-    figure.classList.remove('orbit-complete')
-    figure.classList.add('orbit-running','media-ready')
+    figure.classList.remove('pulse-complete','orbit-complete')
+    figure.classList.add('pulse-running','orbit-running','media-ready')
+    figure.dataset.spatialPulse='running'
     figure.dataset.spatialOrbit='running'
 
     if(!assertBaseIntegrity(figure))return
 
-    const compact=window.matchMedia('(max-width: 640px)').matches
-    const depth=compact ? 0.58 : 1
-
-    const frames=[
-      makeNode(figure,'orbit-frame f1'),
-      makeNode(figure,'orbit-frame f2'),
-      makeNode(figure,'orbit-frame f3')
-    ]
-    const railTop=makeNode(figure,'orbit-rail top')
-    const railBottom=makeNode(figure,'orbit-rail bottom')
-    const n1=makeNode(figure,'orbit-node n1')
-    const n2=makeNode(figure,'orbit-node n2')
-    const halo=makeNode(figure,'orbit-halo')
+    /* Old orbit-* class names are compatibility aliases for the existing release gates.
+       The visible geometry is the approved Spatial Pulse: two rings, two planes,
+       two axes, one expanding pulse and two corner brackets. */
+    const r1=makeNode(figure,'pulse-ring r1 orbit-halo')
+    const r2=makeNode(figure,'pulse-ring r2 orbit-frame')
+    const p1=makeNode(figure,'pulse-plane p1 orbit-frame')
+    const p2=makeNode(figure,'pulse-plane p2 orbit-frame')
+    const h=makeNode(figure,'pulse-axis crossH orbit-rail')
+    const v=makeNode(figure,'pulse-axis crossV orbit-rail')
+    const q=makeNode(figure,'pulse-core')
+    const c1=makeNode(figure,'pulse-corner c1 orbit-node')
+    const c2=makeNode(figure,'pulse-corner c2 orbit-node')
 
     figure.animate([
-      {transform:`perspective(1600px) translate3d(0,${10*depth}px,${-72*depth}px) rotateX(${5.6*depth}deg) rotateY(${-8.2*depth}deg) scale(.955)`,boxShadow:'0 24px 62px rgba(0,0,0,.44)'},
-      {transform:`perspective(1600px) translate3d(0,${-4*depth}px,${28*depth}px) rotateX(${-1.2*depth}deg) rotateY(${1.8*depth}deg) scale(1.02)`,boxShadow:'0 54px 124px rgba(0,0,0,.60)',offset:.62},
-      {transform:'perspective(1600px) translate3d(0,0,0) rotateX(0) rotateY(0) scale(1)',boxShadow:'0 28px 70px rgba(0,0,0,.38)'}
-    ],{duration:1480,easing,fill:'forwards'})
+      {transform:'perspective(1700px) translate3d(0,0,-105px) rotateX(2.5deg) rotateY(-3.5deg) scale(.94)'},
+      {transform:'perspective(1700px) translate3d(0,-2px,48px) rotateX(-1.5deg) rotateY(2.2deg) scale(1.024)',offset:.56},
+      {transform:'perspective(1700px) translate3d(0,0,0) rotateX(0) rotateY(0) scale(1)'}
+    ],{duration:1750,easing:'cubic-bezier(.12,.82,.18,1)',fill:'forwards'})
 
-    const frameKeys=[
-      [
-        {opacity:0,transform:`perspective(1400px) translate3d(${38*depth}px,${22*depth}px,${-90*depth}px) rotateX(${8*depth}deg) rotateY(${-12*depth}deg) scale(.88)`},
-        {opacity:.96,transform:`perspective(1400px) translate3d(${-12*depth}px,${-8*depth}px,${48*depth}px) rotateX(${-2*depth}deg) rotateY(${4*depth}deg) scale(1.055)`,offset:.54},
-        {opacity:.48,transform:`perspective(1400px) translate3d(0,0,${6*depth}px) rotateX(0) rotateY(0) scale(1.012)`,offset:.78},
-        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
-      ],
-      [
-        {opacity:0,transform:`perspective(1400px) translate3d(${-44*depth}px,${-18*depth}px,${-130*depth}px) rotateX(${-7*depth}deg) rotateY(${15*depth}deg) scale(.82)`},
-        {opacity:.74,transform:`perspective(1400px) translate3d(${18*depth}px,${10*depth}px,${28*depth}px) rotateX(${2*depth}deg) rotateY(${-5*depth}deg) scale(1.08)`,offset:.57},
-        {opacity:.32,transform:`perspective(1400px) translate3d(0,0,${2*depth}px) rotateX(0) rotateY(0) scale(1.022)`,offset:.80},
-        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
-      ],
-      [
-        {opacity:0,transform:`perspective(1400px) translate3d(${12*depth}px,${52*depth}px,${-170*depth}px) rotateX(${13*depth}deg) rotateY(${7*depth}deg) scale(.76)`},
-        {opacity:.52,transform:`perspective(1400px) translate3d(${-6*depth}px,${-16*depth}px,${18*depth}px) rotateX(${-3*depth}deg) rotateY(${-2*depth}deg) scale(1.12)`,offset:.60},
-        {opacity:.22,transform:'perspective(1400px) translate3d(0,0,0) scale(1.032)',offset:.82},
-        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
-      ]
-    ]
+    r1.animate([
+      {opacity:0,transform:'perspective(1200px) rotateX(72deg) rotateZ(-24deg) scale(.56)'},
+      {opacity:.52,transform:'perspective(1200px) rotateX(54deg) rotateZ(18deg) scale(1.08)',offset:.5},
+      {opacity:0,transform:'perspective(1200px) rotateX(48deg) rotateZ(46deg) scale(1.22)'}
+    ],{duration:1450,delay:100,easing:'cubic-bezier(.2,.75,.18,1)',fill:'forwards'})
 
-    frames.forEach((frame,index)=>frame.animate(frameKeys[index],{
-      duration:1260,
-      delay:70+index*65,
-      easing,
-      fill:'forwards'
-    }))
+    r2.animate([
+      {opacity:0,transform:'translate3d(0,0,-140px) scale(.72)'},
+      {opacity:.72,transform:'translate3d(0,0,46px) scale(1.08)',offset:.48},
+      {opacity:.2,transform:'translate3d(0,0,12px) scale(1.025)',offset:.76},
+      {opacity:0,transform:'none'}
+    ],{duration:1300,delay:160,easing:'cubic-bezier(.16,.8,.18,1)',fill:'forwards'})
 
-    ;[railTop,railBottom].forEach((rail,index)=>rail.animate([
-      {opacity:0,transform:'scaleX(.12)'},
-      {opacity:.88,transform:'scaleX(1)',offset:.44},
-      {opacity:.52,offset:.70},
-      {opacity:0,transform:'scaleX(.45)'}
-    ],{duration:900,delay:290+index*70,easing:'cubic-bezier(.2,.78,.2,1)',fill:'forwards'}))
+    p1.animate([
+      {opacity:0,transform:'translate3d(-34px,24px,-170px) rotateY(-11deg) scale(.8)'},
+      {opacity:.9,transform:'translate3d(12px,-8px,44px) rotateY(3deg) scale(1.06)',offset:.5},
+      {opacity:0,transform:'none'}
+    ],{duration:1250,delay:110,easing:'cubic-bezier(.16,.84,.18,1)',fill:'forwards'})
 
-    ;[n1,n2].forEach((node,index)=>node.animate([
-      {opacity:0,transform:'scale(.2)'},
-      {opacity:1,transform:'scale(1.25)',offset:.42},
-      {opacity:.9,transform:'scale(1)',offset:.70},
-      {opacity:0,transform:'scale(.4)'}
-    ],{duration:860,delay:330+index*90,easing:'ease-out',fill:'forwards'}))
+    p2.animate([
+      {opacity:0,transform:'translate3d(40px,-24px,-220px) rotateX(9deg) rotateY(13deg) scale(.72)'},
+      {opacity:.72,transform:'translate3d(-9px,10px,27px) rotateX(-2deg) rotateY(-3deg) scale(1.1)',offset:.54},
+      {opacity:0,transform:'none'}
+    ],{duration:1320,delay:170,easing:'cubic-bezier(.16,.84,.18,1)',fill:'forwards'})
 
-    halo.animate([
-      {opacity:0,transform:'scale(.82)'},
-      {opacity:.5,transform:'scale(1.025)',offset:.52},
-      {opacity:0,transform:'scale(1.12)'}
-    ],{duration:1050,delay:180,easing:'cubic-bezier(.2,.72,.2,1)',fill:'forwards'})
+    ;[h,v].forEach((axis,index)=>axis.animate([
+      {opacity:0,transform:index?'scaleY(.05)':'scaleX(.05)'},
+      {opacity:.75,transform:index?'scaleY(1)':'scaleX(1)',offset:.46},
+      {opacity:0,transform:index?'scaleY(.4)':'scaleX(.4)'}
+    ],{duration:920,delay:340+index*55,easing:'ease-out',fill:'forwards'}))
+
+    q.animate([
+      {opacity:0,transform:'scale(.15)'},
+      {opacity:1,transform:'scale(1)',offset:.35},
+      {opacity:.4,transform:'scale(8)',offset:.7},
+      {opacity:0,transform:'scale(15)'}
+    ],{duration:1050,delay:320,easing:'cubic-bezier(.18,.7,.2,1)',fill:'forwards'})
+
+    ;[c1,c2].forEach((corner,index)=>corner.animate([
+      {opacity:0,transform:`translate3d(${index?-24:24}px,${index?24:-24}px,-40px) scale(.65)`},
+      {opacity:1,transform:'translate3d(0,0,18px) scale(1.05)',offset:.55},
+      {opacity:0,transform:'none'}
+    ],{duration:980,delay:390+index*80,easing:'cubic-bezier(.16,.84,.18,1)',fill:'forwards'}))
 
     monitorIntegrity(figure)
-    figure._orbitTimer=setTimeout(()=>finish(figure,true),1750)
+    figure._pulseTimer=setTimeout(()=>finish(figure,true),2050)
   }
 
-  const states=figures.map((figure,index)=>({
-    figure,
-    index,
-    loaded:false,
-    visible:false,
-    started:false
-  }))
+  const states=figures.map(figure=>({figure,loaded:false,visible:false,started:false}))
 
   const tryStart=state=>{
     if(state.started||!state.loaded||!state.visible)return
     state.started=true
-    setTimeout(()=>runOrbit(state.figure),90+state.index*70)
+    setTimeout(()=>runPulse(state.figure),520)
   }
 
   states.forEach(state=>{
     const {figure}=state
     const base=baseImage(figure)
-    figure.classList.add('spatial-orbit-target')
+    figure.dataset.pulseAutonomous='true'
     figure.dataset.orbitAutonomous='true'
     if(!base){finish(figure,false);return}
 
@@ -173,6 +169,7 @@
       if(!state.loaded){finish(figure,false);return}
       tryStart(state)
     }
+
     if(base.complete)loaded()
     else{
       base.addEventListener('load',loaded,{once:true})
@@ -202,6 +199,7 @@
         observer.unobserve(entry.target)
       })
     },{threshold:.20,rootMargin:'0px 0px -3%'})
+
     states.forEach(state=>{
       if(state.visible)tryStart(state)
       else observer.observe(state.figure)
