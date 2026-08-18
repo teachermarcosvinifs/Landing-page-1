@@ -14,6 +14,8 @@ on:
       - 'assets/site-v3-black.css'
       - 'assets/home-v3.css'
       - 'assets/professional-visuals.css'
+      - 'assets/professional-motion-v3.css'
+      - 'assets/professional-motion-v3.js'
       - 'assets/site-v3-motion.js'
       - 'sitemap.xml'
       - 'robots.txt'
@@ -27,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Validate offer, SEO, copy, privacy and V3 visual guardrails
+      - name: Validate offer, SEO, copy, privacy, Spatial Frame Orbit and V3 visual guardrails
         shell: python
         run: |
           from pathlib import Path
@@ -46,6 +48,8 @@ jobs:
           css=Path('assets/site-v3-black.css').read_text(encoding='utf-8')
           home_css=Path('assets/home-v3.css').read_text(encoding='utf-8')
           professional_css=Path('assets/professional-visuals.css').read_text(encoding='utf-8')
+          professional_motion_css=Path('assets/professional-motion-v3.css').read_text(encoding='utf-8')
+          professional_motion_js=Path('assets/professional-motion-v3.js').read_text(encoding='utf-8')
           motion=Path('assets/site-v3-motion.js').read_text(encoding='utf-8')
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           robots=Path('robots.txt').read_text(encoding='utf-8')
@@ -118,12 +122,52 @@ jobs:
           if '.hero-portrait::after' in home_css: errors.append('assets/home-v3.css: linha decorativa ao lado do retrato voltou')
 
           dev=pages['ingles-para-devs.html']; compliance=pages['ingles-para-compliance.html']
-          for marker in ['Participar de calls e reuniões internacionais','Trabalhar com equipes e empresas internacionais','class="professional-visual dev-visual"']:
+          for marker in ['Participar de calls e reuniões internacionais','Trabalhar com equipes e empresas internacionais','class="professional-visual dev-visual spatial-orbit-target"']:
             if marker not in dev: errors.append(f'ingles-para-devs.html: objetivo/visual essencial ausente -> {marker}')
-          if 'class="professional-visual compliance-visual"' not in compliance:
-            errors.append('ingles-para-compliance.html: visual profissional específico ausente')
+          if 'class="professional-visual compliance-visual spatial-orbit-target"' not in compliance:
+            errors.append('ingles-para-compliance.html: visual profissional específico/Spatial Orbit ausente')
+          if home.count('spatial-orbit-target') != 2:
+            errors.append(f'index.html: Spatial Frame Orbit precisa estar exatamente nas 2 fotos profissionais da homepage; encontrado {home.count("spatial-orbit-target")}')
+          if dev.count('spatial-orbit-target') != 1:
+            errors.append(f'ingles-para-devs.html: Spatial Frame Orbit precisa estar exatamente no hero; encontrado {dev.count("spatial-orbit-target")}')
+          if compliance.count('spatial-orbit-target') != 1:
+            errors.append(f'ingles-para-compliance.html: Spatial Frame Orbit precisa estar exatamente no hero; encontrado {compliance.count("spatial-orbit-target")}')
+          cache_version='20260817-2350-orbit-b1'
+          for name in ['index.html','ingles-para-devs.html','ingles-para-compliance.html']:
+            text=pages[name]
+            if text.count(cache_version) != 2:
+              errors.append(f'{name}: cache-busting do CSS/JS Spatial Orbit ausente ou inconsistente')
+            if 'assets/professional-motion-v3.css' not in text or 'assets/professional-motion-v3.js' not in text:
+              errors.append(f'{name}: assets de produção Spatial Orbit não estão ambos carregados')
           if 'prefers-reduced-motion:reduce' not in professional_css.replace(' ','').lower():
             errors.append('assets/professional-visuals.css: movimento sem fallback reduced-motion')
+
+          # Spatial Frame Orbit must preserve one sharp photo plane and never depend on pointer interaction.
+          motion_js_compact=professional_motion_js.lower()
+          motion_css_compact=professional_motion_css.replace(' ','').lower()
+          if 'production b — spatial frame orbit' not in professional_motion_css.lower():
+            errors.append('assets/professional-motion-v3.css: implementação oficial da Opção B não identificada')
+          for marker in ['orbit-frame','orbit-rail','orbit-node','orbit-halo']:
+            if marker not in professional_motion_css or marker not in professional_motion_js:
+              errors.append(f'Spatial Frame Orbit: geometria obrigatória ausente -> {marker}')
+          if 'clonenode' in motion_js_compact:
+            errors.append('assets/professional-motion-v3.js: fotografia não pode ser clonada/duplicada')
+          if re.search(r'blur\s*\(',professional_motion_css,re.I) or re.search(r'blur\s*\(',professional_motion_js,re.I):
+            errors.append('Spatial Frame Orbit: blur não pode existir no motor de produção')
+          if re.search(r'pointer(move|enter|leave)',professional_motion_js,re.I):
+            errors.append('assets/professional-motion-v3.js: efeito não pode depender de pointer/hover')
+          if 'assertbaseintegrity' not in motion_js_compact:
+            errors.append('assets/professional-motion-v3.js: proteção de integridade da fotografia ausente')
+          if "figure.queryselectorall('img').length!==1" not in motion_js_compact:
+            errors.append('assets/professional-motion-v3.js: proteção contra ghosting/duplicação ausente')
+          if 'opacity<.92' not in motion_js_compact:
+            errors.append('assets/professional-motion-v3.js: proteção contra transparência significativa ausente')
+          if 'prefers-reduced-motion:reduce' not in motion_css_compact:
+            errors.append('assets/professional-motion-v3.css: fallback reduced-motion ausente')
+          if 'html,body{overflow-x:clip}' not in motion_css_compact:
+            errors.append('assets/professional-motion-v3.css: proteção contra overflow horizontal do orbit ausente')
+          if 'cinematic-reveal' in motion_js_compact or 'motion-reveal-layer' in motion_js_compact:
+            errors.append('assets/professional-motion-v3.js: motor Cinematic Reveal rejeitado ainda presente')
 
           forbidden=[
             r'english mentoring',r'premium',r'destravar',r'transforma[cç][aã]o',
@@ -182,4 +226,4 @@ jobs:
             print('QA FAILED')
             for e in errors: print('-',e)
             sys.exit(1)
-          print('QA OK — V3 preserves approved promise, direct WhatsApp pricing, Dev/Compliance specialization, SEO, B1+, attribution, privacy and editorial rules')
+          print('QA OK — V3 preserves approved offer/privacy rules and Spatial Frame Orbit is scoped to exactly four sharp production photographs')
