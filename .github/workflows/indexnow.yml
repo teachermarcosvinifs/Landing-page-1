@@ -1,0 +1,101 @@
+name: IndexNow notify
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'sitemap.xml'
+      - '671349d0862530675812d223864164cc.txt'
+      - '.github/workflows/indexnow.yml'
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'sitemap.xml'
+      - '671349d0862530675812d223864164cc.txt'
+      - '.github/workflows/indexnow.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Validate IndexNow configuration
+        shell: python
+        run: |
+          from pathlib import Path
+          key='671349d0862530675812d223864164cc'
+          key_file=Path(f'{key}.txt')
+          assert key_file.exists(), 'IndexNow key file missing'
+          assert key_file.read_text(encoding='utf-8').strip()==key, 'IndexNow key file mismatch'
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          assert 'https://teachermarcosvinifs.github.io/Landing-page-1/' in sitemap, 'Canonical project base missing from sitemap'
+          print('IndexNow config OK')
+
+      - name: Submit changed HTML URLs to IndexNow
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        shell: python
+        run: |
+          import json, os, subprocess, urllib.request
+          from pathlib import PurePosixPath
+
+          base='https://teachermarcosvinifs.github.io/Landing-page-1/'
+          host='teachermarcosvinifs.github.io'
+          key='671349d0862530675812d223864164cc'
+          key_location=base+key+'.txt'
+          before=os.environ.get('BEFORE_SHA','')
+          after=os.environ['AFTER_SHA']
+
+          zero='0'*40
+          if not before or before==zero:
+              cmd=['git','show','--pretty=','--name-only',after]
+          else:
+              cmd=['git','diff','--name-only',before,after]
+          changed=subprocess.check_output(cmd,text=True).splitlines()
+
+          urls=[]
+          for raw in changed:
+              path=PurePosixPath(raw.strip())
+              if path.suffix.lower()!='.html':
+                  continue
+              if path.as_posix()=='index.html':
+                  url=base
+              else:
+                  url=base+path.as_posix()
+              if url not in urls:
+                  urls.append(url)
+
+          if not urls:
+              print('No changed HTML URLs to submit')
+              raise SystemExit(0)
+
+          payload=json.dumps({
+              'host':host,
+              'key':key,
+              'keyLocation':key_location,
+              'urlList':urls,
+          }).encode('utf-8')
+          req=urllib.request.Request(
+              'https://api.indexnow.org/indexnow',
+              data=payload,
+              headers={'Content-Type':'application/json; charset=utf-8'},
+              method='POST',
+          )
+          try:
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  print('IndexNow status:',response.status)
+                  print('Submitted URLs:')
+                  for url in urls: print('-',url)
+          except urllib.error.HTTPError as exc:
+              body=exc.read().decode('utf-8','replace')
+              print('IndexNow HTTP error:',exc.code,body)
+              raise
