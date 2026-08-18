@@ -33,16 +33,16 @@
 @keyframes aNearSettle{0%{opacity:0;transform:translate3d(58px,10px,55px) scale(1.17)}45%{opacity:.92}100%{opacity:1;transform:translate3d(0,0,42px) scale(1.12)}}
 @keyframes aSweep{0%{opacity:0;left:-36%}18%{opacity:.82}75%{opacity:.48}100%{opacity:0;left:118%}}
 
-/* OPTION B — scroll morph drives the impression */
-.prototype-scroll-stage{height:185vh;position:relative;border-bottom:1px solid var(--line)}
+/* OPTION B — scroll morph turns the image into the dominant scene */
+.prototype-scroll-stage{height:205vh;position:relative;border-bottom:1px solid var(--line)}
 .prototype-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
-.prototype-grid-b{width:100%}
-.option-b .concept-b{transform-origin:center right;will-change:transform,border-radius,box-shadow}
+.prototype-grid-b{width:min(1180px,calc(100% - 48px));margin-inline:auto;position:relative}
+.option-b .concept-b{z-index:2;transform-origin:center right;will-change:transform,border-radius,box-shadow}
 .option-b .concept-b .concept-base{transform:scale(1.08);will-change:transform;filter:saturate(.92) brightness(.88)}
 .option-b .concept-b .mid{-webkit-mask-image:radial-gradient(ellipse 78% 78% at 61% 58%,#000 34%,rgba(0,0,0,.94) 58%,transparent 85%);mask-image:radial-gradient(ellipse 78% 78% at 61% 58%,#000 34%,rgba(0,0,0,.94) 58%,transparent 85%);opacity:1;transform:scale(1.10)}
 .option-b .concept-b .near{-webkit-mask-image:radial-gradient(ellipse 53% 58% at 67% 69%,#000 24%,rgba(0,0,0,.9) 50%,transparent 79%);mask-image:radial-gradient(ellipse 53% 58% at 67% 69%,#000 24%,rgba(0,0,0,.9) 50%,transparent 79%);opacity:1;transform:scale(1.13)}
-.option-b .concept-b::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:var(--edge-light,0);background:linear-gradient(105deg,rgba(255,255,255,.12),transparent 24%,transparent 72%,rgba(112,211,244,.08));mix-blend-mode:screen}
-.option-b .scroll-copy{will-change:transform,opacity;transform:translate3d(var(--copy-x,0px),0,0);opacity:var(--copy-opacity,1)}
+.option-b .concept-b::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:var(--edge-light,0);background:linear-gradient(105deg,rgba(255,255,255,.14),transparent 24%,transparent 70%,rgba(112,211,244,.10));mix-blend-mode:screen}
+.option-b .scroll-copy{z-index:1;will-change:transform,opacity;transform:translate3d(var(--copy-x,0px),0,0);opacity:var(--copy-opacity,1)}
 .scroll-cue{margin-top:32px;color:#93a0a6;font-size:13px;letter-spacing:.14em;text-transform:uppercase;opacity:var(--cue-opacity,1)}
 
 @media(max-width:900px){
@@ -50,7 +50,8 @@
  .prototype-copy h1{font-size:clamp(44px,11vw,60px);max-width:14ch}
  .concept-media{justify-self:start;width:min(620px,100%)}
  .prototype-hero{padding:52px 0 62px}
- .prototype-scroll-stage{height:160vh}
+ .prototype-scroll-stage{height:170vh}
+ .prototype-grid-b{width:min(100% - 32px,720px)}
  .option-b .scroll-copy{opacity:1!important;transform:none!important}
 }
 @media(prefers-reduced-motion:reduce){
