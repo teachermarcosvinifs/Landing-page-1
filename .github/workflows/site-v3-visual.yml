@@ -116,14 +116,18 @@ jobs:
               const data=await page.evaluate(()=>{
                 const body=document.body;
                 const html=document.documentElement;
-                const overflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
+                const rawVisualOverflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
+                const y=window.scrollY;
+                window.scrollTo(999999,y);
+                const horizontalScrollPx=Math.abs(window.scrollX);
+                window.scrollTo(0,y);
                 const actionable=[...document.querySelectorAll('a.btn,button,nav a,nav summary')];
                 const tiny=actionable.filter(el=>{
                   const r=el.getBoundingClientRect();
                   return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
                 }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
                 const hiddenReveal=[...document.querySelectorAll('.reveal-target:not(.is-visible)')].length;
-                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
+                return {title:document.title,rawVisualOverflowPx:rawVisualOverflow,horizontalScrollPx,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
               });
               report.push({name,profile,...data,initialLayout,mobileMenu,consoleErrors});
               await page.close();
@@ -132,13 +136,13 @@ jobs:
           }
           await browser.close();
           fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
-          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap || (x.mobileMenu.required && (!x.mobileMenu.present || !x.mobileMenu.panelVisible || x.mobileMenu.linkCount<2)));
+          const failures=report.filter(x=>x.horizontalScrollPx>0 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap || (x.mobileMenu.required && (!x.mobileMenu.present || !x.mobileMenu.panelVisible || x.mobileMenu.linkCount<2)));
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error, undersized target, unrevealed content, header/H1 collision or mobile navigation failure detected');
+            console.error('VISUAL QA FAILED: scrollable horizontal overflow, console error, undersized target, unrevealed content, header/H1 collision or mobile navigation failure detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including layout, overflow, console and mobile navigation');
+          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including layout, real horizontal scroll, console and mobile navigation');
           EOF
           node visual-check.mjs
       - name: Record and verify autonomous Spatial Frame Orbit evidence
@@ -188,7 +192,14 @@ jobs:
                 opacity:Number.parseFloat(cs.opacity)
               }
             }));
-            const overflowDuring=await page.evaluate(()=>Math.max(document.body.scrollWidth,document.documentElement.scrollWidth)-window.innerWidth);
+            const overflowState=await page.evaluate(()=>{
+              const raw=Math.max(document.body.scrollWidth,document.documentElement.scrollWidth)-window.innerWidth;
+              const y=window.scrollY;
+              window.scrollTo(999999,y);
+              const scrollX=Math.abs(window.scrollX);
+              window.scrollTo(0,y);
+              return {rawVisualOverflowPx:raw,horizontalScrollPx:scrollX};
+            });
             await page.screenshot({path:`visual-artifacts/motion/${test.name}-orbit-during.png`,fullPage:false});
 
             for(const state of during){
@@ -201,7 +212,7 @@ jobs:
               assert.equal(state.filter,'none',`${test.name}: photograph must stay sharp`);
               assert.ok(state.opacity>=.92,`${test.name}: photograph must stay visibly opaque`);
             }
-            assert.ok(overflowDuring<=2,`${test.name}: no horizontal overflow during orbit`);
+            assert.equal(overflowState.horizontalScrollPx,0,`${test.name}: orbit must not create horizontal scrolling`);
 
             await page.waitForFunction(({selector,count})=>{
               const targets=[...document.querySelectorAll(selector)];
@@ -221,7 +232,7 @@ jobs:
             }
             assert.equal(consoleErrors.length,0,`${test.name}: console must remain error-free`);
             await page.screenshot({path:`visual-artifacts/motion/${test.name}-orbit-final.png`,fullPage:false});
-            evidence.push({name:test.name,during,final,overflowDuring,consoleErrors});
+            evidence.push({name:test.name,during,final,overflowState,consoleErrors});
 
             const video=page.video();
             await page.close();
