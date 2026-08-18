@@ -46,7 +46,7 @@ jobs:
         run: |
           python3 -m http.server 8000 >/tmp/site-v3-functional-http.log 2>&1 &
           sleep 2
-      - name: Test format finder, contact flows and sharp autonomous cinematic reveal
+      - name: Test format finder, contact flows and Spatial Frame Orbit
         run: |
           cat > functional-check.mjs <<'EOF'
           import { chromium } from 'playwright';
@@ -54,9 +54,12 @@ jobs:
           import fs from 'node:fs';
 
           const browser = await chromium.launch({headless:true});
-          const page = await browser.newPage({viewport:{width:1280,height:900}});
+          const context = await browser.newContext({viewport:{width:1280,height:900}});
+          const page = await context.newPage();
           const choose = async id => page.locator(`label[for="${id}"]`).click();
           const whatsAppText = href => new URL(href).searchParams.get('text') || '';
+          const onePixelPng=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=','base64');
+          await page.route('https://images.pexels.com/**',route=>route.fulfill({status:200,contentType:'image/png',body:onePixelPng}));
 
           await page.goto('http://127.0.0.1:8000/qual-formato.html?src=ig-formatos',{waitUntil:'networkidle'});
           assert.equal(await page.locator('#revealPrice').count(),0,'Price reveal control must not exist');
@@ -113,58 +116,121 @@ jobs:
           const unknownFormatsUrl = new URL(unknownFormats,page.url());
           assert.ok(!unknownFormatsUrl.searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
-          // Approved professional effect: autonomous reveal, no pointer dependency, pristine final photo.
+          // Production Option B guardrails: autonomous, one sharp photo plane, finite spatial geometry.
           const motionCss=fs.readFileSync('assets/professional-motion-v3.css','utf8');
           const motionJs=fs.readFileSync('assets/professional-motion-v3.js','utf8');
-          assert.ok(!/blur\s*\(/i.test(motionCss),'Professional motion CSS must never blur the photograph');
-          assert.ok(!/blur\s*\(/i.test(motionJs),'Professional motion JS must never blur the photograph');
-          assert.ok(!/pointer(move|enter|leave)/i.test(motionJs),'Approved reveal must not depend on pointer interaction');
+          assert.ok(!/blur\s*\(/i.test(motionCss),'Spatial Frame Orbit CSS must never blur the photograph');
+          assert.ok(!/blur\s*\(/i.test(motionJs),'Spatial Frame Orbit JS must never blur the photograph');
+          assert.ok(!/cloneNode/i.test(motionJs),'Spatial Frame Orbit must never duplicate the photograph');
+          assert.ok(!/pointer(move|enter|leave)/i.test(motionJs),'Spatial Frame Orbit must not depend on pointer interaction');
+          assert.ok(motionJs.includes('orbit-frame') && motionJs.includes('orbit-rail') && motionJs.includes('orbit-node') && motionJs.includes('orbit-halo'),'Spatial geometry primitives must exist');
+          assert.ok(motionCss.replace(/\s/g,'').includes('prefers-reduced-motion:reduce'),'Production motion must respect reduced motion');
+          assert.ok(motionJs.includes('assertBaseIntegrity'),'Runtime photograph-integrity guard must exist');
 
+          const motionCases=[
+            {name:'homepage',path:'/index.html',selector:'#ingles-profissional .spatial-orbit-target',count:2,scroll:'#ingles-profissional'},
+            {name:'dev',path:'/ingles-para-devs.html',selector:'.professional-visual.spatial-orbit-target',count:1},
+            {name:'compliance',path:'/ingles-para-compliance.html',selector:'.professional-visual.spatial-orbit-target',count:1}
+          ];
+
+          for(const test of motionCases){
+            await page.goto('http://127.0.0.1:8000'+test.path,{waitUntil:'domcontentloaded'});
+            if(test.scroll)await page.locator(test.scroll).scrollIntoViewIfNeeded();
+            await page.waitForFunction(({selector,count})=>{
+              const nodes=[...document.querySelectorAll(selector)];
+              return nodes.length===count && nodes.every(el=>el.dataset.spatialOrbit==='running');
+            },{selector:test.selector,count:test.count});
+            await page.waitForTimeout(320);
+
+            const during=await page.locator(test.selector).evaluateAll(nodes=>nodes.map(el=>{
+              const img=el.querySelector(':scope > img');
+              const imgCs=getComputedStyle(img);
+              return {
+                autonomous:el.dataset.orbitAutonomous,
+                imgs:el.querySelectorAll('img').length,
+                frames:el.querySelectorAll('.orbit-frame').length,
+                rails:el.querySelectorAll('.orbit-rail').length,
+                nodes:el.querySelectorAll('.orbit-node').length,
+                halos:el.querySelectorAll('.orbit-halo').length,
+                filter:imgCs.filter,
+                opacity:Number.parseFloat(imgCs.opacity)
+              };
+            }));
+            for(const state of during){
+              assert.equal(state.autonomous,'true',`${test.name}: effect must be autonomous`);
+              assert.equal(state.imgs,1,`${test.name}: exactly one photograph must exist`);
+              assert.equal(state.frames,3,`${test.name}: three orbital frames must be perceptible`);
+              assert.equal(state.rails,2,`${test.name}: two rails must exist during orbit`);
+              assert.equal(state.nodes,2,`${test.name}: two nodes must exist during orbit`);
+              assert.equal(state.halos,1,`${test.name}: one temporary halo must exist during orbit`);
+              assert.equal(state.filter,'none',`${test.name}: photograph must stay filter-free`);
+              assert.ok(state.opacity>=.92,`${test.name}: photograph opacity must stay high`);
+            }
+            const overflowDuring=await page.evaluate(()=>Math.max(document.body.scrollWidth,document.documentElement.scrollWidth)-window.innerWidth);
+            assert.ok(overflowDuring<=2,`${test.name}: orbit must not create horizontal overflow`);
+
+            await page.waitForFunction(({selector,count})=>{
+              const nodes=[...document.querySelectorAll(selector)];
+              return nodes.length===count && nodes.every(el=>el.dataset.spatialOrbit==='done');
+            },{selector:test.selector,count:test.count});
+            const finalStates=await page.locator(test.selector).evaluateAll(nodes=>nodes.map(el=>{
+              const img=el.querySelector(':scope > img');
+              const imgCs=getComputedStyle(img);
+              return {
+                integrity:el.dataset.orbitIntegrity,
+                imgs:el.querySelectorAll('img').length,
+                geometry:el.querySelectorAll('.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo').length,
+                frameTransform:getComputedStyle(el).transform,
+                filter:imgCs.filter,
+                opacity:Number.parseFloat(imgCs.opacity)
+              };
+            }));
+            for(const state of finalStates){
+              assert.equal(state.integrity,'passed',`${test.name}: integrity guard must pass`);
+              assert.equal(state.imgs,1,`${test.name}: final photograph must remain unique`);
+              assert.equal(state.geometry,0,`${test.name}: temporary geometry must be removed`);
+              assert.equal(state.frameTransform,'none',`${test.name}: frame must stabilize cleanly`);
+              assert.equal(state.filter,'none',`${test.name}: final photograph must be sharp`);
+              assert.equal(state.opacity,1,`${test.name}: final photograph must be fully opaque`);
+            }
+            const overflowFinal=await page.evaluate(()=>Math.max(document.body.scrollWidth,document.documentElement.scrollWidth)-window.innerWidth);
+            assert.ok(overflowFinal<=2,`${test.name}: final page must not overflow horizontally`);
+          }
+
+          // Pointer movement after completion must not restart/tilt the production effect.
           await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'domcontentloaded'});
-          const media=page.locator('.professional-visual');
-          await media.waitFor();
-          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('cinematic-reveal'));
-          await page.waitForTimeout(360);
-          const during=await media.evaluate(el=>({
-            running:el.dataset.cinematicReveal==='running',
-            layers:el.querySelectorAll('.motion-reveal-layer').length,
-            filter:getComputedStyle(el.querySelector(':scope > img')).filter
-          }));
-          assert.ok(during.running || during.layers===2,'Autonomous cinematic reveal must begin without mouse input');
-          assert.ok(!during.filter.includes('blur'),'Photo must remain optically sharp during the reveal');
-
-          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('reveal-complete'),{timeout:4000});
-          const finalState=await media.evaluate(el=>{
-            const img=el.querySelector(':scope > img');
-            const cs=getComputedStyle(el); const imgCs=getComputedStyle(img);
-            return {
-              opacity:cs.opacity,
-              clip:cs.clipPath,
-              frameTransform:cs.transform,
-              imageFilter:imgCs.filter,
-              imageTransform:imgCs.transform,
-              layers:el.querySelectorAll('.motion-reveal-layer').length,
-              sweep:el.querySelectorAll('.motion-reveal-sweep').length,
-              complete:el.classList.contains('reveal-complete')
-            };
-          });
-          assert.ok(finalState.complete,'Reveal must finish autonomously');
-          assert.equal(finalState.opacity,'1','Final image must be fully visible');
-          assert.ok(finalState.clip==='none' || finalState.clip==='inset(0px)','Final frame must not retain a reveal mask');
-          assert.equal(finalState.frameTransform,'none','Final frame must be geometrically neutral');
-          assert.equal(finalState.imageFilter,'none','Final photograph must have no filter or blur');
-          assert.equal(finalState.imageTransform,'none','Final photograph must use the original sharp render, without transformed resampling');
-          assert.equal(finalState.layers,0,'Depth layers must be removed after the reveal');
-          assert.equal(finalState.sweep,0,'Light sweep must be removed after the reveal');
-
-          const box=await media.boundingBox();
+          const devMedia=page.locator('.professional-visual.spatial-orbit-target');
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.spatialOrbit==='done');
+          const beforePointer=await devMedia.evaluate(el=>({frame:getComputedStyle(el).transform,image:getComputedStyle(el.querySelector(':scope > img')).transform,filter:getComputedStyle(el.querySelector(':scope > img')).filter,state:el.dataset.spatialOrbit}));
+          const box=await devMedia.boundingBox();
           if(box){await page.mouse.move(box.x+box.width*.8,box.y+box.height*.2);await page.waitForTimeout(450);}
-          const afterPointer=await media.evaluate(el=>({frame:getComputedStyle(el).transform,image:getComputedStyle(el.querySelector(':scope > img')).transform,filter:getComputedStyle(el.querySelector(':scope > img')).filter}));
-          assert.equal(afterPointer.frame,'none','Mouse movement must not restart or tilt the approved effect');
-          assert.equal(afterPointer.image,'none','Mouse movement must not move the final photograph');
-          assert.equal(afterPointer.filter,'none','Mouse movement must not soften the final photograph');
+          const afterPointer=await devMedia.evaluate(el=>({frame:getComputedStyle(el).transform,image:getComputedStyle(el.querySelector(':scope > img')).transform,filter:getComputedStyle(el.querySelector(':scope > img')).filter,state:el.dataset.spatialOrbit}));
+          assert.deepEqual(afterPointer,beforePointer,'Mouse movement must not restart, tilt or soften the finished Spatial Frame Orbit');
 
+          // Fail-safe QA: forced blur and forced transparency must abort the orbit and restore the photo.
+          await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'domcontentloaded'});
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.spatialOrbit==='running');
+          await page.locator('.professional-visual.spatial-orbit-target > img').evaluate(img=>img.style.setProperty('filter','blur(2px)','important'));
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.orbitIntegrity==='failed');
+          const blurRecovery=await page.locator('.professional-visual.spatial-orbit-target').evaluate(el=>({state:el.dataset.spatialOrbit,integrity:el.dataset.orbitIntegrity,filter:getComputedStyle(el.querySelector(':scope > img')).filter,opacity:getComputedStyle(el.querySelector(':scope > img')).opacity,geometry:el.querySelectorAll('.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo').length}));
+          assert.deepEqual(blurRecovery,{state:'done',integrity:'failed',filter:'none',opacity:'1',geometry:0},'Blur guard must fail closed and restore a clean photograph');
+
+          await page.goto('http://127.0.0.1:8000/ingles-para-compliance.html',{waitUntil:'domcontentloaded'});
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.spatialOrbit==='running');
+          await page.locator('.professional-visual.spatial-orbit-target > img').evaluate(img=>img.style.setProperty('opacity','.5','important'));
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.orbitIntegrity==='failed');
+          const opacityRecovery=await page.locator('.professional-visual.spatial-orbit-target').evaluate(el=>({state:el.dataset.spatialOrbit,integrity:el.dataset.orbitIntegrity,filter:getComputedStyle(el.querySelector(':scope > img')).filter,opacity:getComputedStyle(el.querySelector(':scope > img')).opacity,geometry:el.querySelectorAll('.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo').length}));
+          assert.deepEqual(opacityRecovery,{state:'done',integrity:'failed',filter:'none',opacity:'1',geometry:0},'Opacity guard must fail closed and restore a clean photograph');
+
+          // Reduced motion: no transient geometry, photo remains normal.
+          await page.emulateMedia({reducedMotion:'reduce'});
+          await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'domcontentloaded'});
+          await page.waitForFunction(()=>document.querySelector('.professional-visual.spatial-orbit-target')?.dataset.spatialOrbit==='done');
+          const reduced=await page.locator('.professional-visual.spatial-orbit-target').evaluate(el=>({integrity:el.dataset.orbitIntegrity,geometry:el.querySelectorAll('.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo').length,filter:getComputedStyle(el.querySelector(':scope > img')).filter,opacity:getComputedStyle(el.querySelector(':scope > img')).opacity}));
+          assert.deepEqual(reduced,{integrity:'passed',geometry:0,filter:'none',opacity:'1'},'Reduced-motion mode must skip transient geometry and keep the photograph clean');
+
+          await context.close();
           await browser.close();
-          console.log('FUNCTIONAL QA OK — commercial rules, attribution and sharp autonomous cinematic reveal verified');
+          console.log('FUNCTIONAL QA OK — commercial rules, attribution and Spatial Frame Orbit verified on all four production photographs');
           EOF
           node functional-check.mjs

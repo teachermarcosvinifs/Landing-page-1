@@ -116,14 +116,18 @@ jobs:
               const data=await page.evaluate(()=>{
                 const body=document.body;
                 const html=document.documentElement;
-                const overflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
+                const rawVisualOverflow=Math.max(body.scrollWidth,html.scrollWidth)-window.innerWidth;
+                const y=window.scrollY;
+                window.scrollTo(999999,y);
+                const horizontalScrollPx=Math.abs(window.scrollX);
+                window.scrollTo(0,y);
                 const actionable=[...document.querySelectorAll('a.btn,button,nav a,nav summary')];
                 const tiny=actionable.filter(el=>{
                   const r=el.getBoundingClientRect();
                   return r.width>0 && r.height>0 && (r.width<36 || r.height<36);
                 }).map(el=>({text:(el.textContent||'').trim().slice(0,60),w:Math.round(el.getBoundingClientRect().width),h:Math.round(el.getBoundingClientRect().height)}));
                 const hiddenReveal=[...document.querySelectorAll('.reveal-target:not(.is-visible)')].length;
-                return {title:document.title,overflowPx:overflow,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
+                return {title:document.title,rawVisualOverflowPx:rawVisualOverflow,horizontalScrollPx,tinyTargets:tiny,hiddenReveal,documentHeight:Math.round(html.scrollHeight)};
               });
               report.push({name,profile,...data,initialLayout,mobileMenu,consoleErrors});
               await page.close();
@@ -132,54 +136,113 @@ jobs:
           }
           await browser.close();
           fs.writeFileSync('visual-artifacts/report.json',JSON.stringify(report,null,2));
-          const failures=report.filter(x=>x.overflowPx>2 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap || (x.mobileMenu.required && (!x.mobileMenu.present || !x.mobileMenu.panelVisible || x.mobileMenu.linkCount<2)));
+          const failures=report.filter(x=>x.horizontalScrollPx>0 || x.consoleErrors.length>0 || x.tinyTargets.length>0 || x.hiddenReveal>0 || x.initialLayout.headerOverlap || (x.mobileMenu.required && (!x.mobileMenu.present || !x.mobileMenu.panelVisible || x.mobileMenu.linkCount<2)));
           console.log(JSON.stringify(report,null,2));
           if(failures.length){
-            console.error('VISUAL QA FAILED: overflow, console error, undersized target, unrevealed content, header/H1 collision or mobile navigation failure detected');
+            console.error('VISUAL QA FAILED: scrollable horizontal overflow, console error, undersized target, unrevealed content, header/H1 collision or mobile navigation failure detected');
             process.exit(1);
           }
-          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including above-fold spacing and interactive mobile navigation');
+          console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including layout, real horizontal scroll, console and mobile navigation');
           EOF
           node visual-check.mjs
-      - name: Record Dev and Compliance motion evidence
+      - name: Record and verify autonomous Spatial Frame Orbit evidence
         run: |
           mkdir -p visual-artifacts/motion
           cat > motion-evidence.mjs <<'EOF'
           import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
           import fs from 'fs';
 
           const browser=await chromium.launch({headless:true});
-          const cases=[['dev','/ingles-para-devs.html'],['compliance','/ingles-para-compliance.html']];
-          for(const [name,path] of cases){
+          const cases=[
+            {name:'home',path:'/index.html',selector:'#ingles-profissional .spatial-orbit-target',count:2,scroll:'#ingles-profissional'},
+            {name:'dev',path:'/ingles-para-devs.html',selector:'.professional-visual.spatial-orbit-target',count:1},
+            {name:'compliance',path:'/ingles-para-compliance.html',selector:'.professional-visual.spatial-orbit-target',count:1}
+          ];
+          const evidence=[];
+
+          for(const test of cases){
             const context=await browser.newContext({
               viewport:{width:1440,height:900},
               recordVideo:{dir:'visual-artifacts/motion',size:{width:1440,height:900}}
             });
             const page=await context.newPage();
-            await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
-            await page.waitForTimeout(850);
-            const media=page.locator('.professional-visual');
-            const box=await media.boundingBox();
-            if(!box)throw new Error(`${name}: professional visual not found`);
-            await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);
-            await page.waitForTimeout(450);
-            await page.mouse.move(box.x+box.width*.84,box.y+box.height*.22,{steps:28});
-            await page.waitForTimeout(650);
-            await page.mouse.move(box.x+box.width*.18,box.y+box.height*.78,{steps:34});
-            await page.waitForTimeout(650);
-            await page.evaluate(()=>window.scrollTo({top:320,behavior:'smooth'}));
-            await page.waitForTimeout(1100);
-            await page.evaluate(()=>window.scrollTo({top:0,behavior:'smooth'}));
-            await page.waitForTimeout(1000);
-            await page.mouse.move(18,18,{steps:24});
-            await page.waitForTimeout(900);
+            const consoleErrors=[];
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+            page.on('pageerror',e=>consoleErrors.push(String(e)));
+            await page.goto('http://127.0.0.1:8000'+test.path,{waitUntil:'domcontentloaded'});
+            if(test.scroll)await page.locator(test.scroll).scrollIntoViewIfNeeded();
+            await page.waitForFunction(({selector,count})=>{
+              const targets=[...document.querySelectorAll(selector)];
+              return targets.length===count && targets.every(el=>el.dataset.spatialOrbit==='running');
+            },{selector:test.selector,count:test.count});
+            await page.waitForTimeout(420);
+
+            const during=await page.locator(test.selector).evaluateAll(targets=>targets.map(el=>{
+              const img=el.querySelector(':scope > img');
+              const cs=getComputedStyle(img);
+              return {
+                autonomous:el.dataset.orbitAutonomous,
+                images:el.querySelectorAll('img').length,
+                frames:el.querySelectorAll('.orbit-frame').length,
+                rails:el.querySelectorAll('.orbit-rail').length,
+                nodes:el.querySelectorAll('.orbit-node').length,
+                halo:el.querySelectorAll('.orbit-halo').length,
+                filter:cs.filter,
+                opacity:Number.parseFloat(cs.opacity)
+              }
+            }));
+            const overflowState=await page.evaluate(()=>{
+              const raw=Math.max(document.body.scrollWidth,document.documentElement.scrollWidth)-window.innerWidth;
+              const y=window.scrollY;
+              window.scrollTo(999999,y);
+              const scrollX=Math.abs(window.scrollX);
+              window.scrollTo(0,y);
+              return {rawVisualOverflowPx:raw,horizontalScrollPx:scrollX};
+            });
+            await page.screenshot({path:`visual-artifacts/motion/${test.name}-orbit-during.png`,fullPage:false});
+
+            for(const state of during){
+              assert.equal(state.autonomous,'true',`${test.name}: orbit must start autonomously`);
+              assert.equal(state.images,1,`${test.name}: photo must not be duplicated`);
+              assert.equal(state.frames,3,`${test.name}: three spatial frames expected`);
+              assert.equal(state.rails,2,`${test.name}: two rails expected`);
+              assert.equal(state.nodes,2,`${test.name}: two nodes expected`);
+              assert.equal(state.halo,1,`${test.name}: one temporary halo expected`);
+              assert.equal(state.filter,'none',`${test.name}: photograph must stay sharp`);
+              assert.ok(state.opacity>=.92,`${test.name}: photograph must stay visibly opaque`);
+            }
+            assert.equal(overflowState.horizontalScrollPx,0,`${test.name}: orbit must not create horizontal scrolling`);
+
+            await page.waitForFunction(({selector,count})=>{
+              const targets=[...document.querySelectorAll(selector)];
+              return targets.length===count && targets.every(el=>el.dataset.spatialOrbit==='done');
+            },{selector:test.selector,count:test.count});
+            const final=await page.locator(test.selector).evaluateAll(targets=>targets.map(el=>{
+              const img=el.querySelector(':scope > img');
+              const cs=getComputedStyle(img);
+              return {integrity:el.dataset.orbitIntegrity,geometry:el.querySelectorAll('.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo').length,filter:cs.filter,opacity:cs.opacity,frame:getComputedStyle(el).transform}
+            }));
+            for(const state of final){
+              assert.equal(state.integrity,'passed',`${test.name}: orbit integrity must pass`);
+              assert.equal(state.geometry,0,`${test.name}: temporary geometry must be removed`);
+              assert.equal(state.filter,'none',`${test.name}: final photograph must be sharp`);
+              assert.equal(state.opacity,'1',`${test.name}: final photograph must be fully visible`);
+              assert.equal(state.frame,'none',`${test.name}: frame must return to neutral`);
+            }
+            assert.equal(consoleErrors.length,0,`${test.name}: console must remain error-free`);
+            await page.screenshot({path:`visual-artifacts/motion/${test.name}-orbit-final.png`,fullPage:false});
+            evidence.push({name:test.name,during,final,overflowState,consoleErrors});
+
             const video=page.video();
             await page.close();
             const raw=await video.path();
-            fs.renameSync(raw,`visual-artifacts/motion/${name}-professional-motion.webm`);
+            fs.renameSync(raw,`visual-artifacts/motion/${test.name}-spatial-frame-orbit.webm`);
             await context.close();
           }
           await browser.close();
+          fs.writeFileSync('visual-artifacts/motion/spatial-orbit-report.json',JSON.stringify(evidence,null,2));
+          console.log('SPATIAL FRAME ORBIT EVIDENCE OK — all four production photographs verified without mouse input');
           EOF
           node motion-evidence.mjs
       - name: Upload visual evidence
