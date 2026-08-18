@@ -2,6 +2,7 @@
    One sharp photograph plane. Spatial depth is created only by temporary geometry
    and controlled perspective around the existing production frame. */
 html,body{overflow-x:clip}
+#ingles-profissional{overflow-x:clip}
 
 .spatial-orbit-target{
   isolation:isolate;
