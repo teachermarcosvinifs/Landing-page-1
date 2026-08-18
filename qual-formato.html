@@ -15,6 +15,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="theme-color" content="#030405">
 <link rel="stylesheet" href="assets/site-v3-black.css">
+<link rel="stylesheet" href="assets/format-tool-v2.css?v=20260818-0215-format-v2">
 <script src="assets/site-v3-motion.js" defer></script>
 </head>
 <body>
@@ -38,6 +39,11 @@
   <p class="lead">Informe seu nível, objetivo, formato e carga semanal. No final, você verá uma combinação para levar ao contato</p>
 </section>
 
+<div class="fit-progress" id="fitProgress" aria-live="polite">
+  <div class="fit-progress-head"><span>Seu progresso</span><b id="progressText">0 de 4 respostas selecionadas</b></div>
+  <div class="fit-progress-track" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+</div>
+
 <form id="fitForm">
 <section class="question"><h2>1. Como está seu inglês hoje?</h2><div class="options"><div class="option"><input required type="radio" name="level" value="beginner" id="l1"><label for="l1">Estou começando / ainda tenho pouca base</label></div><div class="option"><input type="radio" name="level" value="basic" id="l2"><label for="l2">Já estudei, mas minha base ainda é limitada</label></div><div class="option"><input type="radio" name="level" value="b1plus" id="l3"><label for="l3">Já consigo me comunicar e acredito estar no B1 ou acima</label></div><div class="option"><input type="radio" name="level" value="unknown" id="l4"><label for="l4">Não sei dizer</label></div></div></section>
 <section class="question"><h2>2. O que você procura principalmente?</h2><div class="options"><div class="option"><input required type="radio" name="goal" value="regular" id="g1"><label for="g1">Aprender inglês com ensino regular</label></div><div class="option"><input type="radio" name="goal" value="conversation" id="g2"><label for="g2">Ter mais espaço para falar e trabalhar conversação</label></div><div class="option"><input type="radio" name="goal" value="professional" id="g3"><label for="g3">Estudar inglês pensando também no meu trabalho ou profissão</label></div><div class="option"><input type="radio" name="goal" value="unsure" id="g4"><label for="g4">Ainda não sei qual modalidade faz mais sentido</label></div></div></section>
@@ -46,12 +52,29 @@
 <section class="tool-actions"><button class="btn btn-primary" type="submit">Ver opção</button><button class="btn" type="reset" id="resetBtn">Limpar respostas</button></section>
 </form>
 
-<section id="result" class="result" aria-live="polite"><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div><p class="result-copy" id="resultCopy"></p><div class="result-facts" id="facts"></div><p class="notice">Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp</p><div class="tool-actions"><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Consultar pelo WhatsApp</a><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=header" target="_blank" rel="noopener">Preencher formulário</a></div><p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p></section>
+<section id="result" class="result" aria-live="polite">
+  <div class="result-head">
+    <div><div class="result-tag">Com base nas suas respostas</div><div class="result-title" id="resultTitle"></div></div>
+    <span class="result-badge">Recomendação inicial</span>
+  </div>
+  <div class="result-summary" id="resultSummary"></div>
+  <div class="result-explanation"><span class="result-eyebrow">Por que esta combinação apareceu</span><p class="result-copy" id="resultCopy"></p></div>
+  <div class="result-facts" id="facts"></div>
+  <div class="result-next">
+    <span class="result-eyebrow">Próximo passo</span>
+    <p class="notice">Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp</p>
+    <div class="tool-actions"><a class="btn btn-primary" id="waResult" target="_blank" rel="noopener">Consultar pelo WhatsApp</a><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA/viewform?usp=header" target="_blank" rel="noopener">Preencher formulário</a></div>
+    <p class="small">A modalidade conversacional é oferecida a partir do B1. Duplas, trios e grupos dependem de vagas e compatibilidade entre alunos</p>
+  </div>
+</section>
 </main>
 
 <footer class="site-footer"><div class="tool-main footer-row"><span>Professor Marcos Vinicius · aulas de inglês online</span><a href="./">Página inicial</a></div></footer>
 <script>
 const labels={individual:'Individual',dupla:'Dupla',trio:'Trio',grupo:'Grupo de 4 a 6 pessoas'};
+const levelLabels={beginner:'Começando agora',basic:'Base ainda limitada',b1plus:'B1 ou acima',unknown:'Nível a confirmar'};
+const goalLabels={regular:'Ensino regular',conversation:'Mais conversação',professional:'Inglês para o trabalho',unsure:'Modalidade a definir'};
+const minutesLabels={'60':'60 min / semana','90':'90 min / semana','120':'120 min / semana',unknown:'A definir'};
 const sourceLabels={
   'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
   'x-formatos':'uma publicação no X sobre os formatos das aulas',
@@ -65,21 +88,73 @@ const sourceKey=new URLSearchParams(window.location.search).get('src');
 const sourceLabel=sourceLabels[sourceKey]||'';
 const form=document.getElementById('fitForm');
 const result=document.getElementById('result');
-form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');let mode='Ensino regular';let copy='O ensino regular trabalha o inglês de forma ampla e atende desde o nível iniciante';
-if(goal==='conversation'&&level==='b1plus'){mode='Aulas conversacionais (B1+)';copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. A modalidade conversacional pode ser uma opção'}
-else if(goal==='conversation'&&level!=='b1plus'){mode='Ensino regular';copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Para níveis anteriores, trabalho com ensino regular'}
-else if(goal==='professional'){mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';copy='O formato principal depende do seu nível. Vocabulário e situações da sua área podem entrar nas aulas quando forem relevantes'}
-else if(goal==='unsure'){mode='Ensino regular como referência inicial';copy='Se você ainda não sabe qual modalidade escolher, o ensino regular é a referência inicial. Formato e carga semanal podem ser definidos separadamente'}
-document.getElementById('resultTitle').textContent=mode+' · '+labels[format];document.getElementById('resultCopy').textContent=copy;
-let rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b></div><div class="result-fact"><span>Carga semanal considerada</span><b>${minutes==='unknown'?'Ainda não definida':minutes+' minutos'}</b></div>`;
-document.getElementById('facts').innerHTML=rows;
-const summary=`${mode}, ${labels[format]}${minutes==='unknown'?'':', '+minutes+' minutos por semana'}`;
-const sourceSentence=sourceLabel?` Vi a página a partir de ${sourceLabel}.`:'';
-const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}. Gostaria de consultar valores, planos e cargas horárias.${sourceSentence}`;
-document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
-result.classList.add('show');result.classList.add('is-visible');result.scrollIntoView({behavior:'smooth',block:'start'});
+const groups=['level','goal','format','minutes'];
+const progressText=document.getElementById('progressText');
+const progressSegments=[...document.querySelectorAll('.fit-progress-track i')];
+const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function updateProgress(){
+  const completed=groups.filter(name=>form.querySelector(`input[name="${name}"]:checked`)).length;
+  progressText.textContent=`${completed} de 4 ${completed===1?'resposta selecionada':'respostas selecionadas'}`;
+  progressSegments.forEach((segment,index)=>segment.classList.toggle('is-complete',index<completed));
+}
+
+form.addEventListener('change',event=>{
+  if(!event.target.matches('input[type="radio"]'))return;
+  updateProgress();
+  if(!reduceMotion){
+    const label=event.target.nextElementSibling;
+    label?.animate([{transform:'translateY(-1px) scale(.985)'},{transform:'translateY(-1px) scale(1.012)'},{transform:'translateY(-1px) scale(1)'}],{duration:260,easing:'cubic-bezier(.2,.8,.2,1)'});
+  }
 });
-document.getElementById('resetBtn').addEventListener('click',()=>{result.classList.remove('show');});
+
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const data=new FormData(form);
+  const level=data.get('level'),goal=data.get('goal'),format=data.get('format'),minutes=data.get('minutes');
+  let mode='Ensino regular';
+  let copy='O ensino regular trabalha o inglês de forma ampla e atende desde o nível iniciante';
+  if(goal==='conversation'&&level==='b1plus'){
+    mode='Aulas conversacionais (B1+)';
+    copy='Você indicou que já consegue se comunicar e quer mais espaço para fala. A modalidade conversacional pode ser uma opção';
+  }else if(goal==='conversation'&&level!=='b1plus'){
+    mode='Ensino regular';
+    copy='Você quer desenvolver conversação, mas a modalidade conversacional começa a partir do B1. Para níveis anteriores, trabalho com ensino regular';
+  }else if(goal==='professional'){
+    mode=level==='b1plus'?'Ensino regular ou conversacional, conforme a necessidade':'Ensino regular';
+    copy='O formato principal depende do seu nível. Vocabulário e situações da sua área podem entrar nas aulas quando forem relevantes';
+  }else if(goal==='unsure'){
+    mode='Ensino regular como referência inicial';
+    copy='Se você ainda não sabe qual modalidade escolher, o ensino regular é a referência inicial. Formato e carga semanal podem ser definidos separadamente';
+  }
+
+  document.getElementById('resultTitle').textContent=mode+' · '+labels[format];
+  document.getElementById('resultCopy').textContent=copy;
+  document.getElementById('resultSummary').innerHTML=`
+    <div class="result-summary-item"><span>Nível informado</span><b>${levelLabels[level]}</b></div>
+    <div class="result-summary-item"><span>Objetivo principal</span><b>${goalLabels[goal]}</b></div>
+    <div class="result-summary-item"><span>Formato</span><b>${labels[format]}</b></div>
+    <div class="result-summary-item"><span>Carga considerada</span><b>${minutesLabels[minutes]}</b></div>`;
+
+  const availability=format==='individual'?'Não depende de formação de dupla, trio ou grupo':'Depende de vagas e compatibilidade entre alunos';
+  const rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b></div><div class="result-fact"><span>Carga semanal considerada</span><b>${minutes==='unknown'?'Ainda não definida':minutes+' minutos'}</b></div><div class="result-fact"><span>Disponibilidade</span><b>${availability}</b></div>`;
+  document.getElementById('facts').innerHTML=rows;
+
+  const summary=`${mode}, ${labels[format]}${minutes==='unknown'?'':', '+minutes+' minutos por semana'}`;
+  const sourceSentence=sourceLabel?` Vi a página a partir de ${sourceLabel}.`:'';
+  const text=`Olá! Usei a ferramenta de formatos do seu site. Tenho interesse em estudar inglês. Minha escolha ficou em ${summary}. Gostaria de consultar valores, planos e cargas horárias.${sourceSentence}`;
+  document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
+  result.classList.add('show');
+  result.classList.add('is-visible');
+  result.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+});
+
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  result.classList.remove('show');
+  requestAnimationFrame(updateProgress);
+});
+
+updateProgress();
 </script>
 </body>
 </html>
