@@ -8,6 +8,8 @@ on:
       - 'motion-max-c.html'
       - 'assets/motion-max.css'
       - 'assets/motion-max.js'
+      - 'assets/motion-max-refined.css'
+      - 'assets/motion-max-refined.js'
       - '.github/workflows/motion-max-review.yml'
 
 permissions:
@@ -43,8 +45,8 @@ jobs:
           const browser=await chromium.launch({headless:true});
           const concepts=[
             {id:'a',file:'motion-max-a.html',mid:'.prism-slice'},
-            {id:'b',file:'motion-max-b.html',mid:'.depth-mid'},
-            {id:'c',file:'motion-max-c.html',mid:'.refract-core'}
+            {id:'b',file:'motion-max-b.html',mid:'.orbit-frame'},
+            {id:'c',file:'motion-max-c.html',mid:'.refract-band'}
           ];
 
           for(const concept of concepts){
@@ -64,10 +66,10 @@ jobs:
             assert.equal(during.filter,'none',`${concept.id}: base photo must stay sharp during effect`);
             assert.ok(during.opacity>.98,`${concept.id}: base photo must stay visible during effect`);
             assert.ok(await page.locator(concept.mid).count()>=1,`${concept.id}: signature effect layer must exist during animation`);
-            if(concept.id==='a') assert.ok(await page.locator('.prism-slice').count()===5,'A: must assemble five independent prism slices');
-            if(concept.id==='b') assert.ok(await page.locator('.depth-near').count()===1,'B: near depth plane must exist');
+            if(concept.id==='a') assert.equal(await page.locator('.prism-slice').count(),5,'A: must assemble five independent prism slices');
+            if(concept.id==='b') assert.equal(await page.locator('.orbit-frame').count(),3,'B: must orbit three geometric depth frames without duplicating the photo');
             if(concept.id==='c'){
-              const canvas=page.locator('canvas.refraction-gl');
+              const canvas=page.locator('canvas.refraction-gl-refined');
               await canvas.waitFor();
               const gl=await canvas.evaluate(c=>({w:c.width,h:c.height,ok:!!c.getContext('webgl')}));
               assert.ok(gl.w>100&&gl.h>100&&gl.ok,'C: WebGL refraction canvas must initialize');
@@ -84,7 +86,7 @@ jobs:
             fs.copyFileSync(src,`motion-max-evidence/option-${concept.id}.webm`);
           }
           await browser.close();
-          console.log('MOTION MAX REVIEW OK — A/B/C autonomous, base photo sharp throughout, signature effects verified');
+          console.log('MOTION MAX REVIEW OK — A/B/C autonomous, base photo sharp throughout, refined signatures verified');
           EOF
           node motion-max-check.mjs
       - name: Upload comparison evidence
