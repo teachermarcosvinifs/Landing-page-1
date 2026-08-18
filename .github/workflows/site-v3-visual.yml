@@ -141,6 +141,47 @@ jobs:
           console.log('VISUAL QA OK — all 6 pages checked on desktop/mobile, including above-fold spacing and interactive mobile navigation');
           EOF
           node visual-check.mjs
+      - name: Record Dev and Compliance motion evidence
+        run: |
+          mkdir -p visual-artifacts/motion
+          cat > motion-evidence.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'fs';
+
+          const browser=await chromium.launch({headless:true});
+          const cases=[['dev','/ingles-para-devs.html'],['compliance','/ingles-para-compliance.html']];
+          for(const [name,path] of cases){
+            const context=await browser.newContext({
+              viewport:{width:1440,height:900},
+              recordVideo:{dir:'visual-artifacts/motion',size:{width:1440,height:900}}
+            });
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:8000'+path,{waitUntil:'networkidle'});
+            await page.waitForTimeout(850);
+            const media=page.locator('.professional-visual');
+            const box=await media.boundingBox();
+            if(!box)throw new Error(`${name}: professional visual not found`);
+            await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);
+            await page.waitForTimeout(450);
+            await page.mouse.move(box.x+box.width*.84,box.y+box.height*.22,{steps:28});
+            await page.waitForTimeout(650);
+            await page.mouse.move(box.x+box.width*.18,box.y+box.height*.78,{steps:34});
+            await page.waitForTimeout(650);
+            await page.evaluate(()=>window.scrollTo({top:320,behavior:'smooth'}));
+            await page.waitForTimeout(1100);
+            await page.evaluate(()=>window.scrollTo({top:0,behavior:'smooth'}));
+            await page.waitForTimeout(1000);
+            await page.mouse.move(18,18,{steps:24});
+            await page.waitForTimeout(900);
+            const video=page.video();
+            await page.close();
+            const raw=await video.path();
+            fs.renameSync(raw,`visual-artifacts/motion/${name}-professional-motion.webm`);
+            await context.close();
+          }
+          await browser.close();
+          EOF
+          node motion-evidence.mjs
       - name: Upload visual evidence
         if: always()
         uses: actions/upload-artifact@v4

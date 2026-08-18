@@ -5,22 +5,48 @@
 .dev-page-hero .professional-hero-copy h1{max-width:15ch}
 .professional-hero-copy .lead{max-width:680px}
 
-.professional-visual,.specialty-visual{position:relative;overflow:hidden;margin:0;border:1px solid var(--line-strong);background:#080a0c;box-shadow:0 28px 70px rgba(0,0,0,.38)}
+.professional-visual,.specialty-visual{
+  --tilt-x:0deg;
+  --tilt-y:0deg;
+  --media-x:0px;
+  --media-y:0px;
+  --scroll-y:0px;
+  position:relative;
+  overflow:hidden;
+  margin:0;
+  border:1px solid var(--line-strong);
+  background:#080a0c;
+  box-shadow:0 28px 70px rgba(0,0,0,.38);
+  transform:perspective(1200px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  transform-style:preserve-3d;
+  transform-origin:center;
+  will-change:transform,clip-path;
+  transition:border-color .38s ease,box-shadow .48s ease;
+}
 .professional-visual{width:min(430px,100%);justify-self:end;aspect-ratio:4/3;border-radius:16px}
 .specialty-visual{width:100%;aspect-ratio:16/10;border-radius:14px;margin:0 0 24px}
-.professional-visual::after,.specialty-visual::after{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,.055);border-radius:inherit;pointer-events:none}
-.professional-visual img,.specialty-visual img{width:100%;height:100%;object-fit:cover;transform:scale(1.04) translate3d(-1%,0,0);animation:professionalImageDrift 9.5s cubic-bezier(.45,.05,.55,.95) infinite alternate;will-change:transform;transition:filter .55s ease}
-.professional-visual:hover img,.specialty-visual:hover img{filter:brightness(1.045) contrast(1.025)}
+.professional-visual::after,.specialty-visual::after{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,.055);border-radius:inherit;pointer-events:none;z-index:2}
+.professional-visual img,.specialty-visual img{
+  width:100%;height:100%;object-fit:cover;
+  transform:translate3d(var(--media-x),calc(var(--media-y) + var(--scroll-y)),18px) scale(1.14);
+  transform-origin:center;
+  will-change:transform;
+  transition:filter .5s ease;
+}
+.professional-visual.is-motion-active,.specialty-visual.is-motion-active{border-color:#626d75;box-shadow:0 36px 88px rgba(0,0,0,.48)}
+.professional-visual.is-motion-active img,.specialty-visual.is-motion-active img{filter:brightness(1.03) contrast(1.025)}
 .dev-visual img{object-position:center 48%}
 .compliance-visual img{object-position:center 45%}
 
-.professional-visual.reveal-target,.specialty-visual.reveal-target{opacity:0;transform:translateY(20px) scale(.985);clip-path:inset(0 0 14% 0 round 14px);transition:opacity .72s var(--ease),transform .82s var(--ease),clip-path .88s var(--ease)}
-.professional-visual.reveal-target.is-visible,.specialty-visual.reveal-target.is-visible{opacity:1;transform:none;clip-path:inset(0 0 0 0 round 14px)}
-
-@keyframes professionalImageDrift{
-  0%{transform:scale(1.04) translate3d(-1%,0,0)}
-  50%{transform:scale(1.07) translate3d(.25%,-.4%,0)}
-  100%{transform:scale(1.095) translate3d(1.2%,-.85%,0)}
+/* Reveal is held until the real photograph is loaded, then opens from the outside edge inward */
+.professional-visual.reveal-target,.specialty-visual.reveal-target{
+  opacity:0;
+  clip-path:inset(0 0 0 100% round 16px);
+  transition:opacity .5s cubic-bezier(.22,.8,.24,1),clip-path .92s cubic-bezier(.16,.84,.18,1),border-color .38s ease,box-shadow .48s ease;
+}
+.professional-visual.reveal-target.is-visible.media-ready,.specialty-visual.reveal-target.is-visible.media-ready{
+  opacity:1;
+  clip-path:inset(0 0 0 0 round 16px);
 }
 
 @media(max-width:1050px){
@@ -42,9 +68,12 @@
   .dev-page-hero h1{font-size:clamp(42px,11vw,46px);max-width:none}
   .professional-visual{aspect-ratio:4/3;border-radius:12px}
   .specialty-visual{aspect-ratio:4/3;border-radius:12px;margin-bottom:20px}
+  .professional-visual.reveal-target,.specialty-visual.reveal-target{clip-path:inset(0 0 0 100% round 12px)}
+  .professional-visual.reveal-target.is-visible.media-ready,.specialty-visual.reveal-target.is-visible.media-ready{clip-path:inset(0 0 0 0 round 12px)}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .professional-visual img,.specialty-visual img{animation:none;transform:none}
-  .professional-visual.reveal-target,.specialty-visual.reveal-target{opacity:1;transform:none;clip-path:none}
+  .professional-visual,.specialty-visual{transform:none!important;transition:none!important}
+  .professional-visual img,.specialty-visual img{transform:scale(1.02)!important;transition:none!important}
+  .professional-visual.reveal-target,.specialty-visual.reveal-target{opacity:1;clip-path:none;transition:none}
 }

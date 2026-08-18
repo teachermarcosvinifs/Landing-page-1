@@ -93,8 +93,122 @@
     })
   }
 
+  const setupProfessionalMediaMotion=()=>{
+    const elements=[...document.querySelectorAll('.professional-visual,.specialty-visual')]
+    if(!elements.length)return
+
+    elements.forEach(el=>{
+      const img=el.querySelector('img')
+      if(!img){el.classList.add('media-ready');return}
+      const ready=()=>el.classList.add('media-ready')
+      if(img.complete&&img.naturalWidth>0)ready()
+      else{
+        img.addEventListener('load',ready,{once:true})
+        img.addEventListener('error',ready,{once:true})
+      }
+    })
+
+    if(reduceMotion)return
+    const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)').matches
+    const clamp=(value,min,max)=>Math.max(min,Math.min(max,value))
+    const states=elements.map(el=>({
+      el,
+      tiltX:0,tiltY:0,mediaX:0,mediaY:0,scrollY:0,
+      targetTiltX:0,targetTiltY:0,targetMediaX:0,targetMediaY:0,targetScrollY:0
+    }))
+    let frame=0
+
+    const write=state=>{
+      state.el.style.setProperty('--tilt-x',`${state.tiltX.toFixed(3)}deg`)
+      state.el.style.setProperty('--tilt-y',`${state.tiltY.toFixed(3)}deg`)
+      state.el.style.setProperty('--media-x',`${state.mediaX.toFixed(2)}px`)
+      state.el.style.setProperty('--media-y',`${state.mediaY.toFixed(2)}px`)
+      state.el.style.setProperty('--scroll-y',`${state.scrollY.toFixed(2)}px`)
+    }
+
+    const tick=()=>{
+      let moving=false
+      states.forEach(state=>{
+        const values=[
+          ['tiltX','targetTiltX',.115,.004],
+          ['tiltY','targetTiltY',.115,.004],
+          ['mediaX','targetMediaX',.11,.025],
+          ['mediaY','targetMediaY',.11,.025],
+          ['scrollY','targetScrollY',.09,.025]
+        ]
+        values.forEach(([current,target,ease,threshold])=>{
+          const delta=state[target]-state[current]
+          if(Math.abs(delta)>threshold){
+            state[current]+=delta*ease
+            moving=true
+          }else state[current]=state[target]
+        })
+        write(state)
+      })
+      frame=moving?requestAnimationFrame(tick):0
+    }
+
+    const wake=()=>{if(!frame)frame=requestAnimationFrame(tick)}
+
+    const updateScrollTargets=()=>{
+      const viewport=window.innerHeight||document.documentElement.clientHeight
+      states.forEach(state=>{
+        const rect=state.el.getBoundingClientRect()
+        if(rect.bottom<-rect.height||rect.top>viewport+rect.height)return
+        const center=rect.top+rect.height/2
+        const range=(viewport+rect.height)/2
+        const normalized=clamp((viewport/2-center)/range,-1,1)
+        state.targetScrollY=normalized*13
+      })
+      wake()
+    }
+
+    if(finePointer){
+      states.forEach(state=>{
+        const setPointerTarget=event=>{
+          const rect=state.el.getBoundingClientRect()
+          if(!rect.width||!rect.height)return
+          const nx=clamp(((event.clientX-rect.left)/rect.width)*2-1,-1,1)
+          const ny=clamp(((event.clientY-rect.top)/rect.height)*2-1,-1,1)
+          state.targetTiltX=nx*1.9
+          state.targetTiltY=-ny*1.35
+          state.targetMediaX=-nx*11
+          state.targetMediaY=-ny*7.5
+          wake()
+        }
+        state.el.addEventListener('pointerenter',event=>{
+          state.el.classList.add('is-motion-active')
+          setPointerTarget(event)
+        })
+        state.el.addEventListener('pointermove',setPointerTarget,{passive:true})
+        state.el.addEventListener('pointerleave',()=>{
+          state.el.classList.remove('is-motion-active')
+          state.targetTiltX=0
+          state.targetTiltY=0
+          state.targetMediaX=0
+          state.targetMediaY=0
+          wake()
+        })
+      })
+    }
+
+    let scrollQueued=false
+    const queueScrollUpdate=()=>{
+      if(scrollQueued)return
+      scrollQueued=true
+      requestAnimationFrame(()=>{
+        scrollQueued=false
+        updateScrollTargets()
+      })
+    }
+    window.addEventListener('scroll',queueScrollUpdate,{passive:true})
+    window.addEventListener('resize',queueScrollUpdate)
+    updateScrollTargets()
+  }
+
   setupMobileMenu()
   applySourceAttribution()
+  setupProfessionalMediaMotion()
 
   const revealSelectors=[
     '.section-intro','.offer-line','.split-copy','.fact-list','.context-link',
