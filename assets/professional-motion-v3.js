@@ -1,249 +1,128 @@
 (()=>{
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)').matches
-  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v))
-  const elements=[...document.querySelectorAll('.professional-visual,.specialty-visual')]
-  if(!elements.length)return
+  const figures=[...document.querySelectorAll('.professional-visual,.specialty-visual')]
+  if(!figures.length)return
 
-  const createShader=(gl,type,source)=>{
-    const shader=gl.createShader(type)
-    gl.shaderSource(shader,source)
-    gl.compileShader(shader)
-    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(shader)||'shader compile failed')
-    return shader
+  const duration=1220
+  const easing='cubic-bezier(.16,.82,.18,1)'
+
+  const finishPristine=figure=>{
+    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
+    figure.getAnimations().forEach(animation=>animation.cancel())
+    base?.getAnimations().forEach(animation=>animation.cancel())
+    figure.querySelectorAll('.motion-reveal-layer,.motion-reveal-sweep').forEach(node=>node.remove())
+    figure.style.opacity='1'
+    figure.style.clipPath='none'
+    figure.style.transform='none'
+    if(base){base.style.filter='none';base.style.transform='none'}
+    figure.classList.remove('motion-pending','motion-running')
+    figure.classList.add('reveal-complete','media-ready')
   }
 
-  const createGL=(canvas)=>{
-    const gl=canvas.getContext('webgl',{alpha:true,antialias:true,premultipliedAlpha:true,preserveDrawingBuffer:false})
-    if(!gl)return null
-    try{
-      const vertex=createShader(gl,gl.VERTEX_SHADER,`
-        attribute vec2 a_position;
-        varying vec2 v_uv;
-        void main(){
-          v_uv=a_position*.5+.5;
-          gl_Position=vec4(a_position,0.0,1.0);
-        }
-      `)
-      const fragment=createShader(gl,gl.FRAGMENT_SHADER,`
-        precision mediump float;
-        varying vec2 v_uv;
-        uniform vec2 u_pointer;
-        uniform float u_energy;
-        uniform float u_scroll;
-        void main(){
-          vec2 p=u_pointer*.5+.5;
-          vec2 d=v_uv-p;
-          d.x*=1.34;
-          float dist=length(d);
-          float soft=pow(max(0.0,1.0-dist*1.38),4.2);
-          float ribbon=pow(max(0.0,1.0-abs(d.x*.64+d.y*.92)*4.8),7.0)*soft;
-          float edge=(smoothstep(.0,.12,v_uv.x)*smoothstep(.0,.12,1.0-v_uv.x)*smoothstep(.0,.12,v_uv.y)*smoothstep(.0,.12,1.0-v_uv.y));
-          float scrollLift=clamp(abs(u_scroll)*.018,0.0,.16);
-          vec3 cool=vec3(.64,.82,.92);
-          vec3 neutral=vec3(.96,.96,.93);
-          vec3 tint=mix(cool,neutral,clamp(p.x*.55+.25,0.0,1.0));
-          float alpha=(soft*(.032+.055*u_energy)+ribbon*(.018+.034*u_energy)+scrollLift*.018)*edge;
-          gl_FragColor=vec4(tint,alpha);
-        }
-      `)
-      const program=gl.createProgram()
-      gl.attachShader(program,vertex)
-      gl.attachShader(program,fragment)
-      gl.linkProgram(program)
-      if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program)||'program link failed')
-      const buffer=gl.createBuffer()
-      gl.bindBuffer(gl.ARRAY_BUFFER,buffer)
-      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW)
-      gl.useProgram(program)
-      const position=gl.getAttribLocation(program,'a_position')
-      gl.enableVertexAttribArray(position)
-      gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0)
-      return {
-        gl,program,
-        pointer:gl.getUniformLocation(program,'u_pointer'),
-        energy:gl.getUniformLocation(program,'u_energy'),
-        scroll:gl.getUniformLocation(program,'u_scroll')
-      }
-    }catch(error){
-      console.warn('Professional WebGL overlay disabled:',error)
-      return null
-    }
-  }
-
-  const states=elements.map(el=>{
-    const base=el.querySelector(':scope > img')||el.querySelector('img')
-    if(!base)return null
-    el.classList.add('cinematic-v3')
-
+  const buildLayers=(figure,base)=>{
     const mid=base.cloneNode(true)
-    mid.className='depth-layer depth-mid'
+    mid.className='motion-reveal-layer motion-reveal-mid'
     mid.alt=''
     mid.setAttribute('aria-hidden','true')
     mid.removeAttribute('loading')
 
     const near=base.cloneNode(true)
-    near.className='depth-layer depth-near'
+    near.className='motion-reveal-layer motion-reveal-near'
     near.alt=''
     near.setAttribute('aria-hidden','true')
     near.removeAttribute('loading')
 
-    const canvas=document.createElement('canvas')
-    canvas.className='motion-gl'
-    canvas.setAttribute('aria-hidden','true')
+    const sweep=document.createElement('span')
+    sweep.className='motion-reveal-sweep'
+    sweep.setAttribute('aria-hidden','true')
+    figure.append(mid,near,sweep)
+    return {mid,near,sweep}
+  }
 
-    el.append(mid,near,canvas)
+  const runReveal=figure=>{
+    if(figure.dataset.cinematicReveal==='done'||figure.dataset.cinematicReveal==='running')return
+    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
+    if(!base)return
+    if(reduceMotion){figure.dataset.cinematicReveal='done';finishPristine(figure);return}
 
-    const state={
-      el,base,mid,near,canvas,gl:null,
-      rx:0,ry:0,baseX:0,baseY:0,midX:0,midY:0,nearX:0,nearY:0,scroll:0,energy:0,
-      targetRx:0,targetRy:0,targetBaseX:0,targetBaseY:0,targetMidX:0,targetMidY:0,targetNearX:0,targetNearY:0,targetScroll:0,targetEnergy:0,
-      pointerX:0,pointerY:0,targetPointerX:0,targetPointerY:0,
-      strength:el.classList.contains('professional-visual')?1:.72
+    figure.dataset.cinematicReveal='running'
+    figure.classList.add('cinematic-reveal','motion-pending','media-ready')
+    const {mid,near,sweep}=buildLayers(figure,base)
+
+    const frame=figure.animate([
+      {opacity:0,clipPath:'inset(0 100% 0 0 round 16px)',transform:'perspective(1500px) translate3d(52px,14px,-78px) rotateY(-5.2deg) scale(.94)'},
+      {opacity:1,offset:.44},
+      {opacity:1,clipPath:'inset(0 0 0 0 round 16px)',transform:'perspective(1500px) translate3d(0,0,0) rotateY(0deg) scale(1)'}
+    ],{duration,easing,fill:'forwards'})
+
+    const baseMotion=base.animate([
+      {filter:'brightness(.80) saturate(.86) contrast(.98)',transform:'scale(1.15) translate3d(22px,0,0)'},
+      {filter:'brightness(1.015) saturate(1.015) contrast(1.01)',offset:.72},
+      {filter:'none',transform:'none'}
+    ],{duration:duration+90,easing,fill:'forwards'})
+
+    const midMotion=mid.animate([
+      {opacity:0,transform:'translate3d(34px,4px,28px) scale(1.13)'},
+      {opacity:.88,offset:.32},
+      {opacity:.68,transform:'translate3d(0,0,24px) scale(1.07)',offset:.78},
+      {opacity:0,transform:'translate3d(0,0,0) scale(1)'}
+    ],{duration:duration+40,delay:90,easing,fill:'forwards'})
+
+    const nearMotion=near.animate([
+      {opacity:0,transform:'translate3d(58px,10px,55px) scale(1.17)'},
+      {opacity:.86,offset:.38},
+      {opacity:.56,transform:'translate3d(0,0,40px) scale(1.09)',offset:.78},
+      {opacity:0,transform:'translate3d(0,0,0) scale(1)'}
+    ],{duration:duration+80,delay:150,easing,fill:'forwards'})
+
+    const sweepMotion=sweep.animate([
+      {opacity:0,left:'-36%'},
+      {opacity:.72,left:'5%',offset:.22},
+      {opacity:.34,left:'78%',offset:.72},
+      {opacity:0,left:'118%'}
+    ],{duration:760,delay:310,easing:'cubic-bezier(.2,.78,.2,1)',fill:'forwards'})
+
+    figure.classList.remove('motion-pending')
+    figure.classList.add('motion-running')
+
+    Promise.allSettled([frame.finished,baseMotion.finished,midMotion.finished,nearMotion.finished,sweepMotion.finished]).then(()=>{
+      figure.dataset.cinematicReveal='done'
+      finishPristine(figure)
+    })
+  }
+
+  const armFigure=figure=>{
+    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
+    if(!base)return
+    figure.classList.add('cinematic-reveal')
+    const ready=()=>{
+      if(reduceMotion){runReveal(figure);return}
+      const rect=figure.getBoundingClientRect()
+      const visible=rect.top<window.innerHeight*.92&&rect.bottom>window.innerHeight*.08
+      if(visible)window.setTimeout(()=>runReveal(figure),figure.classList.contains('specialty-visual')?120:90)
     }
-
-    const initCanvas=()=>{
-      if(reduceMotion)return
-      state.gl=createGL(canvas)
-      resizeCanvas(state)
-      renderGL(state)
-    }
-    const ready=()=>requestAnimationFrame(initCanvas)
     if(base.complete&&base.naturalWidth>0)ready()
-    else base.addEventListener('load',ready,{once:true})
-
-    return state
-  }).filter(Boolean)
-
-  if(!states.length||reduceMotion)return
-
-  const resizeCanvas=state=>{
-    if(!state.gl)return
-    const rect=state.el.getBoundingClientRect()
-    const dpr=Math.min(window.devicePixelRatio||1,1.5)
-    const w=Math.max(1,Math.round(rect.width*dpr))
-    const h=Math.max(1,Math.round(rect.height*dpr))
-    if(state.canvas.width!==w||state.canvas.height!==h){
-      state.canvas.width=w
-      state.canvas.height=h
-      state.gl.gl.viewport(0,0,w,h)
+    else{
+      base.addEventListener('load',ready,{once:true})
+      base.addEventListener('error',()=>finishPristine(figure),{once:true})
     }
   }
 
-  const renderGL=state=>{
-    if(!state.gl)return
-    const {gl,program,pointer,energy,scroll}=state.gl
-    gl.useProgram(program)
-    gl.uniform2f(pointer,state.pointerX,state.pointerY)
-    gl.uniform1f(energy,state.energy)
-    gl.uniform1f(scroll,state.scroll)
-    gl.clearColor(0,0,0,0)
-    gl.clear(gl.COLOR_BUFFER_BIT)
-    gl.drawArrays(gl.TRIANGLES,0,6)
-  }
-
-  let frame=0
-  const write=state=>{
-    state.el.style.setProperty('--v3-rx',`${state.rx.toFixed(3)}deg`)
-    state.el.style.setProperty('--v3-ry',`${state.ry.toFixed(3)}deg`)
-    state.el.style.setProperty('--v3-base-x',`${state.baseX.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-base-y',`${state.baseY.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-mid-x',`${state.midX.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-mid-y',`${state.midY.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-near-x',`${state.nearX.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-near-y',`${state.nearY.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-scroll',`${state.scroll.toFixed(2)}px`)
-    state.el.style.setProperty('--v3-energy',state.energy.toFixed(3))
-    renderGL(state)
-  }
-
-  const tick=()=>{
-    let moving=false
-    states.forEach(state=>{
-      const props=[
-        ['rx','targetRx',.105,.003],['ry','targetRy',.105,.003],
-        ['baseX','targetBaseX',.10,.02],['baseY','targetBaseY',.10,.02],
-        ['midX','targetMidX',.095,.02],['midY','targetMidY',.095,.02],
-        ['nearX','targetNearX',.09,.02],['nearY','targetNearY',.09,.02],
-        ['scroll','targetScroll',.08,.02],['energy','targetEnergy',.09,.002],
-        ['pointerX','targetPointerX',.11,.002],['pointerY','targetPointerY',.11,.002]
-      ]
-      props.forEach(([current,target,ease,threshold])=>{
-        const delta=state[target]-state[current]
-        if(Math.abs(delta)>threshold){state[current]+=delta*ease;moving=true}
-        else state[current]=state[target]
-      })
-      write(state)
+  const observer=!reduceMotion&&'IntersectionObserver' in window?new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return
+      const figure=entry.target
+      const base=figure.querySelector(':scope > img')||figure.querySelector('img')
+      if(base?.complete&&base.naturalWidth>0)window.setTimeout(()=>runReveal(figure),figure.classList.contains('specialty-visual')?120:70)
+      observer.unobserve(figure)
     })
-    frame=moving?requestAnimationFrame(tick):0
-  }
-  const wake=()=>{if(!frame)frame=requestAnimationFrame(tick)}
+  },{threshold:.26,rootMargin:'0px 0px -4%'}):null
 
-  if(finePointer){
-    states.forEach(state=>{
-      const pointerTarget=event=>{
-        const r=state.el.getBoundingClientRect()
-        if(!r.width||!r.height)return
-        const nx=clamp(((event.clientX-r.left)/r.width)*2-1,-1,1)
-        const ny=clamp(((event.clientY-r.top)/r.height)*2-1,-1,1)
-        const s=state.strength
-        state.targetRy=nx*2.65*s
-        state.targetRx=-ny*1.75*s
-        state.targetBaseX=-nx*3.2*s
-        state.targetBaseY=-ny*2.0*s
-        state.targetMidX=-nx*8.4*s
-        state.targetMidY=-ny*5.2*s
-        state.targetNearX=-nx*15.8*s
-        state.targetNearY=-ny*9.4*s
-        state.targetPointerX=nx
-        state.targetPointerY=-ny
-        state.targetEnergy=1
-        state.el.classList.add('is-cinematic-active')
-        wake()
-      }
-      state.el.addEventListener('pointerenter',pointerTarget)
-      state.el.addEventListener('pointermove',pointerTarget,{passive:true})
-      state.el.addEventListener('pointerleave',()=>{
-        state.targetRx=0;state.targetRy=0
-        state.targetBaseX=0;state.targetBaseY=0
-        state.targetMidX=0;state.targetMidY=0
-        state.targetNearX=0;state.targetNearY=0
-        state.targetPointerX=0;state.targetPointerY=0
-        state.targetEnergy=.12
-        state.el.classList.remove('is-cinematic-active')
-        wake()
-      })
-    })
-  }
-
-  const updateScroll=()=>{
-    const vh=window.innerHeight||document.documentElement.clientHeight
-    states.forEach(state=>{
-      const r=state.el.getBoundingClientRect()
-      if(r.bottom<-r.height||r.top>vh+r.height)return
-      const center=r.top+r.height/2
-      const range=(vh+r.height)/2
-      const normalized=clamp((vh/2-center)/range,-1,1)
-      state.targetScroll=normalized*14*state.strength
-      if(!finePointer){
-        state.targetPointerX=normalized*.32
-        state.targetPointerY=-normalized*.18
-        state.targetEnergy=.22
-      }
-    })
-    wake()
-  }
-
-  let queued=false
-  const queueScroll=()=>{
-    if(queued)return
-    queued=true
-    requestAnimationFrame(()=>{queued=false;updateScroll()})
-  }
-  window.addEventListener('scroll',queueScroll,{passive:true})
-  window.addEventListener('resize',()=>{
-    states.forEach(resizeCanvas)
-    updateScroll()
+  figures.forEach((figure,index)=>{
+    armFigure(figure)
+    if(observer){
+      figure.style.setProperty('--cinematic-order',String(index))
+      observer.observe(figure)
+    }
   })
-  updateScroll()
 })()

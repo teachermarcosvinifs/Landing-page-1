@@ -46,11 +46,12 @@ jobs:
         run: |
           python3 -m http.server 8000 >/tmp/site-v3-functional-http.log 2>&1 &
           sleep 2
-      - name: Test format finder, contact flows and cinematic professional motion
+      - name: Test format finder, contact flows and sharp autonomous cinematic reveal
         run: |
           cat > functional-check.mjs <<'EOF'
           import { chromium } from 'playwright';
           import assert from 'node:assert/strict';
+          import fs from 'node:fs';
 
           const browser = await chromium.launch({headless:true});
           const page = await browser.newPage({viewport:{width:1280,height:900}});
@@ -112,57 +113,58 @@ jobs:
           const unknownFormatsUrl = new URL(unknownFormats,page.url());
           assert.ok(!unknownFormatsUrl.searchParams.has('src'), 'Unknown source must not propagate through internal links');
 
-          // V3 cinematic professional media: 3 depth planes + WebGL light + user-driven motion.
-          await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'networkidle'});
-          const media = page.locator('.professional-visual');
+          // Approved professional effect: autonomous reveal, no pointer dependency, pristine final photo.
+          const motionCss=fs.readFileSync('assets/professional-motion-v3.css','utf8');
+          const motionJs=fs.readFileSync('assets/professional-motion-v3.js','utf8');
+          assert.ok(!/blur\s*\(/i.test(motionCss),'Professional motion CSS must never blur the photograph');
+          assert.ok(!/blur\s*\(/i.test(motionJs),'Professional motion JS must never blur the photograph');
+          assert.ok(!/pointer(move|enter|leave)/i.test(motionJs),'Approved reveal must not depend on pointer interaction');
+
+          await page.goto('http://127.0.0.1:8000/ingles-para-devs.html',{waitUntil:'domcontentloaded'});
+          const media=page.locator('.professional-visual');
           await media.waitFor();
-          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('cinematic-v3'));
-          assert.equal(await media.locator('.depth-layer').count(),2,'Cinematic visual must create mid and near depth planes');
-          assert.equal(await media.locator('canvas.motion-gl').count(),1,'Cinematic visual must create WebGL light plane');
-          const glReady = await media.locator('canvas.motion-gl').evaluate(canvas=>({
-            width:canvas.width,
-            height:canvas.height,
-            webgl:!!canvas.getContext('webgl')
+          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('cinematic-reveal'));
+          await page.waitForTimeout(360);
+          const during=await media.evaluate(el=>({
+            running:el.dataset.cinematicReveal==='running',
+            layers:el.querySelectorAll('.motion-reveal-layer').length,
+            filter:getComputedStyle(el.querySelector(':scope > img')).filter
           }));
-          assert.ok(glReady.width>100 && glReady.height>100,'WebGL canvas must be sized to the photograph');
-          assert.ok(glReady.webgl,'WebGL context must initialize in Chromium');
+          assert.ok(during.running || during.layers===2,'Autonomous cinematic reveal must begin without mouse input');
+          assert.ok(!during.filter.includes('blur'),'Photo must remain optically sharp during the reveal');
 
-          const box = await media.boundingBox();
-          assert.ok(box && box.width > 300, 'Professional hero visual must be present');
-          await page.mouse.move(box.x + box.width * .84, box.y + box.height * .18);
-          await page.waitForTimeout(620);
-          const pointerMotion = await media.evaluate(el => ({
-            rx:parseFloat(el.style.getPropertyValue('--v3-rx'))||0,
-            ry:parseFloat(el.style.getPropertyValue('--v3-ry'))||0,
-            baseX:parseFloat(el.style.getPropertyValue('--v3-base-x'))||0,
-            midX:parseFloat(el.style.getPropertyValue('--v3-mid-x'))||0,
-            nearX:parseFloat(el.style.getPropertyValue('--v3-near-x'))||0,
-            energy:parseFloat(el.style.getPropertyValue('--v3-energy'))||0,
-            active:el.classList.contains('is-cinematic-active')
-          }));
-          assert.ok(pointerMotion.active,'Cinematic depth must activate on pointer hover');
-          assert.ok(Math.abs(pointerMotion.rx)>.35 || Math.abs(pointerMotion.ry)>.45,'Pointer must create measurable scene perspective');
-          assert.ok(Math.abs(pointerMotion.midX)>Math.abs(pointerMotion.baseX)+1.2,'Mid plane must move independently from base');
-          assert.ok(Math.abs(pointerMotion.nearX)>Math.abs(pointerMotion.midX)+2,'Near plane must move farther than mid plane');
-          assert.ok(pointerMotion.energy>.45,'Responsive light must become active with pointer interaction');
+          await page.waitForFunction(()=>document.querySelector('.professional-visual')?.classList.contains('reveal-complete'),{timeout:4000});
+          const finalState=await media.evaluate(el=>{
+            const img=el.querySelector(':scope > img');
+            const cs=getComputedStyle(el); const imgCs=getComputedStyle(img);
+            return {
+              opacity:cs.opacity,
+              clip:cs.clipPath,
+              frameTransform:cs.transform,
+              imageFilter:imgCs.filter,
+              imageTransform:imgCs.transform,
+              layers:el.querySelectorAll('.motion-reveal-layer').length,
+              sweep:el.querySelectorAll('.motion-reveal-sweep').length,
+              complete:el.classList.contains('reveal-complete')
+            };
+          });
+          assert.ok(finalState.complete,'Reveal must finish autonomously');
+          assert.equal(finalState.opacity,'1','Final image must be fully visible');
+          assert.ok(finalState.clip==='none' || finalState.clip==='inset(0px)','Final frame must not retain a reveal mask');
+          assert.equal(finalState.frameTransform,'none','Final frame must be geometrically neutral');
+          assert.equal(finalState.imageFilter,'none','Final photograph must have no filter or blur');
+          assert.equal(finalState.imageTransform,'none','Final photograph must use the original sharp render, without transformed resampling');
+          assert.equal(finalState.layers,0,'Depth layers must be removed after the reveal');
+          assert.equal(finalState.sweep,0,'Light sweep must be removed after the reveal');
 
-          const beforeScroll=parseFloat(await media.evaluate(el=>el.style.getPropertyValue('--v3-scroll')))||0;
-          await page.evaluate(()=>window.scrollTo(0,Math.min(420,document.documentElement.scrollHeight-window.innerHeight)));
-          await page.waitForTimeout(420);
-          const afterScroll=parseFloat(await media.evaluate(el=>el.style.getPropertyValue('--v3-scroll')))||0;
-          assert.ok(Math.abs(afterScroll-beforeScroll)>1.5,'Scroll must create measurable layered parallax');
-
-          await page.mouse.move(4,4);
-          await page.waitForTimeout(850);
-          const reset=await media.evaluate(el=>({
-            rx:parseFloat(el.style.getPropertyValue('--v3-rx'))||0,
-            ry:parseFloat(el.style.getPropertyValue('--v3-ry'))||0,
-            active:el.classList.contains('is-cinematic-active')
-          }));
-          assert.ok(!reset.active,'Cinematic active state must end when pointer leaves');
-          assert.ok(Math.abs(reset.rx)<.35 && Math.abs(reset.ry)<.35,'Perspective must return near neutral with inertia');
+          const box=await media.boundingBox();
+          if(box){await page.mouse.move(box.x+box.width*.8,box.y+box.height*.2);await page.waitForTimeout(450);}
+          const afterPointer=await media.evaluate(el=>({frame:getComputedStyle(el).transform,image:getComputedStyle(el.querySelector(':scope > img')).transform,filter:getComputedStyle(el.querySelector(':scope > img')).filter}));
+          assert.equal(afterPointer.frame,'none','Mouse movement must not restart or tilt the approved effect');
+          assert.equal(afterPointer.image,'none','Mouse movement must not move the final photograph');
+          assert.equal(afterPointer.filter,'none','Mouse movement must not soften the final photograph');
 
           await browser.close();
-          console.log('FUNCTIONAL QA OK — commercial rules, attribution and V3 layered WebGL cinematic motion verified');
+          console.log('FUNCTIONAL QA OK — commercial rules, attribution and sharp autonomous cinematic reveal verified');
           EOF
           node functional-check.mjs
