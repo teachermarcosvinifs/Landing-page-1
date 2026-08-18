@@ -1,128 +1,225 @@
 (()=>{
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const figures=[...document.querySelectorAll('.professional-visual,.specialty-visual')]
+  const figures=[...document.querySelectorAll('.spatial-orbit-target')]
   if(!figures.length)return
 
-  const duration=1220
-  const easing='cubic-bezier(.16,.82,.18,1)'
+  const easing='cubic-bezier(.16,.84,.18,1)'
+  const geometryClasses='.orbit-frame,.orbit-rail,.orbit-node,.orbit-halo'
 
-  const finishPristine=figure=>{
-    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
+  const removeGeometry=figure=>{
+    figure.querySelectorAll(geometryClasses).forEach(node=>node.remove())
+  }
+
+  const baseImage=figure=>figure.querySelector(':scope > img')||figure.querySelector('img')
+
+  const failIntegrity=(figure,reason)=>{
+    figure.dataset.orbitIntegrity='failed'
+    console.error(`[Spatial Frame Orbit] integrity failure: ${reason}`,figure)
+    finish(figure,false)
+  }
+
+  const assertBaseIntegrity=figure=>{
+    const base=baseImage(figure)
+    if(!base){failIntegrity(figure,'base image missing');return false}
+    if(figure.querySelectorAll('img').length!==1){failIntegrity(figure,'ghost/duplicate image detected');return false}
+    const style=getComputedStyle(base)
+    const opacity=Number.parseFloat(style.opacity||'1')
+    if(style.filter!=='none'){failIntegrity(figure,`base filter is ${style.filter}`);return false}
+    if(!Number.isFinite(opacity)||opacity<.92){failIntegrity(figure,`base opacity is ${style.opacity}`);return false}
+    return true
+  }
+
+  const finish=(figure,passed=true)=>{
+    if(figure.dataset.spatialOrbit==='done')return
+    const base=baseImage(figure)
+    if(figure._orbitTimer){clearTimeout(figure._orbitTimer);figure._orbitTimer=0}
+    if(figure._orbitGuard){cancelAnimationFrame(figure._orbitGuard);figure._orbitGuard=0}
     figure.getAnimations().forEach(animation=>animation.cancel())
-    base?.getAnimations().forEach(animation=>animation.cancel())
-    figure.querySelectorAll('.motion-reveal-layer,.motion-reveal-sweep').forEach(node=>node.remove())
-    figure.style.opacity='1'
-    figure.style.clipPath='none'
-    figure.style.transform='none'
-    if(base){base.style.filter='none';base.style.transform='none'}
-    figure.classList.remove('motion-pending','motion-running')
-    figure.classList.add('reveal-complete','media-ready')
-  }
-
-  const buildLayers=(figure,base)=>{
-    const mid=base.cloneNode(true)
-    mid.className='motion-reveal-layer motion-reveal-mid'
-    mid.alt=''
-    mid.setAttribute('aria-hidden','true')
-    mid.removeAttribute('loading')
-
-    const near=base.cloneNode(true)
-    near.className='motion-reveal-layer motion-reveal-near'
-    near.alt=''
-    near.setAttribute('aria-hidden','true')
-    near.removeAttribute('loading')
-
-    const sweep=document.createElement('span')
-    sweep.className='motion-reveal-sweep'
-    sweep.setAttribute('aria-hidden','true')
-    figure.append(mid,near,sweep)
-    return {mid,near,sweep}
-  }
-
-  const runReveal=figure=>{
-    if(figure.dataset.cinematicReveal==='done'||figure.dataset.cinematicReveal==='running')return
-    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
-    if(!base)return
-    if(reduceMotion){figure.dataset.cinematicReveal='done';finishPristine(figure);return}
-
-    figure.dataset.cinematicReveal='running'
-    figure.classList.add('cinematic-reveal','motion-pending','media-ready')
-    const {mid,near,sweep}=buildLayers(figure,base)
-
-    const frame=figure.animate([
-      {opacity:0,clipPath:'inset(0 100% 0 0 round 16px)',transform:'perspective(1500px) translate3d(52px,14px,-78px) rotateY(-5.2deg) scale(.94)'},
-      {opacity:1,offset:.44},
-      {opacity:1,clipPath:'inset(0 0 0 0 round 16px)',transform:'perspective(1500px) translate3d(0,0,0) rotateY(0deg) scale(1)'}
-    ],{duration,easing,fill:'forwards'})
-
-    const baseMotion=base.animate([
-      {filter:'brightness(.80) saturate(.86) contrast(.98)',transform:'scale(1.15) translate3d(22px,0,0)'},
-      {filter:'brightness(1.015) saturate(1.015) contrast(1.01)',offset:.72},
-      {filter:'none',transform:'none'}
-    ],{duration:duration+90,easing,fill:'forwards'})
-
-    const midMotion=mid.animate([
-      {opacity:0,transform:'translate3d(34px,4px,28px) scale(1.13)'},
-      {opacity:.88,offset:.32},
-      {opacity:.68,transform:'translate3d(0,0,24px) scale(1.07)',offset:.78},
-      {opacity:0,transform:'translate3d(0,0,0) scale(1)'}
-    ],{duration:duration+40,delay:90,easing,fill:'forwards'})
-
-    const nearMotion=near.animate([
-      {opacity:0,transform:'translate3d(58px,10px,55px) scale(1.17)'},
-      {opacity:.86,offset:.38},
-      {opacity:.56,transform:'translate3d(0,0,40px) scale(1.09)',offset:.78},
-      {opacity:0,transform:'translate3d(0,0,0) scale(1)'}
-    ],{duration:duration+80,delay:150,easing,fill:'forwards'})
-
-    const sweepMotion=sweep.animate([
-      {opacity:0,left:'-36%'},
-      {opacity:.72,left:'5%',offset:.22},
-      {opacity:.34,left:'78%',offset:.72},
-      {opacity:0,left:'118%'}
-    ],{duration:760,delay:310,easing:'cubic-bezier(.2,.78,.2,1)',fill:'forwards'})
-
-    figure.classList.remove('motion-pending')
-    figure.classList.add('motion-running')
-
-    Promise.allSettled([frame.finished,baseMotion.finished,midMotion.finished,nearMotion.finished,sweepMotion.finished]).then(()=>{
-      figure.dataset.cinematicReveal='done'
-      finishPristine(figure)
-    })
-  }
-
-  const armFigure=figure=>{
-    const base=figure.querySelector(':scope > img')||figure.querySelector('img')
-    if(!base)return
-    figure.classList.add('cinematic-reveal')
-    const ready=()=>{
-      if(reduceMotion){runReveal(figure);return}
-      const rect=figure.getBoundingClientRect()
-      const visible=rect.top<window.innerHeight*.92&&rect.bottom>window.innerHeight*.08
-      if(visible)window.setTimeout(()=>runReveal(figure),figure.classList.contains('specialty-visual')?120:90)
+    removeGeometry(figure)
+    figure.style.transform=''
+    figure.style.boxShadow=''
+    if(base){
+      base.style.setProperty('filter','none','important')
+      base.style.setProperty('opacity','1','important')
     }
-    if(base.complete&&base.naturalWidth>0)ready()
+    figure.classList.remove('orbit-running')
+    figure.classList.add('orbit-complete','media-ready')
+    figure.dataset.spatialOrbit='done'
+    figure.dataset.orbitIntegrity=passed?'passed':'failed'
+  }
+
+  const monitorIntegrity=figure=>{
+    if(figure.dataset.spatialOrbit!=='running')return
+    if(!assertBaseIntegrity(figure))return
+    figure._orbitGuard=requestAnimationFrame(()=>monitorIntegrity(figure))
+  }
+
+  const makeNode=(figure,className)=>{
+    const node=document.createElement('span')
+    node.className=className
+    node.setAttribute('aria-hidden','true')
+    figure.append(node)
+    return node
+  }
+
+  const runOrbit=figure=>{
+    if(figure.dataset.spatialOrbit==='running'||figure.dataset.spatialOrbit==='done')return
+    const base=baseImage(figure)
+    if(!base)return
+    figure.dataset.orbitAutonomous='true'
+    if(reduceMotion){finish(figure,true);return}
+
+    figure.classList.remove('orbit-complete')
+    figure.classList.add('orbit-running','media-ready')
+    figure.dataset.spatialOrbit='running'
+
+    if(!assertBaseIntegrity(figure))return
+
+    const compact=window.matchMedia('(max-width: 640px)').matches
+    const depth=compact ? 0.58 : 1
+
+    const frames=[
+      makeNode(figure,'orbit-frame f1'),
+      makeNode(figure,'orbit-frame f2'),
+      makeNode(figure,'orbit-frame f3')
+    ]
+    const railTop=makeNode(figure,'orbit-rail top')
+    const railBottom=makeNode(figure,'orbit-rail bottom')
+    const n1=makeNode(figure,'orbit-node n1')
+    const n2=makeNode(figure,'orbit-node n2')
+    const halo=makeNode(figure,'orbit-halo')
+
+    figure.animate([
+      {transform:`perspective(1600px) translate3d(0,${10*depth}px,${-72*depth}px) rotateX(${5.6*depth}deg) rotateY(${-8.2*depth}deg) scale(.955)`,boxShadow:'0 24px 62px rgba(0,0,0,.44)'},
+      {transform:`perspective(1600px) translate3d(0,${-4*depth}px,${28*depth}px) rotateX(${-1.2*depth}deg) rotateY(${1.8*depth}deg) scale(1.02)`,boxShadow:'0 54px 124px rgba(0,0,0,.60)',offset:.62},
+      {transform:'perspective(1600px) translate3d(0,0,0) rotateX(0) rotateY(0) scale(1)',boxShadow:'0 28px 70px rgba(0,0,0,.38)'}
+    ],{duration:1480,easing,fill:'forwards'})
+
+    const frameKeys=[
+      [
+        {opacity:0,transform:`perspective(1400px) translate3d(${38*depth}px,${22*depth}px,${-90*depth}px) rotateX(${8*depth}deg) rotateY(${-12*depth}deg) scale(.88)`},
+        {opacity:.96,transform:`perspective(1400px) translate3d(${-12*depth}px,${-8*depth}px,${48*depth}px) rotateX(${-2*depth}deg) rotateY(${4*depth}deg) scale(1.055)`,offset:.54},
+        {opacity:.48,transform:`perspective(1400px) translate3d(0,0,${6*depth}px) rotateX(0) rotateY(0) scale(1.012)`,offset:.78},
+        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
+      ],
+      [
+        {opacity:0,transform:`perspective(1400px) translate3d(${-44*depth}px,${-18*depth}px,${-130*depth}px) rotateX(${-7*depth}deg) rotateY(${15*depth}deg) scale(.82)`},
+        {opacity:.74,transform:`perspective(1400px) translate3d(${18*depth}px,${10*depth}px,${28*depth}px) rotateX(${2*depth}deg) rotateY(${-5*depth}deg) scale(1.08)`,offset:.57},
+        {opacity:.32,transform:`perspective(1400px) translate3d(0,0,${2*depth}px) rotateX(0) rotateY(0) scale(1.022)`,offset:.80},
+        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
+      ],
+      [
+        {opacity:0,transform:`perspective(1400px) translate3d(${12*depth}px,${52*depth}px,${-170*depth}px) rotateX(${13*depth}deg) rotateY(${7*depth}deg) scale(.76)`},
+        {opacity:.52,transform:`perspective(1400px) translate3d(${-6*depth}px,${-16*depth}px,${18*depth}px) rotateX(${-3*depth}deg) rotateY(${-2*depth}deg) scale(1.12)`,offset:.60},
+        {opacity:.22,transform:'perspective(1400px) translate3d(0,0,0) scale(1.032)',offset:.82},
+        {opacity:0,transform:'perspective(1400px) translate3d(0,0,0) scale(1)'}
+      ]
+    ]
+
+    frames.forEach((frame,index)=>frame.animate(frameKeys[index],{
+      duration:1260,
+      delay:70+index*65,
+      easing,
+      fill:'forwards'
+    }))
+
+    ;[railTop,railBottom].forEach((rail,index)=>rail.animate([
+      {opacity:0,transform:'scaleX(.12)'},
+      {opacity:.88,transform:'scaleX(1)',offset:.44},
+      {opacity:.52,offset:.70},
+      {opacity:0,transform:'scaleX(.45)'}
+    ],{duration:900,delay:290+index*70,easing:'cubic-bezier(.2,.78,.2,1)',fill:'forwards'}))
+
+    ;[n1,n2].forEach((node,index)=>node.animate([
+      {opacity:0,transform:'scale(.2)'},
+      {opacity:1,transform:'scale(1.25)',offset:.42},
+      {opacity:.9,transform:'scale(1)',offset:.70},
+      {opacity:0,transform:'scale(.4)'}
+    ],{duration:860,delay:330+index*90,easing:'ease-out',fill:'forwards'}))
+
+    halo.animate([
+      {opacity:0,transform:'scale(.82)'},
+      {opacity:.5,transform:'scale(1.025)',offset:.52},
+      {opacity:0,transform:'scale(1.12)'}
+    ],{duration:1050,delay:180,easing:'cubic-bezier(.2,.72,.2,1)',fill:'forwards'})
+
+    monitorIntegrity(figure)
+    figure._orbitTimer=setTimeout(()=>finish(figure,true),1750)
+  }
+
+  const states=figures.map((figure,index)=>({
+    figure,
+    index,
+    loaded:false,
+    visible:false,
+    started:false
+  }))
+
+  const tryStart=state=>{
+    if(state.started||!state.loaded||!state.visible)return
+    state.started=true
+    setTimeout(()=>runOrbit(state.figure),90+state.index*70)
+  }
+
+  states.forEach(state=>{
+    const {figure}=state
+    const base=baseImage(figure)
+    figure.classList.add('spatial-orbit-target')
+    figure.dataset.orbitAutonomous='true'
+    if(!base){finish(figure,false);return}
+
+    const loaded=()=>{
+      state.loaded=base.naturalWidth>0
+      if(!state.loaded){finish(figure,false);return}
+      tryStart(state)
+    }
+    if(base.complete)loaded()
     else{
-      base.addEventListener('load',ready,{once:true})
-      base.addEventListener('error',()=>finishPristine(figure),{once:true})
+      base.addEventListener('load',loaded,{once:true})
+      base.addEventListener('error',()=>finish(figure,false),{once:true})
     }
-  }
 
-  const observer=!reduceMotion&&'IntersectionObserver' in window?new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(!entry.isIntersecting)return
-      const figure=entry.target
-      const base=figure.querySelector(':scope > img')||figure.querySelector('img')
-      if(base?.complete&&base.naturalWidth>0)window.setTimeout(()=>runReveal(figure),figure.classList.contains('specialty-visual')?120:70)
-      observer.unobserve(figure)
-    })
-  },{threshold:.26,rootMargin:'0px 0px -4%'}):null
-
-  figures.forEach((figure,index)=>{
-    armFigure(figure)
-    if(observer){
-      figure.style.setProperty('--cinematic-order',String(index))
-      observer.observe(figure)
+    if(reduceMotion){
+      state.visible=true
+      tryStart(state)
+      return
     }
+
+    const rect=figure.getBoundingClientRect()
+    state.visible=rect.top<(window.innerHeight||document.documentElement.clientHeight)*.94&&rect.bottom>0
   })
+
+  if(reduceMotion)return
+
+  if('IntersectionObserver' in window){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return
+        const state=states.find(item=>item.figure===entry.target)
+        if(!state)return
+        state.visible=true
+        tryStart(state)
+        observer.unobserve(entry.target)
+      })
+    },{threshold:.20,rootMargin:'0px 0px -3%'})
+    states.forEach(state=>{
+      if(state.visible)tryStart(state)
+      else observer.observe(state.figure)
+    })
+  }else{
+    const check=()=>{
+      const viewport=window.innerHeight||document.documentElement.clientHeight
+      states.forEach(state=>{
+        if(state.started)return
+        const rect=state.figure.getBoundingClientRect()
+        if(rect.top<viewport*.94&&rect.bottom>0){
+          state.visible=true
+          tryStart(state)
+        }
+      })
+    }
+    window.addEventListener('scroll',check,{passive:true})
+    window.addEventListener('resize',check)
+    check()
+  }
 })()
