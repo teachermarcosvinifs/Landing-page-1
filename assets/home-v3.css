@@ -10,8 +10,7 @@
 .hero-note{animation:homeHeroRise .56s .48s cubic-bezier(.22,.61,.36,1) both}
 .hero .actions{animation:homeHeroRise .6s .56s cubic-bezier(.22,.61,.36,1) both}
 .hero-portrait{width:270px;height:270px;margin:0;justify-self:end;position:relative;border-radius:50%;z-index:1;animation:homePortraitIn .94s .22s cubic-bezier(.16,.84,.18,1) both;transition:transform .34s cubic-bezier(.22,.61,.36,1),filter .34s ease}
-.hero-portrait::before{content:'';position:absolute;inset:-13px;border:0;border-radius:50%;padding:1px;background:conic-gradient(from 205deg,rgba(135,184,195,.08),rgba(185,221,228,.76) 18%,rgba(135,184,195,.14) 34%,rgba(255,255,255,.055) 56%,rgba(135,184,195,.38) 76%,rgba(135,184,195,.08));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;box-shadow:0 0 0 1px rgba(255,255,255,.02);z-index:0;pointer-events:none;animation:homePortraitRing 1.1s .36s cubic-bezier(.16,.84,.18,1) both}
-.hero-portrait::after{content:'';position:absolute;z-index:-2;inset:-62px;border-radius:50%;background:radial-gradient(circle,rgba(135,184,195,.14) 0,rgba(77,132,145,.055) 33%,transparent 68%);filter:blur(8px);opacity:.85;pointer-events:none;animation:homeHaloIn 1.2s .28s ease-out both}
+.hero-portrait::before{content:'';position:absolute;inset:-13px;border:0;border-radius:50%;padding:1px;background:conic-gradient(from 205deg,rgba(135,184,195,.08),rgba(185,221,228,.76) 18%,rgba(135,184,195,.14) 34%,rgba(255,255,255,.055) 56%,rgba(135,184,195,.38) 76%,rgba(135,184,195,.08));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 0 38px rgba(77,132,145,.11);z-index:0;pointer-events:none;animation:homePortraitRing 1.1s .36s cubic-bezier(.16,.84,.18,1) both}
 .hero-portrait img{position:relative;z-index:1;width:100%;height:100%;aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 24%;background:#090b0d;box-shadow:0 30px 74px rgba(0,0,0,.46),0 0 0 1px rgba(255,255,255,.025)}
 .hero-portrait:hover{transform:translateY(-4px) scale(1.012);filter:brightness(1.015)}
 
@@ -60,7 +59,6 @@
 @keyframes homeHeroRise{from{opacity:0;transform:translateY(18px);clip-path:inset(0 0 18% 0)}to{opacity:1;transform:none;clip-path:inset(0 0 0 0)}}
 @keyframes homePortraitIn{from{opacity:0;transform:translate3d(22px,14px,0) scale(.92)}to{opacity:1;transform:none}}
 @keyframes homePortraitRing{from{opacity:0;transform:rotate(-24deg) scale(.88)}to{opacity:1;transform:none}}
-@keyframes homeHaloIn{from{opacity:0;transform:scale(.72)}to{opacity:.85;transform:none}}
 @keyframes homeButtonTrace{0%{left:-42%;opacity:0}18%{opacity:1}100%{left:118%;opacity:0}}
 
 @media(max-width:1050px){
@@ -82,7 +80,6 @@
   .hero h1{max-width:12ch}
   .hero-portrait{width:156px;height:156px}
   .hero-portrait::before{inset:-9px}
-  .hero-portrait::after{inset:-38px}
   .hero-promise{font-size:26px;max-width:21ch;margin-bottom:17px}
   .specialty-feature h3{font-size:29px;max-width:none}
   .specialty-action{width:100%;justify-content:space-between;padding:13px 14px}
@@ -97,7 +94,7 @@
 }
 
 @media(prefers-reduced-motion:reduce){
-  .hero h1,.hero .kicker,.hero-promise,.hero .lead,.hero-proof,.hero-note,.hero .actions,.hero-portrait,.hero-portrait::before,.hero-portrait::after{animation:none!important}
+  .hero h1,.hero .kicker,.hero-promise,.hero .lead,.hero-proof,.hero-note,.hero .actions,.hero-portrait,.hero-portrait::before{animation:none!important}
   .hero-portrait{transform:none!important;transition:none!important}
   .hero .btn:hover::after{animation:none!important;display:none}
   .section-intro.reveal-target::after{transform:scaleX(1);opacity:.38;transition:none!important}
