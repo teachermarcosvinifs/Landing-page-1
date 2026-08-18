@@ -1,6 +1,8 @@
 /* Production B — Spatial Frame Orbit
    One sharp photograph plane. Spatial depth is produced only by temporary geometry
    and controlled perspective on the frame itself. */
+html,body{overflow-x:clip}
+
 .spatial-orbit-target{
   isolation:isolate;
   overflow:visible;
