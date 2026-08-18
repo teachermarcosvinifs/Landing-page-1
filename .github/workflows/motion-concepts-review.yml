@@ -1,0 +1,92 @@
+name: Motion Concepts A B Review
+
+on:
+  push:
+    branches: [motion-concepts-a-b]
+    paths:
+      - 'motion-option-a.html'
+      - 'motion-option-b.html'
+      - 'assets/motion-concepts.css'
+      - 'assets/motion-concepts.js'
+      - '.github/workflows/motion-concepts-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python3 -m http.server 8000 >/tmp/motion-concepts-http.log 2>&1 &
+          sleep 2
+      - name: Test and record both concepts
+        run: |
+          mkdir -p motion-review
+          cat > motion-review.mjs <<'EOF'
+          import {chromium} from 'playwright';
+          import fs from 'fs';
+          import assert from 'node:assert/strict';
+          const browser=await chromium.launch({headless:true});
+
+          // A — autonomous reveal: no mouse interaction at all
+          {
+            const context=await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir:'motion-review',size:{width:1440,height:900}}});
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:8000/motion-option-a.html',{waitUntil:'domcontentloaded'});
+            await page.waitForTimeout(2100);
+            const state=await page.locator('.concept-a').evaluate(el=>({ready:el.classList.contains('is-ready'),opacity:getComputedStyle(el).opacity,clip:getComputedStyle(el).clipPath}));
+            assert.ok(state.ready,'A must start autonomously');
+            assert.ok(Number(state.opacity)>.98,'A must finish visible without pointer');
+            await page.screenshot({path:'motion-review/option-a-final.png',fullPage:false});
+            await page.waitForTimeout(900);
+            const video=page.video();
+            await page.close();
+            fs.renameSync(await video.path(),'motion-review/option-a-autonomous-reveal.webm');
+            await context.close();
+          }
+
+          // B — scroll-driven morph: no pointer over the image
+          {
+            const context=await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir:'motion-review',size:{width:1440,height:900}}});
+            const page=await context.newPage();
+            await page.goto('http://127.0.0.1:8000/motion-option-b.html',{waitUntil:'networkidle'});
+            const media=page.locator('.concept-b');
+            const before=await media.evaluate(el=>getComputedStyle(el).transform);
+            await page.waitForTimeout(650);
+            for(const y of [100,220,360,520,690,840]){
+              await page.evaluate(v=>window.scrollTo({top:v,behavior:'smooth'}),y);
+              await page.waitForTimeout(420);
+            }
+            const after=await media.evaluate(el=>getComputedStyle(el).transform);
+            assert.notEqual(after,before,'B must transform from scroll alone');
+            await page.screenshot({path:'motion-review/option-b-morphed.png',fullPage:false});
+            await page.waitForTimeout(650);
+            const video=page.video();
+            await page.close();
+            fs.renameSync(await video.path(),'motion-review/option-b-scroll-morph.webm');
+            await context.close();
+          }
+
+          await browser.close();
+          console.log('MOTION CONCEPTS OK — A autonomous reveal and B scroll morph verified without pointer dependency');
+          EOF
+          node motion-review.mjs
+      - name: Upload comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: motion-concepts-a-b
+          path: motion-review/
+          retention-days: 14
