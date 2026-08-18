@@ -3,6 +3,9 @@ name: Site V3 Production Smoke
 on:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/site-v3-production-smoke.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
-      - name: Wait for GitHub Pages to publish this release
+      - name: Wait for GitHub Pages to publish Spatial Frame Orbit
         shell: python
         run: |
           import time
@@ -31,38 +34,34 @@ jobs:
               'assets/site-v3-black.css',
               'Falar pelo WhatsApp',
               'Preencher formulário',
+              'spatial-orbit-target',
+              '20260817-2350-orbit-b1',
           ]
 
           def fetch(url):
-              req = urllib.request.Request(
-                  url,
-                  headers={
-                      'User-Agent': 'Landing-page-1-production-smoke/1.3',
-                      'Cache-Control': 'no-cache',
-                  },
-              )
+              req = urllib.request.Request(url, headers={'User-Agent': 'Landing-page-1-production-smoke/2.0','Cache-Control': 'no-cache'})
               with urllib.request.urlopen(req, timeout=15) as response:
                   return response.status, response.read().decode('utf-8', errors='replace')
 
           last_error = None
           for attempt in range(1, 19):
               try:
-                  status, html = fetch(base + '?smoke=' + str(int(time.time())))
+                  status, html = fetch(base + '?orbit-smoke=' + str(int(time.time() * 1000)))
                   missing = [marker for marker in expected_home if marker not in html]
-                  if status == 200 and not missing:
-                      print(f'Production V3 detected on attempt {attempt}')
+                  if status == 200 and not missing and html.count('spatial-orbit-target') == 2:
+                      print(f'Spatial Frame Orbit production detected on attempt {attempt}')
                       break
-                  last_error = f'HTTP {status}; missing markers: {missing}'
+                  last_error = f'HTTP {status}; missing markers: {missing}; targets={html.count("spatial-orbit-target")}'
               except Exception as exc:
                   last_error = repr(exc)
               print(f'Attempt {attempt}/18: production not ready yet — {last_error}')
               time.sleep(10)
           else:
-              print('PRODUCTION SMOKE FAILED: GitHub Pages did not expose the expected V3 within 3 minutes')
+              print('PRODUCTION SMOKE FAILED: GitHub Pages did not expose Spatial Frame Orbit within 3 minutes')
               print('Last observation:', last_error)
               sys.exit(1)
 
-      - name: Verify all public V3 routes
+      - name: Verify live public routes
         shell: python
         run: |
           import time
@@ -75,7 +74,7 @@ jobs:
               'como-funciona.html': ['Como funcionam as aulas', 'assets/site-v3-black.css'],
               'portal-dos-alunos.html': ['Portal dos Alunos', 'Materiais e atividades em um só lugar'],
               'ingles-para-devs.html': ['Inglês para desenvolvedores e programadores', 'Participar de calls e reuniões internacionais', 'Trabalhar com equipes e empresas internacionais'],
-              'ingles-para-compliance.html': ['Inglês para profissionais de Compliance', 'Precisão profissional', 'Documentos, evidências e decisões discutidos em equipe'],
+              'ingles-para-compliance.html': ['Inglês para profissionais de Compliance', 'Precisão profissional', 'Linguagem da área'],
               'qual-formato.html': ['Individual, dupla, trio ou grupo?', 'Informe seu nível, objetivo, formato e carga semanal', 'Os valores, planos e cargas horárias são informados diretamente por mim pelo WhatsApp'],
               'sitemap.xml': ['ingles-para-devs.html', 'ingles-para-compliance.html'],
               'robots.txt': ['Sitemap: https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml'],
@@ -86,42 +85,88 @@ jobs:
               for attempt in range(1, attempts + 1):
                   try:
                       separator = '&' if '?' in path else '?'
-                      url = base + path + separator + 'smoke=' + str(int(time.time() * 1000))
-                      req = urllib.request.Request(
-                          url,
-                          headers={
-                              'User-Agent': 'Landing-page-1-production-smoke/1.3',
-                              'Cache-Control': 'no-cache',
-                          },
-                      )
+                      url = base + path + separator + 'orbit-smoke=' + str(int(time.time() * 1000))
+                      req = urllib.request.Request(url, headers={'User-Agent': 'Landing-page-1-production-smoke/2.0','Cache-Control': 'no-cache'})
                       with urllib.request.urlopen(req, timeout=15) as response:
                           return response.status, response.read().decode('utf-8', errors='replace')
                   except Exception as exc:
                       last_error = exc
                       if attempt < attempts:
-                          print(f'{path or "home"}: tentativa {attempt}/{attempts} falhou — {exc!r}; repetindo')
                           time.sleep(4)
               raise last_error
 
           errors = []
+          fetched = {}
           for path, markers in routes.items():
               try:
                   status, body = fetch_with_retry(path)
+                  fetched[path] = body
                   if status != 200:
                       errors.append(f'{path or "home"}: HTTP {status}')
                       continue
-                  body_fold = body.casefold()
                   for marker in markers:
-                      if marker.casefold() not in body_fold:
+                      if marker.casefold() not in body.casefold():
                           errors.append(f'{path or "home"}: marker ausente -> {marker}')
                   if path == 'qual-formato.html' and 'R$' in body:
                       errors.append('qual-formato.html: valor monetário público detectado')
               except Exception as exc:
                   errors.append(f'{path or "home"}: {exc!r}')
 
+          expected_targets = {'':2, 'ingles-para-devs.html':1, 'ingles-para-compliance.html':1}
+          cache_version = '20260817-2350-orbit-b1'
+          for path, expected in expected_targets.items():
+              body = fetched.get(path, '')
+              count = body.count('spatial-orbit-target')
+              if count != expected:
+                  errors.append(f'{path or "home"}: esperado {expected} alvo(s) Spatial Orbit; encontrado {count}')
+              if body.count(cache_version) != 2:
+                  errors.append(f'{path or "home"}: cache-busting novo não está presente em CSS e JS')
+
           if errors:
               print('PRODUCTION ROUTE CHECK FAILED')
               for error in errors: print('-', error)
               sys.exit(1)
+          print('PRODUCTION ROUTES OK — Spatial Frame Orbit markers are live on exactly four professional photographs')
 
-          print('PRODUCTION SMOKE OK — hero refinado, Dev/Compliance e consulta direta de valores estão live em todas as rotas públicas')
+      - name: Verify live Spatial Frame Orbit assets
+        shell: python
+        run: |
+          import time
+          import urllib.request
+          import re
+          import sys
+
+          base = 'https://teachermarcosvinifs.github.io/Landing-page-1/'
+          version = '20260817-2350-orbit-b1'
+
+          def fetch(path):
+              url = base + path + '&orbit-smoke=' + str(int(time.time() * 1000))
+              req = urllib.request.Request(url, headers={'User-Agent':'Landing-page-1-production-smoke/2.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req, timeout=15) as response:
+                  return response.status, response.read().decode('utf-8', errors='replace')
+
+          errors=[]
+          try:
+              css_status, css = fetch('assets/professional-motion-v3.css?v=' + version)
+              js_status, js = fetch('assets/professional-motion-v3.js?v=' + version)
+              if css_status != 200: errors.append(f'CSS HTTP {css_status}')
+              if js_status != 200: errors.append(f'JS HTTP {js_status}')
+              css_low=css.lower(); js_low=js.lower()
+              for marker in ['production b — spatial frame orbit','orbit-frame','orbit-rail','orbit-node','orbit-halo','html,body{overflow-x:clip}']:
+                  if marker not in css_low: errors.append(f'live CSS marker ausente -> {marker}')
+              if 'prefers-reduced-motion:reduce' not in css_low.replace(' ',''):
+                  errors.append('live CSS reduced-motion ausente')
+              for marker in ['.spatial-orbit-target','orbit-frame','orbit-rail','orbit-node','orbit-halo','assertbaseintegrity','orbitautonomous']:
+                  if marker not in js_low: errors.append(f'live JS marker ausente -> {marker}')
+              if re.search(r'blur\s*\(',css,re.I) or re.search(r'blur\s*\(',js,re.I): errors.append('blur detectado nos assets live')
+              if 'clonenode' in js_low: errors.append('cloneNode detectado nos assets live')
+              if re.search(r'pointer(move|enter|leave)',js,re.I): errors.append('dependência de pointer detectada nos assets live')
+              if 'cinematic-reveal' in js_low or 'motion-reveal-layer' in js_low: errors.append('Cinematic Reveal rejeitado ainda servido')
+          except Exception as exc:
+              errors.append(repr(exc))
+
+          if errors:
+              print('PRODUCTION ASSET CHECK FAILED')
+              for error in errors: print('-',error)
+              sys.exit(1)
+          print('PRODUCTION SMOKE OK — Pages serves fresh Spatial Frame Orbit assets with one-photo guardrails and no rejected reveal engine')
