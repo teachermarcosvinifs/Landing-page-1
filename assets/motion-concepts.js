@@ -40,27 +40,28 @@
       const travel=Math.max(1,stage.offsetHeight-window.innerHeight)
       const p=clamp((-rect.top)/travel,0,1)
       const ease=1-Math.pow(1-p,3)
-      const first=clamp(ease/.72,0,1)
-      const late=clamp((p-.24)/.76,0,1)
+      const first=clamp(ease/.78,0,1)
+      const late=clamp((p-.18)/.82,0,1)
+      const arc=Math.sin(first*Math.PI)
 
-      const x=-108*first
-      const y=22*late
-      const scale=1+(.34*first)
-      const rotate=-1.15*first
+      const x=-182*first
+      const y=30*late
+      const scale=1+(.70*first)
+      const rotate=-2.2*arc
       figure.style.transform=`translate3d(${x}px,${y}px,0) scale(${scale}) rotateY(${rotate}deg)`
-      figure.style.borderRadius=`${18-13*first}px`
-      figure.style.boxShadow=`0 ${34+30*first}px ${90+40*first}px rgba(0,0,0,${.48+.12*first})`
-      figure.style.setProperty('--edge-light',(.08+.28*Math.sin(first*Math.PI)).toFixed(3))
+      figure.style.borderRadius=`${18-14*first}px`
+      figure.style.boxShadow=`0 ${34+42*first}px ${90+62*first}px rgba(0,0,0,${.48+.16*first})`
+      figure.style.setProperty('--edge-light',(.08+.38*arc).toFixed(3))
 
-      layers.base.style.transform=`translate3d(${4*first}px,${10*late}px,0) scale(${1.08+.035*first})`
-      layers.base.style.filter=`saturate(${.92+.08*first}) brightness(${.88+.12*first})`
-      layers.mid.style.transform=`translate3d(${-15*first}px,${-8*late}px,22px) scale(${1.10+.06*first})`
-      layers.near.style.transform=`translate3d(${-34*first}px,${-18*late}px,44px) scale(${1.13+.105*first})`
+      layers.base.style.transform=`translate3d(${7*first}px,${12*late}px,0) scale(${1.08+.055*first})`
+      layers.base.style.filter=`saturate(${.90+.10*first}) brightness(${.86+.14*first})`
+      layers.mid.style.transform=`translate3d(${-24*first}px,${-12*late}px,24px) scale(${1.10+.10*first})`
+      layers.near.style.transform=`translate3d(${-52*first}px,${-28*late}px,52px) scale(${1.13+.17*first})`
 
       if(copy){
-        copy.style.setProperty('--copy-x',`${-26*late}px`)
-        copy.style.setProperty('--copy-opacity',`${1-.34*late}`)
-        copy.style.setProperty('--cue-opacity',`${1-clamp(p/.28,0,1)}`)
+        copy.style.setProperty('--copy-x',`${-46*late}px`)
+        copy.style.setProperty('--copy-opacity',`${1-.72*late}`)
+        copy.style.setProperty('--cue-opacity',`${1-clamp(p/.22,0,1)}`)
       }
     }
     const queue=()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}}
