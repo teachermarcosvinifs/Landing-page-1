@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entrar em contato sobre as aulas | Marcos Vinicius</title>
+<meta name="description" content="Informe rapidamente seu nível, objetivo e formato de interesse antes de falar sobre aulas de inglês online com o professor Marcos Vinicius">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://teachermarcosvinifs.github.io/Landing-page-1/contato.html">
+<meta name="theme-color" content="#030405">
+<link rel="stylesheet" href="assets/site-v3-black.css">
+<script src="assets/site-v3-motion.js" defer></script>
+<style>
+.contact-intake{padding:68px 0 82px;border-bottom:1px solid var(--line)}
+.contact-intake-grid{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:72px;align-items:start}
+.contact-intake-copy p{color:var(--muted);font-size:18px;max-width:580px}
+.contact-form-shell{border-top:1px solid var(--line-strong);padding-top:8px}
+.contact-field{padding:19px 0;border-bottom:1px solid var(--line)}
+.contact-field label,.contact-field legend{display:block;margin:0 0 9px;color:var(--ink-soft);font-weight:700;font-size:15px}
+.contact-field small{display:block;color:var(--muted);margin-top:7px}
+.contact-field input,.contact-field select,.contact-field textarea{width:100%;min-height:48px;border:1px solid var(--line-strong);border-radius:3px;background:#080a0d;color:var(--ink);padding:11px 13px;font:inherit;outline:none}
+.contact-field textarea{min-height:108px;resize:vertical}
+.contact-field input:focus,.contact-field select:focus,.contact-field textarea:focus{border-color:#6e7b84;background:#0b0e11}
+.contact-field select option{background:#080a0d;color:var(--ink)}
+.contact-form-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:26px}
+.contact-privacy{font-size:13px!important;color:var(--muted)!important;margin:15px 0 0!important;max-width:720px!important}
+.contact-error{display:none;margin:15px 0 0;color:#e1b3b3;font-size:14px}
+.contact-error.is-visible{display:block}
+@media(max-width:800px){.contact-intake-grid{grid-template-columns:1fr;gap:34px}.contact-intake{padding:48px 0 62px}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<header class="site-header"><div class="wrap"><nav class="site-nav" aria-label="Navegação principal"><a class="brand" href="./"><strong>Marcos Vinicius</strong><span>Professor de inglês · aulas online</span></a><div class="nav-links"><a href="./">Página inicial</a><a href="como-funciona.html">Como funcionam as aulas</a><a href="portal-dos-alunos.html">Portal</a><a href="qual-formato.html">Formatos</a></div></nav></div></header>
+<main id="conteudo">
+<section class="contact-intake"><div class="wrap contact-intake-grid"><div class="contact-intake-copy"><p class="kicker">Contato</p><h1>Conte um pouco sobre o que você procura</h1><p>São poucas informações. Elas entram na mensagem do WhatsApp para eu já saber seu ponto de partida antes da conversa</p><p>Se você ainda não sabe seu nível ou formato, pode marcar essa opção normalmente</p></div><form class="contact-form-shell" id="contact-intake-form" novalidate>
+<div class="contact-field"><label for="name">Seu nome</label><input id="name" name="name" autocomplete="name" required></div>
+<div class="contact-field"><label for="level">Como você descreveria seu inglês hoje?</label><select id="level" name="level" required><option value="">Selecione</option><option>Não sei meu nível</option><option>Estou começando do zero ou quase</option><option>Tenho uma base, mas ainda sou iniciante</option><option>Consigo me comunicar em situações simples</option><option>Já tenho nível intermediário</option><option>Já tenho nível avançado</option></select></div>
+<div class="contact-field"><label for="goal">O que você mais quer desenvolver?</label><select id="goal" name="goal" required><option value="">Selecione</option><option>Inglês geral</option><option>Falar e me comunicar melhor</option><option>Inglês para situações do trabalho</option><option>Inglês para desenvolvedores / programação</option><option>Inglês para Compliance</option><option>Ainda quero entender o melhor caminho</option></select><small>Conversação como modalidade é oferecida a partir do B1</small></div>
+<div class="contact-field"><label for="format">Formato de interesse</label><select id="format" name="format" required><option value="">Selecione</option><option>Individual</option><option>Dupla</option><option>Trio</option><option>Grupo</option><option>Quero comparar as opções</option></select></div>
+<div class="contact-field"><label for="note">Tem algo importante que eu deveria saber?</label><textarea id="note" name="note" maxlength="500" placeholder="Opcional"></textarea></div>
+<div class="contact-form-actions"><button class="btn btn-primary" type="submit">Continuar no WhatsApp</button><a class="btn" href="qual-formato.html">Comparar formatos</a></div>
+<p class="contact-error" id="contact-error" role="alert">Preencha nome, nível, objetivo e formato para continuar</p>
+<p class="contact-privacy">As respostas não são enviadas para um banco de dados por esta página. Ao continuar, elas são colocadas na mensagem que será aberta no WhatsApp</p>
+</form></div></section>
+</main>
+<footer class="site-footer"><div class="wrap footer-row"><span>Professor Marcos Vinicius · aulas de inglês online</span><a href="./">Página inicial</a></div></footer>
+<script>
+(()=>{
+  const form=document.getElementById('contact-intake-form')
+  const error=document.getElementById('contact-error')
+  const sourceLabels={
+    'acheiusa':'AcheiUSA',
+    'minhavidausa':'Minha Vida USA',
+    'brfind':'BR Find',
+    'reddit-idiomas':'r/Idiomas',
+    'ig-formatos':'Instagram — formatos',
+    'x-formatos':'X — formatos',
+    'wa-formatos':'WhatsApp Status — formatos',
+    'ig-conversacao':'Instagram — conversação',
+    'x-conversacao':'X — conversação',
+    'wa-conversacao':'WhatsApp Status — conversação',
+    'ig-portal':'Instagram — Portal',
+    'x-portal':'X — Portal',
+    'wa-portal':'WhatsApp Status — Portal'
+  }
+  form?.addEventListener('submit',event=>{
+    event.preventDefault()
+    const data=new FormData(form)
+    const name=String(data.get('name')||'').trim()
+    const level=String(data.get('level')||'').trim()
+    const goal=String(data.get('goal')||'').trim()
+    const format=String(data.get('format')||'').trim()
+    const note=String(data.get('note')||'').trim()
+    if(!name||!level||!goal||!format){
+      error?.classList.add('is-visible')
+      return
+    }
+    error?.classList.remove('is-visible')
+    const src=new URLSearchParams(window.location.search).get('src')
+    const source=sourceLabels[src]
+    const lines=[
+      'Olá! Vi seu site e tenho interesse em estudar inglês.',
+      `Nome: ${name}`,
+      `Meu inglês hoje: ${level}`,
+      `Quero desenvolver: ${goal}`,
+      `Formato: ${format}`
+    ]
+    if(note)lines.push(`Observação: ${note}`)
+    if(source)lines.push(`Origem: ${source}`)
+    const url=`https://wa.me/5592985273076?text=${encodeURIComponent(lines.join('\n'))}`
+    window.location.href=url
+  })
+})()
+</script>
+</body>
+</html>

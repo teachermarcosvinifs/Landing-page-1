@@ -1,13 +1,34 @@
 (()=>{
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const sourceLabels={
+    'acheiusa':'o AcheiUSA',
+    'minhavidausa':'o Minha Vida USA',
+    'brfind':'o BR Find',
+    'reddit-idiomas':'uma divulgação no r/Idiomas',
     'ig-formatos':'uma publicação no Instagram sobre os formatos das aulas',
     'x-formatos':'uma publicação no X sobre os formatos das aulas',
     'wa-formatos':'um Status do WhatsApp sobre os formatos das aulas',
     'ig-conversacao':'uma publicação no Instagram sobre aulas conversacionais',
     'x-conversacao':'uma publicação no X sobre aulas conversacionais',
+    'wa-conversacao':'um Status do WhatsApp sobre aulas conversacionais',
     'ig-portal':'uma publicação no Instagram sobre o Portal dos Alunos',
-    'x-portal':'uma publicação no X sobre o Portal dos Alunos'
+    'x-portal':'uma publicação no X sobre o Portal dos Alunos',
+    'wa-portal':'um Status do WhatsApp sobre o Portal dos Alunos'
+  }
+
+  const redirectLegacyAcquisitionForm=()=>{
+    const legacyFormId='1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+    document.querySelectorAll(`a[href*="${legacyFormId}"]`).forEach(link=>{
+      link.setAttribute('href','contato.html')
+      link.removeAttribute('target')
+      link.removeAttribute('rel')
+      link.textContent='Informar meu interesse'
+    })
+    document.querySelectorAll('p').forEach(paragraph=>{
+      if(paragraph.textContent.includes('ou preencher o formulário')){
+        paragraph.textContent=paragraph.textContent.replace('ou preencher o formulário','ou informar seu interesse antes de abrir o WhatsApp')
+      }
+    })
   }
 
   const setupMobileMenu=()=>{
@@ -206,6 +227,7 @@
     updateScrollTargets()
   }
 
+  redirectLegacyAcquisitionForm()
   setupMobileMenu()
   applySourceAttribution()
   setupProfessionalMediaMotion()
