@@ -1,0 +1,107 @@
+name: SEO V3 Intent Pages QA
+
+on:
+  push:
+    branches: [acquisition-seo-v3-current-20260820]
+    paths:
+      - 'aulas-de-ingles-online-adultos.html'
+      - 'conversacao-ingles-adultos.html'
+      - 'assets/acquisition-source.js'
+      - 'sitemap.xml'
+      - '.github/workflows/seo-v3-intent-pages-qa.yml'
+  pull_request:
+    paths:
+      - 'aulas-de-ingles-online-adultos.html'
+      - 'conversacao-ingles-adultos.html'
+      - 'assets/acquisition-source.js'
+      - 'sitemap.xml'
+      - '.github/workflows/seo-v3-intent-pages-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate search pages against real offer, V3 and attribution rules
+        shell: python
+        run: |
+          from pathlib import Path
+          from urllib.parse import urlsplit, unquote
+          from html import unescape
+          import re, sys
+
+          errors=[]
+          base='https://teachermarcosvinifs.github.io/Landing-page-1/'
+          names=['aulas-de-ingles-online-adultos.html','conversacao-ingles-adultos.html']
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          form_marker='docs.google.com/forms/d/e/1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+          source_path=Path('assets/acquisition-source.js')
+          source_js=source_path.read_text(encoding='utf-8') if source_path.exists() else ''
+
+          for name in names:
+            text=Path(name).read_text(encoding='utf-8')
+            url=base+name
+            if '<title>' not in text: errors.append(f'{name}: title ausente')
+            if 'name="description"' not in text: errors.append(f'{name}: meta description ausente')
+            if f'href="{url}"' not in text: errors.append(f'{name}: canonical ausente/incorreto')
+            if url not in sitemap: errors.append(f'{name}: URL ausente do sitemap')
+            if 'assets/site-v3-black.css' not in text: errors.append(f'{name}: CSS V3 ausente')
+            if 'assets/site-v3-motion.js' not in text: errors.append(f'{name}: motion V3 ausente')
+            if 'assets/acquisition-source.js' not in text: errors.append(f'{name}: preservação de origem ausente')
+            if 'wa.me/5592985273076' not in text: errors.append(f'{name}: WhatsApp ausente')
+            if form_marker not in text: errors.append(f'{name}: formulário ausente')
+            if 'application/ld+json' not in text: errors.append(f'{name}: dados estruturados ausentes')
+            if len(re.findall(r'<h1\b',text,re.I)) != 1: errors.append(f'{name}: precisa ter exatamente um H1')
+            if re.search(r'R\$\s*\d',text): errors.append(f'{name}: preço público não deve aparecer')
+            if re.search(r'english mentoring|premium|mentoria|coaching|flu[eê]ncia r[aá]pida|roteiro de respostas|prepara[cç][aã]o para entrevista',text,re.I):
+              errors.append(f'{name}: linguagem/serviço proibido detectado')
+
+            for attr,target in re.findall(r'\b(href|src)="([^"]+)"',text,re.I):
+              if target.startswith(('http://','https://','#','javascript:')): continue
+              clean=unquote(urlsplit(target).path).lstrip('/')
+              if not clean or clean in ('./','../'): continue
+              if not Path(clean).exists(): errors.append(f'{name}: {attr} interno quebrado -> {target}')
+
+            body=text.split('<body',1)[-1]
+            body=re.sub(r'<script\b.*?</script>','',body,flags=re.I|re.S)
+            for tag,inner in re.findall(r'<(h[1-6]|p|figcaption|summary|span|small)\b[^>]*>(.*?)</\1>',body,flags=re.I|re.S):
+              visible=unescape(re.sub(r'<[^>]+>','',inner)).strip()
+              if visible.endswith('.') and not visible.endswith('...'):
+                errors.append(f'{name}: {tag} termina com ponto final -> {visible[-70:]}')
+
+          adult=Path(names[0]).read_text(encoding='utf-8').lower()
+          for term in ['adultos','individual','dupla','trio','grupo','iniciante','avançado','portal dos alunos']:
+            if term not in adult: errors.append(f'adultos: conteúdo essencial ausente -> {term}')
+
+          conversation=Path(names[1]).read_text(encoding='utf-8').lower()
+          for term in ['conversação','b1','produção oral','ensino regular']:
+            if term not in conversation: errors.append(f'conversação: conteúdo essencial ausente -> {term}')
+          if 'modalidade conversacional é oferecida a partir do b1' not in conversation:
+            errors.append('conversação: regra B1+ precisa estar explícita')
+          if 'aulas-de-ingles-online-adultos.html' not in conversation:
+            errors.append('conversação: link contextual para ensino regular ausente')
+          if 'conversacao-ingles-adultos.html' not in adult:
+            errors.append('adultos: link contextual para conversação ausente')
+
+          if not source_js:
+            errors.append('atribuição: assets/acquisition-source.js ausente/vazio')
+          else:
+            required_sources=['acheiusa','minhavidausa','brfind','reddit-idiomas','ig-formatos','x-formatos','wa-formatos','ig-conversacao','x-conversacao','wa-conversacao','ig-portal','x-portal','wa-portal']
+            for key in required_sources:
+              if f"'{key}'" not in source_js:
+                errors.append(f'atribuição: origem permitida ausente -> {key}')
+            if "sourceSentences[sourceKey]" not in source_js or "if(!sourceSentence)return" not in source_js:
+              errors.append('atribuição: origens desconhecidas precisam falhar fechadas')
+            if "url.hostname!=='wa.me'" not in source_js or "url.origin!==window.location.origin" not in source_js:
+              errors.append('atribuição: separação entre WhatsApp e links internos ausente')
+            if "url.searchParams.set('src',sourceKey)" not in source_js:
+              errors.append('atribuição: propagação segura de src em links internos ausente')
+
+          if errors:
+            print('QA FAILED')
+            for error in errors: print('-',error)
+            sys.exit(1)
+          print('QA OK — páginas V3 alinhadas à oferta real, B1+, sem preço público e com origem preservada até o contato')
