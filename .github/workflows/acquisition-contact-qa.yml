@@ -1,0 +1,62 @@
+name: Acquisition Contact QA
+
+on:
+  push:
+    branches: [acquisition-contact-fix-20260820]
+    paths:
+      - 'contato.html'
+      - 'assets/site-v3-motion.js'
+      - '.github/workflows/acquisition-contact-qa.yml'
+  pull_request:
+    paths:
+      - 'contato.html'
+      - 'assets/site-v3-motion.js'
+      - '.github/workflows/acquisition-contact-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Validate acquisition contact path
+        shell: bash
+        run: |
+          node --check assets/site-v3-motion.js
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          errors=[]
+          contact=Path('contato.html').read_text(encoding='utf-8')
+          motion=Path('assets/site-v3-motion.js').read_text(encoding='utf-8')
+          legacy='1FAIpQLSfcXQrH8jlLpLD3Z0YT6oruW5sO5hbL9EahlXDRYNCl5MayrA'
+
+          for marker in ['id="contact-intake-form"','id="name"','id="level"','id="goal"','id="format"','wa.me/5592985273076']:
+              if marker not in contact:
+                  errors.append(f'contato.html: marcador ausente -> {marker}')
+          if 'form action=' in contact.lower():
+              errors.append('contato.html: não deve enviar dados para backend externo')
+          if legacy in contact:
+              errors.append('contato.html: formulário pedagógico antigo não pode aparecer')
+          if 'noindex,follow' not in contact:
+              errors.append('contato.html: página utilitária deve ficar fora do índice')
+          if legacy not in motion or "link.setAttribute('href','contato.html')" not in motion:
+              errors.append('site-v3-motion.js: redirecionamento do CTA legado ausente')
+          if "redirectLegacyAcquisitionForm()" not in motion:
+              errors.append('site-v3-motion.js: guard não executado')
+
+          # Toda página HTML que ainda contém o link legado precisa carregar o guard compartilhado
+          for path in Path('.').glob('*.html'):
+              text=path.read_text(encoding='utf-8')
+              if legacy in text and 'assets/site-v3-motion.js' not in text:
+                  errors.append(f'{path}: link legado sem guard de correção')
+
+          if errors:
+              print('QA FAILED')
+              for error in errors: print('-',error)
+              raise SystemExit(1)
+          print('QA OK — CTA legado é interceptado, contato comercial é local e WhatsApp é o destino final')
+          PY
