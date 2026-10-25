@@ -1,0 +1,98 @@
+name: Motion Max A B C Review
+
+on:
+  pull_request:
+    paths:
+      - 'motion-max-a.html'
+      - 'motion-max-b.html'
+      - 'motion-max-c.html'
+      - 'assets/motion-max.css'
+      - 'assets/motion-max.js'
+      - 'assets/motion-max-refined.css'
+      - 'assets/motion-max-refined.js'
+      - '.github/workflows/motion-max-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Playwright Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python3 -m http.server 8000 >/tmp/motion-max-http.log 2>&1 &
+          sleep 2
+      - name: Validate and record all concepts
+        run: |
+          cat > motion-max-check.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          fs.mkdirSync('motion-max-evidence',{recursive:true});
+          const browser=await chromium.launch({headless:true});
+          const concepts=[
+            {id:'a',file:'motion-max-a.html',mid:'.prism-slice'},
+            {id:'b',file:'motion-max-b.html',mid:'.orbit-frame'},
+            {id:'c',file:'motion-max-c.html',mid:'.refract-band'}
+          ];
+
+          for(const concept of concepts){
+            const dir=path.resolve(`video-${concept.id}`);fs.mkdirSync(dir,{recursive:true});
+            const context=await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir,size:{width:1440,height:900}}});
+            const page=await context.newPage();
+            const video=page.video();
+            await page.goto(`http://127.0.0.1:8000/${concept.file}`,{waitUntil:'networkidle'});
+            const media=page.locator('.max-media');
+            const base=page.locator('.base-photo');
+            await media.waitFor();
+            const initial=await base.evaluate(el=>({filter:getComputedStyle(el).filter,opacity:parseFloat(getComputedStyle(el).opacity),transform:getComputedStyle(el).transform}));
+            assert.equal(initial.filter,'none',`${concept.id}: base photo must start sharp`);
+            assert.ok(initial.opacity>.98,`${concept.id}: base photo must remain visible`);
+            await page.waitForTimeout(520);
+            const during=await base.evaluate(el=>({filter:getComputedStyle(el).filter,opacity:parseFloat(getComputedStyle(el).opacity)}));
+            assert.equal(during.filter,'none',`${concept.id}: base photo must stay sharp during effect`);
+            assert.ok(during.opacity>.98,`${concept.id}: base photo must stay visible during effect`);
+            assert.ok(await page.locator(concept.mid).count()>=1,`${concept.id}: signature effect layer must exist during animation`);
+            if(concept.id==='a') assert.equal(await page.locator('.prism-slice').count(),5,'A: must assemble five independent prism slices');
+            if(concept.id==='b') assert.equal(await page.locator('.orbit-frame').count(),3,'B: must orbit three geometric depth frames without duplicating the photo');
+            if(concept.id==='c'){
+              const canvas=page.locator('canvas.refraction-gl-refined');
+              await canvas.waitFor();
+              const gl=await canvas.evaluate(c=>({w:c.width,h:c.height,ok:!!c.getContext('webgl')}));
+              assert.ok(gl.w>100&&gl.h>100&&gl.ok,'C: WebGL refraction canvas must initialize');
+            }
+            await page.waitForFunction(()=>document.querySelector('.max-media')?.dataset.fxComplete==='true',{timeout:3500});
+            await page.waitForTimeout(650);
+            const final=await base.evaluate(el=>({filter:getComputedStyle(el).filter,opacity:parseFloat(getComputedStyle(el).opacity),transform:getComputedStyle(el).transform}));
+            assert.equal(final.filter,'none',`${concept.id}: final photo must be perfectly sharp`);
+            assert.ok(final.opacity>.98,`${concept.id}: final photo must remain fully visible`);
+            assert.equal(await page.locator('.fx-clone').count(),0,`${concept.id}: temporary image layers must clean up`);
+            await page.screenshot({path:`motion-max-evidence/option-${concept.id}-final.png`,fullPage:false});
+            await context.close();
+            const src=await video.path();
+            fs.copyFileSync(src,`motion-max-evidence/option-${concept.id}.webm`);
+          }
+          await browser.close();
+          console.log('MOTION MAX REVIEW OK — A/B/C autonomous, base photo sharp throughout, refined signatures verified');
+          EOF
+          node motion-max-check.mjs
+      - name: Upload comparison evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: motion-max-a-b-c
+          path: motion-max-evidence/
+          if-no-files-found: error
+          retention-days: 14
