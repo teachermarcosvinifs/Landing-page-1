@@ -192,3 +192,27 @@ Resultados anteriores mantidos: `sitemap.xml` e `sitemap-urls.txt` públicos, en
 Referência oficial: https://developers.google.com/webmaster-tools/v1/sitemaps (campo `isPending`: 'If true, the sitemap has not been processed'). Em comunidade oficial, especialista de produto explicou que `Couldn't fetch` na interface pode equivaler a `isPending=true` quando o Google ainda não acessou o sitemap **no processo específico de sitemaps**: https://support.google.com/webmasters/thread/477259408/sitemap-shows-couldn-t-fetch-while-api-reports-ispending-true?hl=en . Não tratar essa resposta de fórum como diagnóstico causal específico para este site.
 
 **Próxima ação informativa única:** consultar `Sitemaps.get` para `https://teachermarcosvinifs.github.io/Landing-page-1/sitemap-urls.txt` no mesmo APIs Explorer (somente `feedpath` muda, sem submissão). Se também `isPending=true`, ambos os formatos estão em estado pendente, fortalecendo gargalo de processamento/acesso da ferramenta ao invés de sintaxe XML específica; se `false`, observar `type`, `lastDownloaded`, `contents` e erros. **Não** criar novos sitemaps, reenvios, alteração de robots ou novo domínio por enquanto. Com a evidência completa, investigar com a comunidade oficial do Search Console; não declarar solução nem prometer prazo. GitHub, OpenSEO, CRM devem conservar esse estado como PENDENTE.
+
+
+## 15. Sitemaps.get confirma ambos pendentes — 13/11/2026
+
+O professor executou o segundo teste autenticado de leitura **Google Search Console API → Sitemaps.get** para o arquivo TXT. Resultado literal:
+
+```json
+{
+  "path": "https://teachermarcosvinifs.github.io/Landing-page-1/sitemap-urls.txt",
+  "lastSubmitted": "2026-11-13T15:27:45.452Z",
+  "isPending": true,
+  "isSitemapsIndex": false,
+  "warnings": "0",
+  "errors": "0"
+}
+```
+
+Comparação com XML da seção 14: `isPending=true` em **ambos os sitemaps** (`sitemap.xml` e `sitemap-urls.txt`). Ambos foram enviados em 12–13/11/2026, e não mostram `lastDownloaded`, `type` ou `contents` no recurso. O Google define **isPending=true = sitemap não processado**. `errors=0`/`warnings=0` indicam somente nenhuma ocorrência registrada; **não validam arquivo ainda pendente**. HTTP 200 nessas capturas é sucesso da chamada à API. A UI de ambos mostrava `Tipo: Desconhecido`, `Não foi possível buscar/ler` e `Páginas encontradas: 0`.
+
+**Diagnóstico revisado:** falha específica de sintaxe/parsing XML fica menos plausível, pois texto puro também pendente; não foi demonstrada causa definitiva nem defeito interno do Google. Como as duas entradas foram submetidas recentemente, `isPending=true` isolado não prova que ambas estejam travadas permanentemente; histórico de meses de envios anteriores permanece relevante, mas timestamps atuais só medem a última submissão. A homepage continua indexada e as 7 páginas internas desconhecidas na última inspeção por API.
+
+**Decisão:** encerrar variações de sitemap/reenvios e alterações especulativas no repositório. Próxima investigação realmente nova = reunir os dois retornos da API, resultados dos testes ao vivo e histórico de indexação numa solicitação técnica à comunidade oficial do Search Console. Se surgir mensagem de erro HTTP específica ou evidência do backend, verificar somente a causa apontada. Em paralelo, medir busca orgânica comercial por consulta/página/contato; não misturar com leads originados do Twitter/X (único canal com aquisição comprovada). Não declarar a indexação resolvida.
+
+Referências: https://developers.google.com/webmaster-tools/v1/sitemaps?hl=pt-BR e https://support.google.com/webmasters/answer/7451001?hl=pt-BR .
