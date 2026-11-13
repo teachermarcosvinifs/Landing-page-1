@@ -170,3 +170,25 @@ O professor enviou captura autenticada da propriedade `https://teachermarcosvini
 Resultados anteriores mantidos: `sitemap.xml` e `sitemap-urls.txt` públicos, enviados separadamente, ambos com **“Não foi possível buscar/ler sitemap”**, `Tipo: Desconhecido` e `0 páginas encontradas`; homepage indexada com último crawl registrado em 20/09/2026; as sete páginas internas desconhecidas pelo Google na API de Inspeção. Não houve correção verificada no Search Console. Evitar novos envios, novas variações de sitemap e alegações de que há penalização.
 
 **Próxima via de investigação sustentada:** obter, se possível, o recurso da **API oficial Search Console `sitemaps.get`** para o registro correto, que pode detalhar `path`, `lastDownloaded`, `isPending`, `errors`, `warnings`, `type`, `contents`; tal operação NÃO está exposta pelo conector OpenSEO atualmente conectado. Alternativa: encaminhar os resultados com URLs e datas à comunidade oficial do Search Console; não há garantia de resposta de engenharia nem de indexação. Documentação oficial: https://support.google.com/webmasters/answer/7451001 e https://support.google.com/webmasters/answer/9044175 . Não solicitar screenshots repetidos da página de Sitemaps ou Ações manuais.
+
+
+## 14. API oficial Sitemaps.get — 13/11/2026
+
+**Nova evidência direta fornecida pelo professor:** execução autenticada de `Sitemaps: get` no próprio Google APIs Explorer (HTTP 200 da REQUISIÇÃO À API, que não é status do sitemap):
+
+```json
+{
+  "path": "https://teachermarcosvinifs.github.io/Landing-page-1/sitemap.xml",
+  "lastSubmitted": "2026-11-13T01:49:24.011Z",
+  "isPending": true,
+  "isSitemapsIndex": false,
+  "warnings": "0",
+  "errors": "0"
+}
+```
+
+**Interpretação segundo a definição OFICIAL da API:** `isPending=true` significa que o sitemap **ainda não foi processado**. `errors=0` / `warnings=0` significam **zero erros/avisos registrados**, NÃO uma validação do arquivo enquanto estiver pendente. Ausência de `lastDownloaded`, `type` e `contents` significa que o recurso não oferece evidência de download/processamento como sitemap. `lastSubmitted` corresponde ao último envio registrado (12/11 em hora local), e sozinho NÃO data o início do problema; o histórico anterior do professor permanece relevante. A Inspeção de URL do XML com fetch bem-sucedido em 05/11 é via mecanismo distinto e não prova processamento no relatório de Sitemaps.
+
+Referência oficial: https://developers.google.com/webmaster-tools/v1/sitemaps (campo `isPending`: 'If true, the sitemap has not been processed'). Em comunidade oficial, especialista de produto explicou que `Couldn't fetch` na interface pode equivaler a `isPending=true` quando o Google ainda não acessou o sitemap **no processo específico de sitemaps**: https://support.google.com/webmasters/thread/477259408/sitemap-shows-couldn-t-fetch-while-api-reports-ispending-true?hl=en . Não tratar essa resposta de fórum como diagnóstico causal específico para este site.
+
+**Próxima ação informativa única:** consultar `Sitemaps.get` para `https://teachermarcosvinifs.github.io/Landing-page-1/sitemap-urls.txt` no mesmo APIs Explorer (somente `feedpath` muda, sem submissão). Se também `isPending=true`, ambos os formatos estão em estado pendente, fortalecendo gargalo de processamento/acesso da ferramenta ao invés de sintaxe XML específica; se `false`, observar `type`, `lastDownloaded`, `contents` e erros. **Não** criar novos sitemaps, reenvios, alteração de robots ou novo domínio por enquanto. Com a evidência completa, investigar com a comunidade oficial do Search Console; não declarar solução nem prometer prazo. GitHub, OpenSEO, CRM devem conservar esse estado como PENDENTE.
