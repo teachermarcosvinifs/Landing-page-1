@@ -64,7 +64,9 @@
     'wa-conversacao':'WhatsApp Status — conversação',
     'ig-portal':'Instagram — Portal',
     'x-portal':'X — Portal',
-    'wa-portal':'WhatsApp Status — Portal'
+    'wa-portal':'WhatsApp Status — Portal',
+    'x-perfil':'X',
+    'ig-perfil':'Instagram'
   }
   form?.addEventListener('submit',event=>{
     event.preventDefault()
@@ -79,8 +81,15 @@
       return
     }
     error?.classList.remove('is-visible')
-    const src=new URLSearchParams(window.location.search).get('src')
-    const source=sourceLabels[src]
+    const explicitSrc=new URLSearchParams(window.location.search).get('src')
+    let storedSrc=null
+    try{
+      const previous=JSON.parse(sessionStorage.getItem('mv_acquisition_source_v1')||'null')
+      if(previous&&Number.isFinite(previous.savedAt)&&Date.now()-previous.savedAt<30*60*1000)
+        storedSrc=previous.source
+    }catch(_){/* Sem armazenamento da sessão */}
+    const src=explicitSrc||storedSrc
+    const source=Object.prototype.hasOwnProperty.call(sourceLabels,src)?sourceLabels[src]:null
     const lines=[
       'Olá! Vi seu site e tenho interesse em estudar inglês.',
       `Nome: ${name}`,
