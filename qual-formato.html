@@ -128,11 +128,14 @@ form.addEventListener('submit',e=>{
   const rows=`<div class="result-fact"><span>Formato</span><b>${labels[format]}</b></div><div class="result-fact"><span>Carga semanal considerada</span><b>${minutes==='unknown'?'Ainda não definida':minutes+' minutos'}</b></div><div class="result-fact"><span>Disponibilidade</span><b>${availability}</b></div>`;
   document.getElementById('facts').innerHTML=rows;
 
-  const formatText={individual:'aulas individuais',dupla:'aulas em dupla',trio:'aulas em trio',grupo:'aulas em grupo'}[format]||'aulas de inglês';
-  const interest=mode==='Aulas conversacionais (B1+)'?`${formatText} de conversação em inglês`:`${formatText} de inglês`;
-  const weeklyTime=minutes==='unknown'?'':` Pensei em ${minutes} minutos por semana.`;
-  const sourceSentence=sourceLabel?` Conheci o site por ${sourceLabel}.`:'';
-  const text=`Oi, Marcos! Vi os formatos de aula no seu site e tenho interesse em ${interest}. Podemos conversar sobre horários e valores?${weeklyTime}${sourceSentence}`;
+  const summary=`${mode}, ${labels[format]}`;
+  const lines=[
+    'Olá, tenho interesse em estudar inglês',
+    '',
+    `Minha escolha ficou em ${summary}. Gostaria de consultar valores, planos e cargas horárias`
+  ];
+  if(sourceLabel)lines.push('',`Conheci o site por ${sourceLabel}`);
+  const text=lines.join('\n');
   document.getElementById('waResult').href='https://wa.me/5592985273076?text='+encodeURIComponent(text);
   result.classList.add('show');
   result.classList.add('is-visible');
