@@ -83,3 +83,33 @@ Dados finais, propriedade correta, Pesquisa Web:
 - Print do OpenSEO fornecido em 13/11 mostrava conta autorizada mas propriedade `Not connected` **antes** da seleção final feita nesta conversa.
 
 **Estado final deste handoff:** integração Google Search Console -> OpenSEO **concluída e confirmada**; publicação das mudanças SEO confirmada; indexação de todas as páginas **não confirmada**; ações futuras baseadas nos dados e com causa demonstrável.
+
+
+## 9. Atualização confirmada — 13/11/2026, inspeção individual via API do Google
+
+**ATUALIZAÇÃO PRIORITÁRIA sobre as seções 2, 3 e 6:** a integração atual do OpenSEO disponibiliza a operação de leitura `inspect_urls` para consultar os estados de indexação armazenados no Google Search Console. A limitação registrada acima (“não expõe a Inspeção de URL”) referia-se à ferramenta usada na rodada anterior, não à capacidade atual do conector. Consulta realizada nesta continuação, sem solicitar indexação.
+
+**Conexão:** `list_search_console_sites` retornou `ok=true`, conta Google autorizada, `requiresReconnect=false`, `apiDisabled=false`, propriedade `https://teachermarcosvinifs.github.io/Landing-page-1/` com `isSelected=true`, permissão `siteOwner`. Nenhuma ação do professor necessária.
+
+**Status oficial por URL (via `inspect_urls`, dados de índice existentes, NÃO teste ao vivo):**
+
+| URL relativa | `coverageState` do Google | `verdict` |
+|---|---|---|
+| `/` (homepage) | Enviada e indexada | PASS |
+| `aulas-de-ingles-online-adultos.html` | O Google não reconhece o URL | NEUTRAL |
+| `conversacao-ingles-adultos.html` | O Google não reconhece o URL | NEUTRAL |
+| `ingles-para-devs.html` | O Google não reconhece o URL | NEUTRAL |
+| `ingles-para-compliance.html` | O Google não reconhece o URL | NEUTRAL |
+| `como-funciona.html` | O Google não reconhece o URL | NEUTRAL |
+| `qual-formato.html` | O Google não reconhece o URL | NEUTRAL |
+| `portal-dos-alunos.html` | O Google não reconhece o URL | NEUTRAL |
+
+A homepage tem `lastCrawlTime=2026-09-20T06:02:51Z`, `pageFetchState=SUCCESSFUL`, rastreamento MOBILE, `robotsTxtState=ALLOWED` e canônica selecionada pelo Google igual à declarada. Os sete URLs internos não trazem `lastCrawlTime`, `pageFetchState` ou canônica; estados não informados NÃO significam bloqueio. Essa evidência confirma falta de reconhecimento das URLs pelo Google na consulta de 13/11/2026, **não identifica a causa**, nem informa prazo.
+
+**Analytics reconsultado (dado final):** 14/10–10/11/2026 tem 5 impressões, 0 clique, só home; as cinco impressões ocorreram em 14/10 (2), 03/11 (2), 04/11 (1); dimensão consulta sem linhas nesse período. 10/08–10/11: apenas `manda o link do site` em consulta+página (1 impressão, 1 clique), com as demais impressões ocultas no detalhamento. Nenhuma alteração de 13/11 pode ser avaliada nesses dados.
+
+**Revisão técnica sem alteração no site:** os arquivos do GitHub `sitemap.xml`, `robots.txt`, `index.html` e `aulas-de-ingles-online-adultos.html` foram consultados. Sitemap lista oito endereços coerentes; `robots.txt` está armazenado na subpasta do projeto (não equivale a arquivo na raiz `github.io`); home e adultos têm canônicas corretas; home agora tem links HTML para adultos e conversação; a página de adultos permite `index,follow`. Auditoria OpenSEO anterior encontrou oito páginas HTTP 200 e indexáveis, mas **não substitui o estado de índice fornecido pelo Google**. Em auditoria antiga, `inSitemap=false` nos registros de páginas não prova que o Google rejeitou o XML. O GSC anteriormente indicou `Não foi possível buscar o sitemap`; a causa permanece sem confirmação. O `<lastmod>` da home no XML está antigo (17/08) apesar de alterações legítimas em 13/11; não foi alterado nesta rodada por não haver evidência de que isso explique o erro de leitura.
+
+**Priorização:** primeiro demonstrar reconhecimento e indexação das URLs comerciais pelo Google; usar inspeção programática de leitura (não pedidos repetidos). Depois avaliar aumento de impressões por consultas com intenção real e contatos atribuídos. Manter ações gratuitas de exposição externa legítima, sem prometer que backlinks individuais ou `IndexNow` resolvam Google; o Google não participa de IndexNow. Nenhuma necessidade de reconectar conta, reenviar sitemap ou pedir indexação nesta rodada. Sem alteração em layout, contatos, formulário, WhatsApp ou URLs canônicas.
+
+**Fontes oficiais:** https://support.google.com/webmasters/answer/9012289 (inspeção de URL), https://support.google.com/webmasters/answer/7451001 (erros de sitemap), https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap (lastmod). Próximas datas de avaliação permanecem 13/12/2026 e 12/01/2027, com histórico sem apagar.
