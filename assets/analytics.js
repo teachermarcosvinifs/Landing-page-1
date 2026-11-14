@@ -42,7 +42,7 @@ const banner=()=>{
  const actions=document.createElement('div');actions.style.cssText='display:flex;flex-wrap:wrap;gap:8px;align-items:center;';
  const btn=(label,primary,v)=>{
   const el=document.createElement('button');el.type='button';el.textContent=label;
-  el.style.cssText='font:600 13px system-ui,sans-serif;cursor:pointer;padding:9px 15px;border-radius:5px;border:1px solid '+(primary?'#cfd6da':'#5e6b72')+';background:'+(primary?'#e3e9ed':'transparent')+';color:'+(primary?'#111820':'#e8edef')+';';
+  el.style.cssText='font:600 13px system-ui,sans-serif;cursor:pointer;padding:9px 15px;min-height:44px;border-radius:5px;border:1px solid '+(primary?'#cfd6da':'#5e6b72')+';background:'+(primary?'#e3e9ed':'transparent')+';color:'+(primary?'#111820':'#e8edef')+';';
   el.addEventListener('click',()=>{
    const previous=loaded;save(v);box.remove();
    if(v==='granted')enable();
@@ -73,7 +73,7 @@ document.addEventListener('submit',e=>{
 const footer=document.querySelector('.site-footer .footer-row');
 if(footer&&!footer.querySelector('[data-analytics-preferences]')){
  const prefs=document.createElement('button');prefs.type='button';prefs.dataset.analyticsPreferences='true';prefs.textContent='Preferências de privacidade';
- prefs.style.cssText='background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit;';
+ prefs.style.cssText='background:none;border:0;padding:0;min-height:44px;display:inline-flex;align-items:center;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:inherit;';
  prefs.addEventListener('click',banner);footer.append(prefs);
 }
 if(choice==='granted')enable();else if(choice!=='denied')banner();
